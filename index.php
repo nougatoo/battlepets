@@ -130,6 +130,9 @@ function getAndParseAuctionData()
 	$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
 	$conn->query($removeHourlySql);
 
+	$startTimeTotal = microtime(true);
+	
+	// Make the inital call to get the data URLs
 	$dataUrls = getDataUrls();
 	
 	// Getting Auction Data and inserting 
@@ -146,14 +149,13 @@ function getAndParseAuctionData()
 
 	$curls= array($ch1,$ch2,$ch3);
 	$numCurls = sizeof($curls);
-	$responses = [];
-	$contents = [];
-	$auctions = [];
-	$ahRealms = [];
-	$slugMaps = [];
-	file_put_contents('php://stderr', "\n".print_r("SIZEOF CURLS: ".$numCurls , TRUE));
-
-	for($i = 0; $i<sizeof($dataUrls); $i=$i+3) {	
+	$responses = []; // String (json) array of what we get back from the data url call
+	$contents = []; // a response json object as an array
+	$auctions = []; // auction data for realms
+	$ahRealms = []; // realms for which the auction data is for
+	$slugMaps = []; // map of a realm name to a realm slug
+	
+	for($i = 0; $i<sizeof($dataUrls); $i=$i+$numCurls) {	
 		
 		$startTimeData = microtime(true);
 		
@@ -166,18 +168,22 @@ function getAndParseAuctionData()
 		curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
 		file_put_contents('php://stderr', "\n".print_r("Url1: ".$dataUrls[$i] , TRUE));
 		
+		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+1) < sizeof($dataUrls)) {
 			curl_setopt($curls[1], CURLOPT_URL, $dataUrls[$i+1]);
 			file_put_contents('php://stderr', "\n".print_r("Url2: ".$dataUrls[$i+1] , TRUE));
 		}
 		
+		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+2) < sizeof($dataUrls)) {
 			curl_setopt($curls[2], CURLOPT_URL, $dataUrls[$i+2]);
 			file_put_contents('php://stderr', "\n".print_r("Url3: ".$dataUrls[$i+2] , TRUE));
 		}
 
+		// Curl multi handler
 		$mh = curl_multi_init();
 		
+		// Add curls to the multi handlers
 		for($j = 0; $j<$numCurls; $j+=1) {
 			curl_multi_add_handle($mh,$curls[$j]);
 		}
@@ -188,35 +194,56 @@ function getAndParseAuctionData()
 			curl_multi_exec($mh, $running);
 		} while ($running);
 		
-		// Get the responses from all curls
+		// Get meat from all the curls
 		for($j = 0; $j<$numCurls; $j+=1) {
 			array_push($responses, curl_multi_getcontent($curls[$j]));
+			array_push($contents, json_decode($responses[$j], true));
+			array_push($auctions, $contents[$j]['auctions']);
+			array_push($ahRealms, $contents[$j]['realms']);
 		}
 		
+		/*
 		// Get the contents from each response as json
 		for($j = 0; $j<$numCurls; $j+=1) {
 			array_push($contents, json_decode($responses[$j], true));
 		}
 		
-		// Get the auctions data
+		// Get the auctions data from the contents
 		for($j = 0; $j<$numCurls; $j+=1) {
 			array_push($auctions, $contents[$j]['auctions']);
 		}
 		
-		// Get the realms array from contents
+		// Get the realms array from the contents
 		for($j = 0; $j<$numCurls; $j+=1) {
 			array_push($ahRealms, $contents[$j]['realms']);
 		}
-		
-		
-		$endTimeData = microtime(true);
-		$timeDiffData = $endTimeData - $startTimeData;
-		file_put_contents('php://stderr', "\n".print_r("Time to complete Raw Data: ".$timeDiffData , TRUE));
-		
+		*/
 		
 		// Creating slug map so we don't have to query db
-		$startTimeAuctions = microtime(true);
+		foreach($ahRealms as  $key => $current) {	
+			$realmSlugList= [];
+			$realmNameList = [];
+			
+			foreach($current as $aRealm) {		
+				array_push($realmSlugList, $aRealm['slug']);
+				array_push($realmNameList, $aRealm['name']);			
+			}
+			
+			array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
+			
+			unset($realmSlugList);
+			unset($realmNameList);
+		}
 		
+		insertAuctionData($auctions, $slugMaps);
+		
+		/*
+		$endTimeData = microtime(true);
+		$timeDiffData = $endTimeData - $startTimeData;
+		file_put_contents('php://stderr', "\n".print_r("Time to complete Raw Data: ".$timeDiffData , TRUE));	
+
+		$startTimeAuctions = microtime(true);
+		// Creating slug map so we don't have to query db
 		foreach($ahRealms as  $key => $current) {	
 			$realmSlugList= [];
 			$realmNameList = [];
@@ -232,6 +259,7 @@ function getAndParseAuctionData()
 			unset($realmNameList);
 		}
 			
+		// Insert auctions for a realm in one transaction per realm
 		foreach($auctions as  $key => $currentRealmAh) {		
 		
 			$conn->query('START TRANSACTION;');
@@ -249,6 +277,7 @@ function getAndParseAuctionData()
 				$timeLeft = $currentAuction['timeLeft'];
 				$quantity = $currentAuction['quantity'];
 				
+				// Only inserting pets
 				if($isPet)
 				{
 					$speciesId = $currentAuction['petSpeciesId'];
@@ -258,11 +287,10 @@ function getAndParseAuctionData()
 							. "ON DUPLICATE KEY UPDATE "
 							. "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
 
-
 					if ($conn->query($sql) === TRUE) {
-					//echo "New record created successfully";
+						//echo "New record created successfully";
 					} else {
-					echo "Error: " . $sql . "<br>" . $conn->error;
+						echo "Error: " . $sql . "<br>" . $conn->error;
 					}
 				}
 			}
@@ -275,48 +303,36 @@ function getAndParseAuctionData()
 		$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
 		file_put_contents('php://stderr', print_r(" Time to complete auctions insert: " . $timeDiffAuctions . "\n" , TRUE));
 		file_put_contents('php://stderr', "\n".print_r("----------------------------------------------" , TRUE));
-		
-		// Not sure if i need these
-		unset($auctions1);
-		unset($auctions2);
-		unset($auctions3);
-		
-		unset($content1);
-		unset($content2);
-		unset($content3);
-		
-		unset($response1);
-		unset($response2);
-		unset($response3);	
-		
+		*/
 	}
 
-	//close the handles
-
+	// Close the handles
 	curl_multi_remove_handle($mh, $ch1);
 	curl_multi_remove_handle($mh, $ch2);
 	curl_multi_remove_handle($mh, $ch3);
 	curl_multi_close($mh);
 
-
+	// Add all this new data into the daily table
 	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
-	SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
-	FROM auctions_hourly_pet
-	ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
+									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
+									FROM auctions_hourly_pet
+									ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
 	$conn->query($transferToDailySql);
 
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
-	file_put_contents('php://stderr', "\n".print_r("Final time". ": " . $timeDiffTotal . " - " , TRUE));
-	
+	file_put_contents('php://stderr', "\n".print_r("Final time". ": " . $timeDiffTotal . " - " , TRUE));	
 }
 
+/**
+	TODO
+*/
 function getDataUrls()
 {
 	// Connect to database
 	$conn = dbConnect();
 	
-	// Getting URLs for each realm
+
 	$realmsToPull = []; // List of all realms 
 	$realmsCompleted = []; // Used to know which connected realms we've done
 	$dataUrls = []; // contains the urls where the real auction data is contained
@@ -331,9 +347,9 @@ function getDataUrls()
 		echo "0 results";
 	}
 
-	$startTimeTotal = microtime(true);
-	$numReamlsToPull = sizeof($realmsToPull);
-	for($i = 0; $i<$numReamlsToPull; $i+=1) {
+	$numRealmsToPull = sizeof($realmsToPull);
+	
+	for($i = 0; $i<$numRealmsToPull; $i+=1) {
 
 		file_put_contents('php://stderr', "\nWorking on -- ".$realmsToPull[$i], TRUE);
 		
@@ -369,9 +385,66 @@ function getDataUrls()
 	return $dataUrls;
 }
 
+/**
+	TODO
+*/
+function insertAuctionData($auctions, $slugMaps)
+{
+	// Connect to database
+	$conn = dbConnect();
+	
+	$startTimeAuctions = microtime(true);
+		
+	// Insert auctions for a realm in one transaction per realm
+	foreach($auctions as  $key => $currentRealmAh) {		
+	
+		$conn->query('START TRANSACTION;');
+		
+		// This could be optimized by adding more than one "values" but for now the speed is less
+		// than one second fpr 3 realms.
+		foreach ($currentRealmAh as $key2 => $currentAuction) {
+		  
+			$id = $currentAuction['auc'];
+			$realmName = $currentAuction['ownerRealm']; 
+			$buyout = $currentAuction['buyout'];
+			$bid = $currentAuction['bid'];
+			$isPet = isset($currentAuction['petSpeciesId']);
+			$owner = $currentAuction['owner'];
+			$timeLeft = $currentAuction['timeLeft'];
+			$quantity = $currentAuction['quantity'];
+			
+			// Only inserting pets
+			if($isPet)
+			{
+				$speciesId = $currentAuction['petSpeciesId'];
+				
+				$sql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
+				VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')"
+						. "ON DUPLICATE KEY UPDATE "
+						. "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
+
+				if ($conn->query($sql) === TRUE) {
+					//echo "New record created successfully";
+				} else {
+					echo "Error: " . $sql . "<br>" . $conn->error;
+				}
+			}
+		}
+		
+		$conn->query('COMMIT;');
+		$conn->query('SET autocommit=1;');
+	}
+	
+	$endTimeAuctions = microtime(true);
+	$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
+	file_put_contents('php://stderr', print_r("\n Time to complete auctions insert: " . $timeDiffAuctions . "\n" , TRUE));
+	file_put_contents('php://stderr', "\n".print_r("----------------------------------------------" , TRUE));
+	
+	
+}
 
 
-/* Getting market value */
+/* TODO */
 function calculateMarketValues()
 {
 	// Connect to database

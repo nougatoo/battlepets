@@ -27,10 +27,6 @@ function getAndParseAuctionData()
 	// Connect to database
 	$conn = dbConnect();
 	
-	// Remove all existing auctions from the hourly table
-	$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
-	$conn->query($removeHourlySql);
-
 	$startTimeTotal = microtime(true);
 	
 	// Make the inital call to get the data URLs
@@ -120,12 +116,26 @@ function getAndParseAuctionData()
 	curl_multi_remove_handle($mh, $ch3);
 	curl_multi_close($mh);
 
+	// Remove all existing auctions from the hourly table
+	$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
+	$conn->query($removeHourlySql);
+	
+	// Move this from the staging table to the real hourly table
+	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
+									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
+									FROM auctions_hourly_pet_stg;";							
+	$conn->query($transferOutOfStgSql);
+	
 	// Add all this new data into the daily table as well
 	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
 									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
 									FROM auctions_hourly_pet
 									ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
 	$conn->query($transferToDailySql);
+	
+	// Clear out the staging table
+	$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg;" ;
+	$conn->query($removeHourlySql);
 
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
@@ -196,7 +206,9 @@ function getDataUrls()
 }
 
 /**
-	Inserts the passed auction data into the auctions_hourly_table
+	Inserts the passed auction data into the auctions_hourly_table_stg.
+	Using a staging table so that we don't disrupt the use of the application
+	while our getAndParseAuctionData is running.
 	
 */
 function insertAuctionData($auctions, $slugMaps)
@@ -229,7 +241,7 @@ function insertAuctionData($auctions, $slugMaps)
 			{
 				$speciesId = $currentAuction['petSpeciesId'];
 				
-				$sql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
+				$sql = "INSERT INTO auctions_hourly_pet_stg (id, species_id, realm, buyout, bid, owner, time_left, quantity)
 				VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')"
 						. "ON DUPLICATE KEY UPDATE "
 						. "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";

@@ -6,13 +6,13 @@ set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
 customLog("calcMarketVal","Calculating Daily Market Values...");
-calculateMarketValues();
+calculateDailyMarketValues();
 
 /**
 	Calculates the market value for each seen pet on all realms.
 	Connected realms are considered 1 realm.
  */
-function calculateMarketValues()
+function calculateDailyMarketValues()
 {
 	// Connect to database
 	$conn = dbConnect();

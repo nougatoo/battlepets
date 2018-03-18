@@ -2,3 +2,4 @@ TODO:
  - Add to the daily market value calculation to remove the daily data after it runs
 	- Make sure this is scheduled
 - THink of way to handle the 14 day market value...AKA real market value
+- can't use tool while its parsing data???

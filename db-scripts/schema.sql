@@ -51,3 +51,27 @@ CREATE TABLE `battle_pets`.`auctions_hourly_pet` (
   `time_left` VARCHAR(45) NULL,
   `quantity` INT NULL,
   PRIMARY KEY (`id`));
+  
+USE `battle_pets`;
+CREATE  OR REPLACE VIEW `market_value_pets_historical` AS
+SELECT species_id, AVG(market_value) as market_value_hist FROM market_value_pets 
+WHERE DATE >= CURDATE() - INTERVAL  14 DAY 
+      AND DATE  < CURDATE() + INTERVAL  1 DAY
+GROUP BY species_id;
+
+-- Staging table
+CREATE TABLE `auctions_hourly_pet_stg` (
+   `id` int(11) NOT NULL,
+   `species_id` int(11) DEFAULT NULL,
+   `realm` varchar(45) DEFAULT NULL,
+   `buyout` decimal(11,0) DEFAULT NULL,
+   `bid` decimal(11,0) DEFAULT NULL,
+   `owner` varchar(45) DEFAULT NULL,
+   `time_left` varchar(45) DEFAULT NULL,
+   `quantity` int(11) DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   KEY `species_id_hourly_idx` (`species_id`),
+   KEY `realm_hourly_idx` (`realm`),
+   CONSTRAINT `realm_hourly_stg_fk` FOREIGN KEY (`realm`) REFERENCES `realms` (`slug`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `species_id_hourly_stg_fk` FOREIGN KEY (`species_id`) REFERENCES `pets` (`species_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8

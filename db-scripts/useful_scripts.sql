@@ -16,3 +16,11 @@ select min(buyout)/10000 as minbuy, species_id, realm from auctions_daily_pet gr
 on a.species_id = b.species_id
 where realm in ('cenarion-circle', 'wyrmrest-accord')
 order by diff desc
+
+
+-- 14 day market value 
+select realm, species_id, avg(market_value) from market_value_pets 
+WHERE date >= CURDATE() - INTERVAL  14 DAY 
+      AND date  < CURDATE() + INTERVAL  1 DAY
+group by species_id, realm
+order by species_id, realm;

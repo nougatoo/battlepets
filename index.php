@@ -2,10 +2,7 @@
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-//$conn = new mysqli('localhost',$config['username'],$config['password'],$config['dbname']);
-
 $conn = dbConnect();
-
 
 // Check connection
 if ($conn->connect_error) {
@@ -17,7 +14,8 @@ echo ("<br/>");
 
 //getPetData();
 //getRealmData();
-getAndParseAuctionData();
+//getAndParseAuctionData();
+calculateMarketValues();
 
 /** 
  *		Gets JSON pet data from blizzards master pet API.
@@ -149,21 +147,16 @@ function getAndParseAuctionData()
 
 	$curls= array($ch1,$ch2,$ch3);
 	$numCurls = sizeof($curls);
-	$responses = []; // String (json) array of what we get back from the data url call
-	$contents = []; // a response json object as an array
-	$auctions = []; // auction data for realms
-	$ahRealms = []; // realms for which the auction data is for
-	$slugMaps = []; // map of a realm name to a realm slug
-	
+
 	for($i = 0; $i<sizeof($dataUrls); $i=$i+$numCurls) {	
 		
 		$startTimeData = microtime(true);
 		
-		$responses = [];
-		$contents = [];
-		$auctions = [];
-		$ahRealms = [];
-		$slugMaps = [];
+		$responses = []; // String (json) array of what we get back from the data url call
+		$contents = []; // a response json object as an array
+		$auctions = []; // auction data for realms
+		$ahRealms = []; // realms for which the auction data is for
+		$slugMaps = []; // maps of a realm name to a realm slug
 		
 		curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
 		file_put_contents('php://stderr', "\n".print_r("Url1: ".$dataUrls[$i] , TRUE));
@@ -194,7 +187,7 @@ function getAndParseAuctionData()
 			curl_multi_exec($mh, $running);
 		} while ($running);
 		
-		// Get meat from all the curls
+		// Get the meat from all the curls
 		for($j = 0; $j<$numCurls; $j+=1) {
 			array_push($responses, curl_multi_getcontent($curls[$j]));
 			array_push($contents, json_decode($responses[$j], true));
@@ -202,23 +195,6 @@ function getAndParseAuctionData()
 			array_push($ahRealms, $contents[$j]['realms']);
 		}
 		
-		/*
-		// Get the contents from each response as json
-		for($j = 0; $j<$numCurls; $j+=1) {
-			array_push($contents, json_decode($responses[$j], true));
-		}
-		
-		// Get the auctions data from the contents
-		for($j = 0; $j<$numCurls; $j+=1) {
-			array_push($auctions, $contents[$j]['auctions']);
-		}
-		
-		// Get the realms array from the contents
-		for($j = 0; $j<$numCurls; $j+=1) {
-			array_push($ahRealms, $contents[$j]['realms']);
-		}
-		*/
-		
 		// Creating slug map so we don't have to query db
 		foreach($ahRealms as  $key => $current) {	
 			$realmSlugList= [];
@@ -230,80 +206,9 @@ function getAndParseAuctionData()
 			}
 			
 			array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
-			
-			unset($realmSlugList);
-			unset($realmNameList);
 		}
 		
-		insertAuctionData($auctions, $slugMaps);
-		
-		/*
-		$endTimeData = microtime(true);
-		$timeDiffData = $endTimeData - $startTimeData;
-		file_put_contents('php://stderr', "\n".print_r("Time to complete Raw Data: ".$timeDiffData , TRUE));	
-
-		$startTimeAuctions = microtime(true);
-		// Creating slug map so we don't have to query db
-		foreach($ahRealms as  $key => $current) {	
-			$realmSlugList= [];
-			$realmNameList = [];
-			
-			foreach($current as $aRealm) {		
-				array_push($realmSlugList, $aRealm['slug']);
-				array_push($realmNameList, $aRealm['name']);			
-			}
-			
-			array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
-			
-			unset($realmSlugList);
-			unset($realmNameList);
-		}
-			
-		// Insert auctions for a realm in one transaction per realm
-		foreach($auctions as  $key => $currentRealmAh) {		
-		
-			$conn->query('START TRANSACTION;');
-			
-			// This could be optimized by adding more than one "values" but for now the speed is less
-			// than one second fpr 3 realms.
-			foreach ($currentRealmAh as $key2 => $currentAuction) {
-			  
-				$id = $currentAuction['auc'];
-				$realmName = $currentAuction['ownerRealm']; 
-				$buyout = $currentAuction['buyout'];
-				$bid = $currentAuction['bid'];
-				$isPet = isset($currentAuction['petSpeciesId']);
-				$owner = $currentAuction['owner'];
-				$timeLeft = $currentAuction['timeLeft'];
-				$quantity = $currentAuction['quantity'];
-				
-				// Only inserting pets
-				if($isPet)
-				{
-					$speciesId = $currentAuction['petSpeciesId'];
-					
-					$sql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
-					VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')"
-							. "ON DUPLICATE KEY UPDATE "
-							. "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
-
-					if ($conn->query($sql) === TRUE) {
-						//echo "New record created successfully";
-					} else {
-						echo "Error: " . $sql . "<br>" . $conn->error;
-					}
-				}
-			}
-			
-			$conn->query('COMMIT;');
-			$conn->query('SET autocommit=1;');
-		}
-		
-		$endTimeAuctions = microtime(true);
-		$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
-		file_put_contents('php://stderr', print_r(" Time to complete auctions insert: " . $timeDiffAuctions . "\n" , TRUE));
-		file_put_contents('php://stderr', "\n".print_r("----------------------------------------------" , TRUE));
-		*/
+		insertAuctionData($auctions, $slugMaps);	
 	}
 
 	// Close the handles
@@ -312,7 +217,7 @@ function getAndParseAuctionData()
 	curl_multi_remove_handle($mh, $ch3);
 	curl_multi_close($mh);
 
-	// Add all this new data into the daily table
+	// Add all this new data into the daily table as well
 	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
 									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
 									FROM auctions_hourly_pet
@@ -325,13 +230,15 @@ function getAndParseAuctionData()
 }
 
 /**
-	TODO
+	Makes the initial call to the blizzard API and builds an array of the URLs 
+	that we want to get the data for.
+	
+	Returns and array of strings
 */
 function getDataUrls()
 {
 	// Connect to database
 	$conn = dbConnect();
-	
 
 	$realmsToPull = []; // List of all realms 
 	$realmsCompleted = []; // Used to know which connected realms we've done
@@ -355,10 +262,10 @@ function getDataUrls()
 		
 		// Inital call to get URL for Realm
 		if(!in_array($realmsToPull[$i], $realmsCompleted)) {
-			$urlResponse1 = file_get_contents('https://us.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
-			$result1 = json_decode($urlResponse1, true);	
-			$url1 = $result1['files'][0]['url'];			
-			array_push($dataUrls, $url1);
+			$urlResponse = file_get_contents('https://us.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
+			$result = json_decode($urlResponse, true);	
+			$url = $result['files'][0]['url'];			
+			array_push($dataUrls, $url);
 					
 			// Add all connected realms to the completed realms list so that we don't pull data that we already have		
 			$connectedRealmsSQL = "SELECT slug_child FROM realms_connected WHERE slug_parent = '".$realmsToPull[$i]."'";
@@ -375,7 +282,7 @@ function getDataUrls()
 			
 			// Add current realm to the completed list
 			array_push($realmsCompleted, $realmsToPull[$i]);
-			unset($urlResponse1);
+			unset($urlResponse);
 		}		
 	}
 	// End of getting URLs for each realm
@@ -386,7 +293,8 @@ function getDataUrls()
 }
 
 /**
-	TODO
+	Inserts the passed auction data into the auctions_hourly_table
+	
 */
 function insertAuctionData($auctions, $slugMaps)
 {
@@ -664,18 +572,6 @@ function standard_deviation($sample){
 	}
 }
 
-function loadFile($url) {
-	$ch = curl_init();
-
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_URL, $url);
-
-	$data = curl_exec($ch);
-	curl_close($ch);
-
-	return $data;
-}
 
 function dbConnect() {
 

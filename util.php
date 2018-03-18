@@ -38,4 +38,22 @@ function customLog($logType, $log) {
 	file_put_contents($config['errorLogFolder'].'/'.$logType.'_log_'.date("j.n.Y").'.txt', "[".date('Y-m-d H:i:s')."] -- ".$log."\n", FILE_APPEND);
 	
 }
+
+/**
+	TODO: Returns a string of wow gold
+*/
+function convertToWoWCurrency($value) {
+	
+	$value = floor($value);
+	$copper = $value%100;
+	$value = ($value-$copper)/100;
+	
+	$silver = $value%100;
+	$value = ($value-$silver)/100;
+	
+	$gold = $value;
+	
+	return number_format($gold).'<strong style="color:#CAAA00">g</strong> '.$silver.'<strong style="color:#777">s</strong> '.$copper.'<strong style="color:#B87333">c</strong>';
+	
+}
 ?>

@@ -1,0 +1,76 @@
+ <html>
+ 
+ <style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+ <title>HTML with PHP</title>
+ <body>
+ <h1>My Example</h1>
+ 
+<table border = '2'>
+<tr>
+<th>Name</th>
+<th>Realm</th>
+<th>Global Market Value</th>
+<th>Difference</th>
+</tr>
+<?php
+
+include("util.php");
+
+$conn = dbConnect();
+
+customLog("index", "logging function test");
+
+$sql = "select a.species_id, a.name, b.realm, a.gblavg, b.minbuy, a.gblavg-b.minbuy as diff from (select market_value_pets.species_id, avg(market_value) as gblavg, pets.name
+from market_value_pets
+inner join pets on market_value_pets.species_id = pets.species_id
+group by market_value_pets.species_id, name
+) a
+inner join (
+select min(buyout) as minbuy, species_id, realm from auctions_daily_pet group by species_id, realm) b
+on a.species_id = b.species_id
+where realm in ('cenarion-circle', 'wyrmrest-accord')
+and b.minbuy < (a.gblavg*0.5)
+order by diff desc";
+
+
+$globalAvgs = $conn->query($sql);
+
+if ($globalAvgs->num_rows > 0) {
+	// output data of each row
+	while($row = $globalAvgs->fetch_assoc()) {
+	
+		    echo "<tr>";
+			echo "<td>" . $row['name'] ."</td>";
+			echo "<td>" . $row['realm'] . "</td>";
+			echo "<td>" . convertToWoWCurrency($row['gblavg']) . "</td>";
+			echo "<td>" . convertToWoWCurrency($row['diff']) . "</td>";
+			echo "</tr>";
+	}
+} else {
+	echo "0 results";
+}
+
+?>
+</table>
+ <b>Here is some more HTML</b>
+
+
+ 
+ </body>
+ </html>

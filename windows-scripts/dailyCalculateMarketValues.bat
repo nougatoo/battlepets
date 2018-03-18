@@ -1,0 +1,1 @@
+php C:\Apache24\htdocs\battlepets\calculateMarketValues.php

@@ -178,6 +178,7 @@ function getDataUrls()
 			$urlResponse = file_get_contents('https://us.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
+			$lastModified = $result['files'][0]['lastModified'];			
 			array_push($dataUrls, $url);
 					
 			// Add all connected realms to the completed realms list so that we don't pull data that we already have		

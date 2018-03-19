@@ -49,6 +49,7 @@ function findSellersForRealm($realm)
 	
 	$myRealmName = "";
 	
+	// TODO - could move this to config
 	if ($realm == "proudmoore")
 		$myRealmName = "Lladox";
 	elseif ($realm == "cenarion-circle")
@@ -107,7 +108,7 @@ function findDealsForRealm($realm, $getSpecies)
 		INNER JOIN pets 
 			ON pets.species_id = market_value_pets_historical.species_id
 		INNER JOIN 
-			(SELECT min(buyout) as minbuy, species_id, realm, realms.slug as buy_realm_name FROM auctions_hourly_pet INNER JOIN realms ON realms.slug = realm WHERE buyout > 0 GROUP BY species_id, realm) buy_realm
+			(SELECT min(buyout) as minbuy, species_id, realm, realms.name as buy_realm_name FROM auctions_hourly_pet INNER JOIN realms ON realms.slug = realm WHERE buyout > 0 GROUP BY species_id, realm) buy_realm
 			ON pets.species_id = buy_realm.species_id
 		WHERE 
 			".$realmRes." AND 
@@ -135,6 +136,5 @@ function findDealsForRealm($realm, $getSpecies)
 	else
 		return $goodDealsRaw;
 }
-
 
 ?>

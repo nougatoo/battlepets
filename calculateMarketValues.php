@@ -149,6 +149,10 @@ function calculateDailyMarketValues()
 		}
 	}
 
+	// Clear out the daily auctions table
+	$removeDailySql = "DELETE FROM auctions_daily_pet;" ;
+	$conn->query($removeDailySql);
+	
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
 	customLog("calcMarketVal","Market Value Calculation time: " . $timeDiffMv);

@@ -57,19 +57,24 @@ function getAndParseAuctionData()
 		$ahRealms = []; // realms for which the auction data is for
 		$slugMaps = []; // maps of a realm name to a realm slug
 		
-		curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
-		customLog("auctionData","Url1: ".$dataUrls[$i]);
-		
+		if($dataUrls[$i]) {
+			curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
+		} else {
+			customLog("auctionData","Index ".($i+1)." Url1 Not Found");
+		}
+ 		
 		// Safeguard if the length of realms is not a multiple of 3
-		if(($i+1) < sizeof($dataUrls)) {
+		if(($i+1) < sizeof($dataUrls) &&  $dataUrls[$i+1]) {
 			curl_setopt($curls[1], CURLOPT_URL, $dataUrls[$i+1]);
-			customLog("auctionData","Url2: ".$dataUrls[$i+1]);
+		} else {
+			customLog("auctionData","Index ".($i+1)." Url2 Not Found");
 		}
 		
 		// Safeguard if the length of realms is not a multiple of 3
-		if(($i+2) < sizeof($dataUrls)) {
+		if(($i+2) < sizeof($dataUrls) && $dataUrls[$i+2]) {
 			curl_setopt($curls[2], CURLOPT_URL, $dataUrls[$i+2]);
-			customLog("auctionData","Url3: ".$dataUrls[$i+2]);
+		} else {
+			customLog("auctionData","Index ".($i+2)." Url3 Not Found");
 		}
 
 		// Curl multi handler
@@ -94,20 +99,24 @@ function getAndParseAuctionData()
 			array_push($ahRealms, $contents[$j]['realms']);
 		}
 		
-		// Creating slug map so we don't have to query db
-		foreach($ahRealms as  $key => $current) {	
-			$realmSlugList= [];
-			$realmNameList = [];
-			
-			foreach($current as $aRealm) {		
-				array_push($realmSlugList, $aRealm['slug']);
-				array_push($realmNameList, $aRealm['name']);			
+		if($auctions && $ahRealms) {
+			// Creating slug map so we don't have to query db
+			foreach($ahRealms as  $key => $current) {	
+				$realmSlugList= [];
+				$realmNameList = [];
+				
+				foreach($current as $aRealm) {		
+					array_push($realmSlugList, $aRealm['slug']);
+					array_push($realmNameList, $aRealm['name']);			
+				}
+				
+				array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
 			}
 			
-			array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
+			insertAuctionData($auctions, $slugMaps);	
+		} else {
+			customLog("auctionData","No auction data found from Url ".$i.".");
 		}
-		
-		insertAuctionData($auctions, $slugMaps);	
 	}
 
 	// Close the handles
@@ -164,22 +173,25 @@ function getDataUrls()
 			array_push($realmsToPull, $row["slug"]);
 		}
 	} else {
-		echo "0 results";
+		customLog("auctionData", "No realms for realmsToPul");
 	}
 
 	$numRealmsToPull = sizeof($realmsToPull);
 	
 	for($i = 0; $i<$numRealmsToPull; $i+=1) {
 
-		customLog("auctionData","Working on -- ".$realmsToPull[$i]);
-		
 		// Inital call to get URL for Realm
 		if(!in_array($realmsToPull[$i], $realmsCompleted)) {
 			$urlResponse = file_get_contents('https://us.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
-			$lastModified = $result['files'][0]['lastModified'];			
-			array_push($dataUrls, $url);
+			$lastModified = $result['files'][0]['lastModified'];		
+
+			if($url) {
+				array_push($dataUrls, $url);
+			} else {
+				customLog("auctionData", "Could not get URL for: ".$realmsToPull[$i]);
+			}
 					
 			// Add all connected realms to the completed realms list so that we don't pull data that we already have		
 			$connectedRealmsSQL = "SELECT slug_child FROM realms_connected WHERE slug_parent = '".$realmsToPull[$i]."'";
@@ -191,7 +203,7 @@ function getDataUrls()
 					array_push($realmsCompleted, $row["slug_child"]);
 				}
 			} else {
-				echo "0 results";
+				// Do nothing - has no connected realms
 			}
 			
 			// Add current realm to the completed list
@@ -200,8 +212,8 @@ function getDataUrls()
 		}		
 	}
 	// End of getting URLs for each realm
-	customLog("auctionData","SIZE OF dataUrls: ".sizeof($dataUrls));
-	customLog("auctionData","SIZE OF realmsCompleted: ".sizeof($realmsCompleted));
+	customLog("auctionData","Size OF dataUrls: ".sizeof($dataUrls));
+	customLog("auctionData","Size OF realmsCompleted: ".sizeof($realmsCompleted));
 	
 	return $dataUrls;
 }

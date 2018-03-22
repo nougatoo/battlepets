@@ -1,5 +1,87 @@
 <?php
 
+/*
+ WORKING HERE - TODO:
+ - pass in the character names for each realm somehow.
+ - I don't have to have duplicated code four times. Refactor into something managable with a for loop
+*/
+
+require_once('util.php');
+
+$characters = $_POST['characters'];
+$realms = $_POST['realms'];
+//$characters = json_decode($characters, true);
+ 
+echo '<table class="table table-striped table-hover">
+			<tr>
+				<th>Name</th>
+				<th>Realm</th>
+				<th>Global Market Value</th>
+				<th>Min Buy</th>
+				<th>% Global Market Value</th>
+				<th>Realm to Sell On</th>
+			</tr>
+			<tbody id="myTable1">';
+ 
+// Find good deals on wyrmrest
+$goodDealsRaw = findDealsForRealm($realms[0], FALSE);
+$goodDealsRawSpecies = findDealsForRealm($realms[0], TRUE);
+
+// Find good places to sell 
+$goodSellers1 = findSellersForRealm($realms[1]);
+
+// Now that good sells contains only good selling pets that i do not own, we find good selling pets which are also good deals
+$goodDealsFiltered1 = array_intersect($goodDealsRawSpecies,$goodSellers1);
+
+foreach($goodDealsRaw as $row) {
+
+		if(in_array($row['species_id'], $goodDealsFiltered1))
+		{
+			if($row['market_value_hist'] > 100000000)
+				echo '<tr class="success">';
+			else
+				echo "<tr>";
+			echo "<td>" . $row['name'] ."</td>";
+			echo "<td>" . $row['buy_realm_name'] . "</td>";
+			echo "<td>" . convertToWoWCurrency($row['market_value_hist']) . "</td>";
+			echo "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
+			echo "<td>" . $row['percent_of_market']. "%</td>";
+			echo "<td>" . "Wyrmrest Accord". "</td>";
+			echo "</tr>";	
+		}			
+}
+echo "</tbody></table><br/>";
+ /*
+ echo '<div class="container">
+  <h2>Basic Table</h2>
+  <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>            
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@example.com</td>
+      </tr>
+      <tr>
+        <td>July</td>
+        <td>Dooley</td>
+        <td>july@example.com</td>
+      </tr>
+    </tbody>
+  </table>
+</div>'; */
 /**
 	Finds good selling species_id from a given realm.
 */

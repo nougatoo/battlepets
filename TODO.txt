@@ -1,3 +1,6 @@
 TODO:
  - Add a last updated field to the realms table
 	- update this field when a realm is checked
+	
+	
+	- SANITIZE DB INPUTS

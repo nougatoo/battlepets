@@ -56,4 +56,23 @@ function convertToWoWCurrency($value) {
 	return number_format($gold).'<strong style="color:#CAAA00">g</strong> '.$silver.'<strong style="color:#777">s</strong> '.$copper.'<strong style="color:#B87333">c</strong>';
 	
 }
+
+/**
+	TODO
+*/
+
+function getRealmNameFromSlug($slug)
+{
+	$conn = dbConnect();
+	$sql = "SELECT name FROM realms WHERE slug = '" . $slug. "'"; 
+	$result = $conn->query($sql);
+
+	if ($result->num_rows > 0) {
+		// output data of each row
+		while($row = $result->fetch_assoc()) {		
+			return $row['name'];
+		}
+	}
+	
+}
 ?>

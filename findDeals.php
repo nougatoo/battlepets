@@ -4,95 +4,101 @@
  WORKING HERE - TODO:
  - pass in the character names for each realm somehow.
  - I don't have to have duplicated code four times. Refactor into something managable with a for loop
+ - Adding an echo for a load bar return would be cool!!!
 */
+
 
 require_once('util.php');
 
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
+$purpose = $_POST['purpose'];
 //$characters = json_decode($characters, true);
  
-echo '<table class="table table-striped table-hover">
-			<tr>
-				<th>Name</th>
-				<th>Realm</th>
-				<th>Global Market Value</th>
-				<th>Min Buy</th>
-				<th>% Global Market Value</th>
-				<th>Realm to Sell On</th>
-			</tr>
-			<tbody id="myTable1">';
- 
-// Find good deals on wyrmrest
-$goodDealsRaw = findDealsForRealm($realms[0], FALSE);
-$goodDealsRawSpecies = findDealsForRealm($realms[0], TRUE);
-
-// Find good places to sell 
-$goodSellers1 = findSellersForRealm($realms[1]);
-
-// Now that good sells contains only good selling pets that i do not own, we find good selling pets which are also good deals
-$goodDealsFiltered1 = array_intersect($goodDealsRawSpecies,$goodSellers1);
-
-foreach($goodDealsRaw as $row) {
-
-		if(in_array($row['species_id'], $goodDealsFiltered1))
-		{
-			if($row['market_value_hist'] > 100000000)
-				echo '<tr class="success">';
-			else
-				echo "<tr>";
-			echo "<td>" . $row['name'] ."</td>";
-			echo "<td>" . $row['buy_realm_name'] . "</td>";
-			echo "<td>" . convertToWoWCurrency($row['market_value_hist']) . "</td>";
-			echo "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
-			echo "<td>" . $row['percent_of_market']. "%</td>";
-			echo "<td>" . "Wyrmrest Accord". "</td>";
-			echo "</tr>";	
-		}			
+if($purpose == "buttonBar")
+{
+	createButtonBar($realms);
 }
-echo "</tbody></table><br/>";
- /*
- echo '<div class="container">
-  <h2>Basic Table</h2>
-  <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>            
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
-</div>'; */
+else
+{
+	//createRealmButtonBar();
+	// Find good deals on wyrmrest
+	/*
+	$goodDealsRaw = findDealsForRealm($realms[0], FALSE);
+	$goodDealsRawSpecies = findDealsForRealm($realms[0], TRUE);
+	*/
+
+	for($i = 0; $i<sizeof($realms); $i++)
+	{
+
+		echo '<h2 id="'.$realms[$i].'">' . getRealmNameFromSlug($realms[$i]) . "</h2>";
+
+
+		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE);
+		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE);
+		
+		for($j = 0; $j<sizeof($realms); $j++)
+		{
+			if($realms[$i] === $realms[$j])
+				continue;
+			
+			$tableHTML = '<table class="table table-striped table-hover">
+									<tr>
+										<th>Name</th>
+										<th>Realm</th>
+										<th>Global Market Value</th>
+										<th>Min Buy</th>
+										<th>% Global Market Value</th>
+										<th>Realm to Sell On</th>
+									</tr>
+									<tbody id="myTable1">';
+						
+			// Find good places to sell 
+			$goodSellers1 = findSellersForRealm($realms[$j], $characters[$j]);
+
+			// Now that good sells contains only good selling pets that i do not own, we find good selling pets which are also good deals
+			$goodDealsFiltered1 = array_intersect($goodDealsRawSpecies,$goodSellers1);
+
+			foreach($goodDealsRaw as $row) {
+
+					if(in_array($row['species_id'], $goodDealsFiltered1))
+					{
+						if($row['market_value_hist'] > 100000000)
+							$tableHTML .= '<tr class="success">';
+						else
+							$tableHTML.= "<tr>";
+						
+						$tableHTML .= "<td>" . $row['name'] ."</td>";
+						$tableHTML .=  "<td>" . $row['buy_realm_name'] . "</td>";
+						$tableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist']) . "</td>";
+						$tableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
+						$tableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
+						$tableHTML .=  "<td>" . getRealmNameFromSlug($realms[$j]). "</td>";
+						$tableHTML .=  "</tr>";	
+					}			
+			}
+			$tableHTML .=  "</tbody></table><br/>"; 
+			
+			echo $tableHTML;
+		}
+
+	}
+}
 /**
 	Finds good selling species_id from a given realm.
 */
-function findSellersForRealm($realm)
+function findSellersForRealm($realm, $character)
 {
 	$conn = dbConnect();
 	
+	/*
 	$realmRes = "(realm =  '".$realm."')";
 	// TODO - make this beter
 	if($realm == "cenarion-circle")
 		$realmRes ="(realm =  '".$realm."' OR realm = 'sisters-of-elune')";
+	*/
+	
+	$realmRes = buildingRealmRes($realm);
 	
 	$sql = "
 			SELECT 
@@ -129,22 +135,10 @@ function findSellersForRealm($realm)
 		echo "0 results";
 	}
 	
-	$myRealmName = "";
-	
-	// TODO - could move this to config
-	if ($realm == "proudmoore")
-		$myRealmName = "Lladox";
-	elseif ($realm == "cenarion-circle")
-		$myRealmName = 'Irone';
-	elseif ($realm == "wyrmrest-accord")
-		$myRealmName = 'Valamyr';
-	elseif ($realm == "emerald-dream")
-		$myRealmName = 'Åurd';
-		
 	// Now we have a list of good sellers on this realm.
 	// Lets remove all species that i'm already selling
 	$currentlySelling = []; // Species_id
-	$sql = "SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE owner = '".$myRealmName."' and realm = '".$realm."'";
+	$sql = "SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE owner = '".$character."' and realm = '".$realm."'";
 	$sellingResult = $conn->query($sql);
 
 	if ($sellingResult->num_rows > 0) {
@@ -168,13 +162,8 @@ function findSellersForRealm($realm)
 function findDealsForRealm($realm, $getSpecies)
 {
 	$conn = dbConnect();
+	$realmRes = buildingRealmRes($realm);
 
-	$realmRes = "(realm =  '".$realm."')";
-	
-	// TODO - make this beter
-	if($realm == "cenarion-circle")
-		$realmRes ="(realm =  '".$realm."' OR realm = 'sisters-of-elune')";
-	
 	// Gets the pets that are a good deal on selected realm (Less than 50% global market avg)
 	$goodDealsRawSql = "
 		SELECT 
@@ -218,5 +207,63 @@ function findDealsForRealm($realm, $getSpecies)
 	else
 		return $goodDealsRaw;
 }
+
+
+function buildingRealmRes($realm) 
+{
+	$conn = dbConnect();
+	$realmRes = "(realm =  '".$realm."'";
+	
+	$sql = "SELECT slug_child FROM realms_connected WHERE slug_parent = '". $realm . "'";
+	$result = $conn->query($sql);
+	
+	if ($result->num_rows > 0) {
+		// output data of each row
+		while($row = $result->fetch_assoc()) {
+			$realmRes .= " OR realm = '" . $row['slug_child'] . "'";
+		}
+	} 
+	
+	$realmRes .= ")";
+	return $realmRes;
+}
+
+
+/**
+	TODO
+*/
+function createButtonBar($realms)
+{
+	foreach($realms as $aRealm) {
+		$buttonBarHTML = '<a href="#';
+		
+		$realmName = getRealmNameFromSlug($aRealm);
+		$buttonBarHTML .= $aRealm . '" class="btn btn-primary btn-bar">'.$realmName.'</a>';
+			
+		echo $buttonBarHTML;
+		customLog("findData", $buttonBarHTML);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ?>

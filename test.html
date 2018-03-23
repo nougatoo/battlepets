@@ -1,7 +1,7 @@
 <html>
 	
 <head>
-	<title>Bootstrap Example</title>
+	<title>Battle Pets</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -35,16 +35,16 @@
 
 <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="1">
 	<ul class="nav navbar-nav">
-		<li class="active"><a href="#">Basic Topnav</a></li>
-		<li><a href="#">Page 1</a></li>
-		<li><a href="#">Page 2</a></li>
+		<li class="active"><a href="#">Battle Pets</a></li>
+		<li><a href="#">Home</a></li>
+		<li><a href="#">View All Pets</a></li>
 		<li><a href="#">Page 3</a></li>
 	</ul>
 </nav>
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-sm-3" style="background-color:lavender;" width >
+		<div class="col-sm-2" style="background-color:lavender;" width >
 			<h3>Select Characters</h3>
 			<br/>
 			<br/>
@@ -52,24 +52,22 @@
 				<input type="text" class="form-control" id="character1"  placeholder="Character 1" onchange="activateDealsButton()">
 				<select class="form-control" id="realm1">
 					<option></option>
-					<option>cenarion-circle</option>
-					<option>wyrmrest-accord</option>
+					<option value="cenarion-circle">Cenarion Circle</option>
+					<option value="wyrmrest-accord">Wyrmrest Accord</option>
 					<option>Proudmoore</option>
 					<option>4</option>
 				</select>
 			</div>
-			<br/>
 			<div class="form-group">
 				<input type="text" class="form-control" id="character2"  placeholder="Character 2">
 				<select class="form-control" id="realm2">
 					<option></option>
-					<option>cenarion-circle</option>
-					<option>wyrmrest-accord</option>
+					<option value="cenarion-circle">Cenarion Circle</option>
+					<option value="wyrmrest-accord">Wyrmrest Accord</option>
 					<option>Proudmoore</option>
 					<option>4</option>
 				</select>
 			</div>
-			<br/>
 			<div class="form-group">
 				<input type="text" class="form-control" id="character3"  placeholder="Character 3">
 				<select class="form-control" id="realm3">
@@ -79,7 +77,6 @@
 					<option>4</option>
 				</select>
 			</div>
-			<br/>
 			<div class="form-group">
 				<input type="text" class="form-control" id="character4"  placeholder="Character 4">
 				<select class="form-control" id="realm4">
@@ -89,10 +86,9 @@
 					<option>4</option>
 				</select>
 			</div>	
-			<br/>
 			<button type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()">Find Deals</button>
 		</div>
-		<div id="dataSection" class="col-sm-9" style="background-color:lavenderblush;">
+		<div id="dataSection" class="col-sm-10" style="background-color:lavenderblush;">
 			<center>
 				<h1>Please select at least two characters</h1>
 				<br/>

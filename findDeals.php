@@ -8,25 +8,19 @@
 */
 
 
+
 require_once('util.php');
+
 
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
 $purpose = $_POST['purpose'];
 //$characters = json_decode($characters, true);
  
-if($purpose == "buttonBar")
-{
+if($purpose == "buttonBar") {
 	createButtonBar($realms);
 }
-else
-{
-	//createRealmButtonBar();
-	// Find good deals on wyrmrest
-	/*
-	$goodDealsRaw = findDealsForRealm($realms[0], FALSE);
-	$goodDealsRawSpecies = findDealsForRealm($realms[0], TRUE);
-	*/
+else {
 
 	for($i = 0; $i<sizeof($realms); $i++)
 	{
@@ -84,6 +78,7 @@ else
 
 	}
 }
+
 /**
 	Finds good selling species_id from a given realm.
 */
@@ -126,28 +121,22 @@ function findSellersForRealm($realm, $character)
 	$sellers = []; // species_id
 	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-		// output data of each row
-		while($row = $result->fetch_assoc()) {		
+	if($result) {
+		while($row = $result->fetch()) {		
 				array_push($sellers, $row['species_id']);		
 		}
-	} else {
-		echo "0 results";
 	}
-	
+
 	// Now we have a list of good sellers on this realm.
 	// Lets remove all species that i'm already selling
 	$currentlySelling = []; // Species_id
 	$sql = "SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE owner = '".$character."' and realm = '".$realm."'";
 	$sellingResult = $conn->query($sql);
 
-	if ($sellingResult->num_rows > 0) {
-		// output data of each row
-		while($row = $sellingResult->fetch_assoc()) {		
+	if($sellingResult) {		
+		while($row = $sellingResult->fetch()) {		
 				array_push($currentlySelling, $row['species_id']);		
 		}
-	} else {
-		echo "0 results";
 	}
 
 	$sellers = array_diff($sellers,$currentlySelling);
@@ -191,15 +180,13 @@ function findDealsForRealm($realm, $getSpecies)
 	$goodDealsRaw = []; 
 	$result = $conn->query($goodDealsRawSql);
 
-	if ($result->num_rows > 0) {
+	if($result) {
 		// output data of each row
-		while($row = $result->fetch_assoc()) {	
+		while($row = $result->fetch()) {	
 		
 				array_push($goodDealsRawSpecies, $row['species_id']);
 				array_push($goodDealsRaw, $row);				
 		}
-	} else {
-		echo "0 results";
 	}
 		
 	if($getSpecies)
@@ -217,12 +204,12 @@ function buildingRealmRes($realm)
 	$sql = "SELECT slug_child FROM realms_connected WHERE slug_parent = '". $realm . "'";
 	$result = $conn->query($sql);
 	
-	if ($result->num_rows > 0) {
-		// output data of each row
-		while($row = $result->fetch_assoc()) {
+	if($result) {	
+		while($row = $result->fetch()) {
 			$realmRes .= " OR realm = '" . $row['slug_child'] . "'";
 		}
-	} 
+	}
+
 	
 	$realmRes .= ")";
 	return $realmRes;
@@ -241,7 +228,7 @@ function createButtonBar($realms)
 		$buttonBarHTML .= $aRealm . '" class="btn btn-primary btn-bar">'.$realmName.'</a>';
 			
 		echo $buttonBarHTML;
-		customLog("findData", $buttonBarHTML);
+		//customLog("findData", $buttonBarHTML);
 	}
 	
 }

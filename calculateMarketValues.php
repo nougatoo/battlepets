@@ -5,7 +5,7 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-customLog("calcMarketVal","Calculating Daily Market Values...");
+error_log("Calculating Daily Market Values...", 0);
 calculateDailyMarketValues();
 
 /**
@@ -23,12 +23,12 @@ function calculateDailyMarketValues()
 	//$sql = "SELECT slug FROM realms WHERE slug = 'eredar' or slug = 'gorefiend' or slug = 'spinebreaker' or slug = 'wildhammer'";
 	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-		while($row = $result->fetch_assoc()) {
+	if ($result) {
+		while($row = $result->fetch()) {
 			array_push($allRealms, $row["slug"]);
 		}
 	} else {
-		customLog("calcMarketVal","0 results");
+		error_log("0 results", 0);
 	}
 
 	// Calculate the MV for each active pet on each realm
@@ -42,24 +42,27 @@ function calculateDailyMarketValues()
 			$connectedRealmsSQL = "SELECT slug_child FROM realms_connected WHERE slug_parent = '".$allRealms[$rkey]."'";
 			$connectedRealmsResult = $conn->query($connectedRealmsSQL);
 
-			if ($connectedRealmsResult->num_rows > 0) {
+			if ($connectedRealmsResult) {
 				// output data of each row
-				while($row = $connectedRealmsResult->fetch_assoc()) {
+				while($row = $connectedRealmsResult->fetch()) {
 					array_push($connectedRealms, $row["slug_child"]);
 				}
 			} else {
-				customLog("calcMarketVal","No Connected Realms");
+				error_log("No Connected Realms",0);
 			}
 			
 			// Need to include the current realm
 			array_push($connectedRealms, $allRealms[$rkey]);
 			$connectedRealmClause = implode("' OR realm = '",$connectedRealms);
 
-			$sql = "SELECT DISTINCT species_id FROM auctions_daily_pet WHERE (realm = '".$connectedRealmClause."') AND buyout > 0 ";
+			$sql = "SELECT DISTINCT species_id FROM auctions_daily_pet WHERE (realm = '".$connectedRealmClause."') AND buyout > 0;";
 			//$sql = "SELECT DISTINCT species_id FROM auctions_daily_pet WHERE (realm = '".$connectedRealmClause."') AND buyout > 0 and species_id = '242'";
 			$result = $conn->query($sql);
-			while($row = $result->fetch_assoc()) {
-				array_push($distinctPets, $row["species_id"]);
+			
+			if($result) {
+				while($row = $result->fetch()) {
+					array_push($distinctPets, $row["species_id"]);
+				}
 			}
 			
 			// For each distinct pet that was found on this realm today, calculate it's market value
@@ -70,13 +73,15 @@ function calculateDailyMarketValues()
 				// Build an array of buyouts for this pet from this realm and it's connected realms
 				// For some reason it is faster to run multiple queries instead of 1 query with multiple where's for the realms
 				foreach($connectedRealms as $aConnRealm) {		
-					$sql = "SELECT buyout FROM auctions_daily_pet WHERE realm = '".$aConnRealm."' AND species_id = '" . $currentPet . "' AND buyout > 0";
+					$sql = "SELECT buyout FROM auctions_daily_pet WHERE realm = '".$aConnRealm."' AND species_id = '" . $currentPet . "' AND buyout > 0;";
 					//$sql = "SELECT buyout FROM auctions_daily_pet WHERE realm = 'aegwynn' OR realm = 'bonechewer' OR realm = 'daggerspine' OR realm = 'gurubashi' OR realm = 'hakkar' AND species_id = '" . $currentPet . "' ORDER BY buyout";
 					$result = $conn->query($sql);
 					
-					while($row = $result->fetch_assoc()) {
-						array_push($petBuyouts, $row["buyout"]);
-					}	
+					if($result) {
+						while($row = $result->fetch()) {
+							array_push($petBuyouts, $row["buyout"]);
+						}	
+					}
 				}
 				
 				// Sort the pet buyouts from least to greatest
@@ -129,13 +134,12 @@ function calculateDailyMarketValues()
 				$petMarketValue = floor(array_sum($petBuyouts)/count($petBuyouts)); 
 									
 				// Insert into market_value_pets
-				$mvInsertSql = "INSERT INTO market_value_pets (species_id, realm, date, market_value)
-														VALUES ('".$currentPet."' , '".$currentRealm."' , '".date('Y-m-d H:i:s')."' , '".$petMarketValue."')";
+				$mvInsertSql = "INSERT INTO market_value_pets (species_id, realm, date, market_value) VALUES ('".$currentPet."' , '".$currentRealm."' , '".date('Y-m-d H:i:s')."' , '".$petMarketValue."')";
 			
 				if ($conn->query($mvInsertSql) === TRUE) {
 					//echo "New record created successfully";
 				} else {
-					customLog("calcMarketVal","Error: " . $sql . "<br>" . $conn->error);
+					error_log("Error: " . $sql, 0);
 				}
 				
 				$conn->query('COMMIT;');
@@ -155,7 +159,7 @@ function calculateDailyMarketValues()
 	
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
-	customLog("calcMarketVal","Market Value Calculation time: " . $timeDiffMv);
+	error_log("Market Value Calculation time: " . $timeDiffMv, 0);
 }
 
 ?>

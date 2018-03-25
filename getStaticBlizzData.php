@@ -2,16 +2,16 @@
 
 require_once('util.php');
 
+
 set_time_limit(0);
-ini_set('memory_limit', '1024M');
 
-customLog("getStaticBlizzData","Getting pet data...");
+//customLog("getStaticBlizzData","Getting pet data...");
 getPetData();
-customLog("getStaticBlizzData","Done getting pet data...");
+//customLog("getStaticBlizzData","Done getting pet data...");
 
-customLog("getStaticBlizzData","Geting realm data...");
+//customLog("getStaticBlizzData","Geting realm data...");
 getRealmData();
-customLog("getStaticBlizzData","Done getting realm data...");
+//customLog("getStaticBlizzData","Done getting realm data...");
 
 /** 
  *		Gets JSON pet data from blizzards master pet API.

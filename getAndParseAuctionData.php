@@ -5,9 +5,9 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-customLog("auctionData","Calling getAndParseAuctionData...");
+echo ("Calling getAndParseAuctionData...");
 getAndParseAuctionData();
-customLog("auctionData","Finished calling getAndParseAuctionData...");
+////customLog("auctionData","Finished calling getAndParseAuctionData...");
 
 /** 
  *		Gets the pet auction data from blizzard. 
@@ -60,21 +60,21 @@ function getAndParseAuctionData()
 		if($dataUrls[$i]) {
 			curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
 		} else {
-			customLog("auctionData","Index ".($i+1)." Url1 Not Found");
+			//customLog("auctionData","Index ".($i+1)." Url1 Not Found");
 		}
  		
 		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+1) < sizeof($dataUrls) &&  $dataUrls[$i+1]) {
 			curl_setopt($curls[1], CURLOPT_URL, $dataUrls[$i+1]);
 		} else {
-			customLog("auctionData","Index ".($i+1)." Url2 Not Found");
+			//customLog("auctionData","Index ".($i+1)." Url2 Not Found");
 		}
 		
 		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+2) < sizeof($dataUrls) && $dataUrls[$i+2]) {
 			curl_setopt($curls[2], CURLOPT_URL, $dataUrls[$i+2]);
 		} else {
-			customLog("auctionData","Index ".($i+2)." Url3 Not Found");
+			//customLog("auctionData","Index ".($i+2)." Url3 Not Found");
 		}
 
 		// Curl multi handler
@@ -115,7 +115,8 @@ function getAndParseAuctionData()
 			
 			insertAuctionData($auctions, $slugMaps);	
 		} else {
-			customLog("auctionData","No auction data found from Url ".$i.".");
+			//customLog("auctionData","No auction data found from Url ".$i.".");
+			error_log("No auction data found from Url ".$i.".", 0);
 		}
 	}
 
@@ -130,16 +131,11 @@ function getAndParseAuctionData()
 	$conn->query($removeHourlySql);
 	
 	// Move this from the staging table to the real hourly table
-	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
-									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
-									FROM auctions_hourly_pet_stg;";							
+	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg;";							
 	$conn->query($transferOutOfStgSql);
 	
 	// Add all this new data into the daily table as well
-	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity)
-									SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity
-									FROM auctions_hourly_pet
-									ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
+	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
 	$conn->query($transferToDailySql);
 	
 	// Clear out the staging table
@@ -148,7 +144,7 @@ function getAndParseAuctionData()
 
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
-	customLog("auctionData","Final time". ": " . $timeDiffTotal . " - ");
+	//customLog("auctionData","Final time". ": " . $timeDiffTotal . " - ");
 }
 
 /**
@@ -168,12 +164,12 @@ function getDataUrls()
 	$sql = "SELECT slug FROM realms";
 	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-		while($row = $result->fetch_assoc()) {
+	if ($result) {
+		while($row = $result->fetch()) {
 			array_push($realmsToPull, $row["slug"]);
 		}
 	} else {
-		customLog("auctionData", "No realms for realmsToPul");
+		//customLog("auctionData", "No realms for realmsToPul");
 	}
 
 	$numRealmsToPull = sizeof($realmsToPull);
@@ -190,16 +186,17 @@ function getDataUrls()
 			if($url) {
 				array_push($dataUrls, $url);
 			} else {
-				customLog("auctionData", "Could not get URL for: ".$realmsToPull[$i]);
+				//customLog("auctionData", "Could not get URL for: ".$realmsToPull[$i]);
+				error_log("Could not get URL for: ".$realmsToPull[$i], 0);
 			}
 					
 			// Add all connected realms to the completed realms list so that we don't pull data that we already have		
 			$connectedRealmsSQL = "SELECT slug_child FROM realms_connected WHERE slug_parent = '".$realmsToPull[$i]."'";
 			$connectedRealmsResult = $conn->query($connectedRealmsSQL);
 
-			if ($connectedRealmsResult->num_rows > 0) {
+			if ($connectedRealmsResult) {
 				// output data of each row
-				while($row = $connectedRealmsResult->fetch_assoc()) {
+				while($row = $connectedRealmsResult->fetch()) {
 					array_push($realmsCompleted, $row["slug_child"]);
 				}
 			} else {
@@ -212,8 +209,10 @@ function getDataUrls()
 		}		
 	}
 	// End of getting URLs for each realm
-	customLog("auctionData","Size OF dataUrls: ".sizeof($dataUrls));
-	customLog("auctionData","Size OF realmsCompleted: ".sizeof($realmsCompleted));
+	//customLog("auctionData","Size OF dataUrls: ".sizeof($dataUrls));
+	error_log("Size OF dataUrls: ".sizeof($dataUrls),0);
+	//customLog("auctionData","Size OF realmsCompleted: ".sizeof($realmsCompleted));
+	error_log("Size OF realmsCompleted: ".sizeof($realmsCompleted), 0);
 	
 	return $dataUrls;
 }
@@ -254,15 +253,12 @@ function insertAuctionData($auctions, $slugMaps)
 			{
 				$speciesId = $currentAuction['petSpeciesId'];
 				
-				$sql = "INSERT INTO auctions_hourly_pet_stg (id, species_id, realm, buyout, bid, owner, time_left, quantity)
-				VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')"
-						. "ON DUPLICATE KEY UPDATE "
-						. "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
+				$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')". " ON DUPLICATE KEY UPDATE ". "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
 
 				if ($conn->query($sql) === TRUE) {
 					//echo "New record created successfully";
 				} else {
-					echo "Error: " . $sql . "<br>" . $conn->error;
+					//error_log("Error: " . $sql, 0 );
 				}
 			}
 		}
@@ -273,7 +269,25 @@ function insertAuctionData($auctions, $slugMaps)
 	
 	$endTimeAuctions = microtime(true);
 	$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
-	customLog("auctionData","Time to complete auctions insert: " . $timeDiffAuctions);
-	customLog("auctionData","----------------------------------------------");
+	//customLog("auctionData","Time to complete auctions insert: " . $timeDiffAuctions);
+	error_log("Time to complete auctions insert: " . $timeDiffAuctions, 0);
+	//customLog("auctionData","----------------------------------------------");
+	error_log("----------------------------------------------", 0);
 }
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

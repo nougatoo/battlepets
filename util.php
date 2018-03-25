@@ -1,5 +1,6 @@
 <?php
 
+
 /**
 	TODO
 */
@@ -13,7 +14,8 @@ function standard_deviation($sample){
 
 
 function dbConnect() {
-
+	
+	/*
     // Define connection as a static variable, to avoid connecting more than once 
     static $connection;
 
@@ -30,6 +32,15 @@ function dbConnect() {
         return mysqli_connect_error(); 
     }
     return $connection;
+	*/
+	
+	static $conn;
+	
+	$dbserver = 'mysql:dbname=' . "battlepets". ';host=' . "battlepets-example.cqei6votoxra.us-east-2.rds.amazonaws.com";
+	$conn = new PDO($dbserver, "nougatoo", "Brandonbrien12!");
+
+	return $conn;
+		
 }
 
 function customLog($logType, $log) {
@@ -67,12 +78,9 @@ function getRealmNameFromSlug($slug)
 	$sql = "SELECT name FROM realms WHERE slug = '" . $slug. "'"; 
 	$result = $conn->query($sql);
 
-	if ($result->num_rows > 0) {
-		// output data of each row
-		while($row = $result->fetch_assoc()) {		
-			return $row['name'];
-		}
+	while($row = $result->fetch()) {		
+		return $row['name'];
 	}
-	
+
 }
 ?>

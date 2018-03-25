@@ -78,6 +78,7 @@ function findDeals() {
 	
 	data["purpose"] = "buttonBar";
 	
+	
 	$.ajax({
 		url: 'findDeals.php',
 		type: 'POST',
@@ -87,15 +88,18 @@ function findDeals() {
 		}
 	});
 	
+	
+	
 	data["purpose"] = "tableData";
 		$.ajax({
-		url: 'findDeals.php',
+		url: 'calculateMarketValues.php',
 		type: 'POST',
 		data: data,
 		success:function(response){			
 			$('#tableArea')[0].innerHTML += response;
 		}
 	});
+	
 }
 
 function topFunction() {

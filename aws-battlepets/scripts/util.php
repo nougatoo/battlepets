@@ -43,10 +43,9 @@ function dbConnect() {
 		
 }
 
-function customLog($logType, $log) {
+function customLog($type, $text) {
 	
-	$config = parse_ini_file('C:/Apache24/conf/config.ini'); 
-	file_put_contents($config['errorLogFolder'].'/'.$logType.'_log_'.date("j.n.Y").'.txt', "[".date('Y-m-d H:i:s')."] -- ".$log."\n", FILE_APPEND);
+	echo ("[".date('Y-m-d H:i:s')."][".$type."] -- ".$text."\n");
 	
 }
 

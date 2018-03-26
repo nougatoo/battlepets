@@ -1,2 +1,0 @@
-# The newline at the end of this file is extremely important.  Cron won't run without it.
-*/30 * * * * root /usr/bin/php /var/app/current/getAndParseAuctionData.php > /dev/null

@@ -40,13 +40,13 @@ function findDeals() {
 	
 	// For faster testing...
 	
-	char1 = 'valamyr';
-	char2 = 'Irone';
+	char1 = 'Irone';
+	char2 = 'valamyr';
 	char3 = 'Lladox';
 	char4 = "";
 	
-	realm1 = 'wyrmrest-accord';
-	realm2 = 'cenarion-circle';
+	realm1 = 'cenarion-circle';
+	realm2 = 'wyrmrest-accord';
 	realm3 = 'proudmoore';
 	realm4 = "";
 	
@@ -92,7 +92,7 @@ function findDeals() {
 	
 	data["purpose"] = "tableData";
 		$.ajax({
-		url: 'calculateMarketValues.php',
+		url: 'findDeals.php',
 		type: 'POST',
 		data: data,
 		success:function(response){			

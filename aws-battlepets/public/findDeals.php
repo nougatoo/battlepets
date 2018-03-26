@@ -9,7 +9,7 @@
 
 
 
-require_once('util.php');
+require_once('../scripts/util.php');
 
 
 $characters = $_POST['characters'];

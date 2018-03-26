@@ -43,7 +43,7 @@ function getPetData()
 		if ($conn->query($sql) === TRUE) {
 			//echo "New record created successfully";
 		} else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			echo "Error: " . $sql . "<br>";
 		}
 	}
 }
@@ -95,7 +95,7 @@ function getRealmData()
 				if ($conn->query($sql) === TRUE) {
 					//echo "New realm created successfully<br/>";
 				} else {
-					echo "Error: " . $sql . "<br>" . $conn->error;
+					echo "Error: " . $sql . "<br>";
 				}	
 			}			
 		}

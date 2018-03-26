@@ -5,7 +5,7 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-error_log("Calculating Daily Market Values...", 0);
+customLog ("INFO", "Calculating Daily Market Values...");
 calculateDailyMarketValues();
 
 /**
@@ -28,7 +28,7 @@ function calculateDailyMarketValues()
 			array_push($allRealms, $row["slug"]);
 		}
 	} else {
-		error_log("0 results", 0);
+		customLog ("ERROR", "0 results");
 	}
 
 	// Calculate the MV for each active pet on each realm
@@ -48,7 +48,7 @@ function calculateDailyMarketValues()
 					array_push($connectedRealms, $row["slug_child"]);
 				}
 			} else {
-				error_log("No Connected Realms",0);
+				customLog ("INFO", "No Connected Realms");
 			}
 			
 			// Need to include the current realm
@@ -132,14 +132,15 @@ function calculateDailyMarketValues()
 				
 				// Simple average of what's left is our final MV for the day
 				$petMarketValue = floor(array_sum($petBuyouts)/count($petBuyouts)); 
-									
+							
+				// TODO: Strange error where it's trying to insert multiple duplicate records
 				// Insert into market_value_pets
-				$mvInsertSql = "INSERT INTO market_value_pets (species_id, realm, date, market_value) VALUES ('".$currentPet."' , '".$currentRealm."' , '".date('Y-m-d H:i:s')."' , '".$petMarketValue."')";
+				$mvInsertSql = "INSERT INTO market_value_pets (`species_id`, `realm`, `date`, `market_value`) VALUES ('".$currentPet."' , '".$currentRealm."' , '".date('Y-m-d H:i:s')."' , '".$petMarketValue."')";
 			
 				if ($conn->query($mvInsertSql) === TRUE) {
-					//echo "New record created successfully";
+					//customLog "New record created successfully";
 				} else {
-					error_log("Error: " . $sql, 0);
+					//customLog ("ERROR", $mvInsertSql);
 				}
 				
 				$conn->query('COMMIT;');
@@ -159,7 +160,7 @@ function calculateDailyMarketValues()
 	
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
-	error_log("Market Value Calculation time: " . $timeDiffMv, 0);
+	customLog ("INFO", "Market Value Calculation time: " . $timeDiffMv);
 }
 
 ?>

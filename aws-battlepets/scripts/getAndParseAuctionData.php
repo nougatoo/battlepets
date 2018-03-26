@@ -5,7 +5,7 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-echo ("Calling getAndParseAuctionData...");
+customLog ("INFO", "Calling getAndParseAuctionData...");
 getAndParseAuctionData();
 ////customLog("auctionData","Finished calling getAndParseAuctionData...");
 
@@ -116,7 +116,7 @@ function getAndParseAuctionData()
 			insertAuctionData($auctions, $slugMaps);	
 		} else {
 			//customLog("auctionData","No auction data found from Url ".$i.".");
-			error_log("No auction data found from Url ".$i.".", 0);
+			customLog("ERROR", "No auction data found from Url ".$i.".");
 		}
 	}
 
@@ -187,7 +187,7 @@ function getDataUrls()
 				array_push($dataUrls, $url);
 			} else {
 				//customLog("auctionData", "Could not get URL for: ".$realmsToPull[$i]);
-				error_log("Could not get URL for: ".$realmsToPull[$i], 0);
+				customLog ("ERROR", "Could not get URL for: ".$realmsToPull[$i]);
 			}
 					
 			// Add all connected realms to the completed realms list so that we don't pull data that we already have		
@@ -210,9 +210,9 @@ function getDataUrls()
 	}
 	// End of getting URLs for each realm
 	//customLog("auctionData","Size OF dataUrls: ".sizeof($dataUrls));
-	error_log("Size OF dataUrls: ".sizeof($dataUrls),0);
+	customLog ("INFO", "Size OF dataUrls: ".sizeof($dataUrls));
 	//customLog("auctionData","Size OF realmsCompleted: ".sizeof($realmsCompleted));
-	error_log("Size OF realmsCompleted: ".sizeof($realmsCompleted), 0);
+	customLog ("INFO", "Size OF realmsCompleted: ".sizeof($realmsCompleted));
 	
 	return $dataUrls;
 }
@@ -256,7 +256,7 @@ function insertAuctionData($auctions, $slugMaps)
 				$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')". " ON DUPLICATE KEY UPDATE ". "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
 
 				if ($conn->query($sql) === TRUE) {
-					//echo "New record created successfully";
+					//customLog "New record created successfully";
 				} else {
 					//error_log("Error: " . $sql, 0 );
 				}
@@ -270,9 +270,9 @@ function insertAuctionData($auctions, $slugMaps)
 	$endTimeAuctions = microtime(true);
 	$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
 	//customLog("auctionData","Time to complete auctions insert: " . $timeDiffAuctions);
-	error_log("Time to complete auctions insert: " . $timeDiffAuctions, 0);
+	customLog ("INFO", "Time to complete auctions insert: " . $timeDiffAuctions);
 	//customLog("auctionData","----------------------------------------------");
-	error_log("----------------------------------------------", 0);
+	customLog ("INFO", "----------------------------------------------");
 }
 ?>
 

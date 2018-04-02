@@ -57,7 +57,11 @@ else {
 
 					if(in_array($row['species_id'], $goodDealsFiltered1))
 					{
-						if($row['market_value_hist'] > 100000000)
+						if($row['market_value_hist'] > 200000000)
+							$tableHTML .= '<tr class="epicdeal">';
+						elseif($row['market_value_hist'] > 100000000)
+							$tableHTML .= '<tr class="bluedeal">';
+						elseif($row['market_value_hist'] > 50000000)
 							$tableHTML .= '<tr class="success">';
 						else
 							$tableHTML.= "<tr>";

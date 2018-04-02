@@ -43,12 +43,12 @@ function findDeals() {
 	char1 = 'Irone';
 	char2 = 'valamyr';
 	char3 = 'Lladox';
-	char4 = "";
+	char4 = 'Åurd';
 	
 	realm1 = 'cenarion-circle';
 	realm2 = 'wyrmrest-accord';
 	realm3 = 'proudmoore';
-	realm4 = "";
+	realm4 = 'emerald-dream';
 	
 	var data = {
 		"characters": [],

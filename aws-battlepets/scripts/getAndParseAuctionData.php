@@ -58,45 +58,54 @@ function getAndParseAuctionData()
 		$slugMaps = []; // maps of a realm name to a realm slug
 		
 		if($dataUrls[$i]) {
+			customLog("INFO","Index ".($i)." URL: ".$dataUrls[$i]);
 			curl_setopt($curls[0], CURLOPT_URL, $dataUrls[$i]);
 		} else {
-			//customLog("auctionData","Index ".($i+1)." Url1 Not Found");
+			customLog("ERROR","Index ".($i)." Url1 Not Found");
 		}
  		
 		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+1) < sizeof($dataUrls) &&  $dataUrls[$i+1]) {
+			customLog("INFO","Index ".($i+1)." URL: ".$dataUrls[$i+1]);
 			curl_setopt($curls[1], CURLOPT_URL, $dataUrls[$i+1]);
 		} else {
-			//customLog("auctionData","Index ".($i+1)." Url2 Not Found");
+			customLog("ERROR","Index ".($i+1)." Url2 Not Found");
 		}
 		
 		// Safeguard if the length of realms is not a multiple of 3
 		if(($i+2) < sizeof($dataUrls) && $dataUrls[$i+2]) {
+			customLog("INFO","Index ".($i+2)." URL: ".$dataUrls[$i+2]);
 			curl_setopt($curls[2], CURLOPT_URL, $dataUrls[$i+2]);
 		} else {
-			//customLog("auctionData","Index ".($i+2)." Url3 Not Found");
+			customLog("ERROR","Index ".($i+2)." Url3 Not Found");
 		}
 
-		// Curl multi handler
-		$mh = curl_multi_init();
 		
-		// Add curls to the multi handlers
-		for($j = 0; $j<$numCurls; $j+=1) {
-			curl_multi_add_handle($mh,$curls[$j]);
-		}
-		
-		// Run curl calls
-		$running = null;
-		do {
-			curl_multi_exec($mh, $running);
-		} while ($running);
-		
-		// Get the meat from all the curls
-		for($j = 0; $j<$numCurls; $j+=1) {
-			array_push($responses, curl_multi_getcontent($curls[$j]));
-			array_push($contents, json_decode($responses[$j], true));
-			array_push($auctions, $contents[$j]['auctions']);
-			array_push($ahRealms, $contents[$j]['realms']);
+		try {
+			// Curl multi handler
+			$mh = curl_multi_init();
+			
+			// Add curls to the multi handlers
+			for($j = 0; $j<$numCurls; $j+=1) {
+				curl_multi_add_handle($mh,$curls[$j]);
+			}
+			
+			// Run curl calls
+			$running = null;
+			do {
+				curl_multi_exec($mh, $running);
+			} while ($running);
+			
+			// Get the meat from all the curls
+			for($j = 0; $j<$numCurls; $j+=1) {
+				array_push($responses, curl_multi_getcontent($curls[$j]));
+				array_push($contents, json_decode($responses[$j], true));
+				array_push($auctions, $contents[$j]['auctions']);
+				array_push($ahRealms, $contents[$j]['realms']);
+			}
+			
+		} catch (Exception $e) {
+			customLog("ERROR", "Failed to get data");
 		}
 		
 		if($auctions && $ahRealms) {

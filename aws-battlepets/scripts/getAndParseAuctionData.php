@@ -5,9 +5,9 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-customLog ("INFO", "Calling getAndParseAuctionData...");
+customLog("INFO", "Calling getAndParseAuctionData...");
 getAndParseAuctionData();
-////customLog("auctionData","Finished calling getAndParseAuctionData...");
+customLog("INFO","Finished calling getAndParseAuctionData...");
 
 /** 
  *		Gets the pet auction data from blizzard. 
@@ -153,7 +153,7 @@ function getAndParseAuctionData()
 
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
-	//customLog("auctionData","Final time". ": " . $timeDiffTotal . " - ");
+	customLog("INFO","Final time". ": " . $timeDiffTotal . " - ");
 }
 
 /**

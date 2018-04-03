@@ -19,7 +19,12 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="jquery-3.3.1.js"></script>
 	<script src="index.js"></script>
+	<link rel="stylesheet" href="myCustomStyle.css">
 	<style>
+		.table {
+		  font-size: 14px !important;
+		}
+		
 		.affix {
 			top: 0;
 			width: 100%;
@@ -55,6 +60,7 @@
 		}
 		
 		.btn-bar {
+			font-size: 16px !important;
 			background-color:#00b386; 
 			border-color:#00b386;
 		
@@ -76,12 +82,20 @@
 			height: 30px !important;
 		}
 		
+		.leggodeal {
+		  background-color: #ffebcc !important;
+		}
+		.leggodeal:hover,
+		.leggodeal:focus {
+		  background-color: #ffe0b3 !important;
+		}
+		
 		.epicdeal {
 		  background-color: #e0d6f5 !important;
 		}
 		.epicdeal:hover,
 		.epicdeal:focus {
-		  background-color: #a384e1 !important;
+		  background-color: #d1c2f0 !important;
 		}
 		
 		.bluedeal {
@@ -89,7 +103,7 @@
 		}
 		.bluedeal:hover,
 		.bluedeal:focus {
-		  background-color: #99c2ff !important;
+		  background-color: #b3d1ff !important;
 		}
 		
 	</style>
@@ -124,13 +138,15 @@
 <div class="container-fluid">
 	<div class="row" id="row1">
 		<div class="col-sm-3" id="row1col1">
-			<div style="background-color:#222;border-radius:6px;padding:10px;">
+			<div style="background-color:#ffffff;border-radius:6px;padding:10px;">
+				<!--
 				<div class="container-fluid" style="color:white;height:75px;">
 					<center>
 						<h1>Select Characters</h1>
 					</center>
 				</div>
 				<br/>
+				-->
 				<div class="form-group">
 					<input type="text" class="form-control" id="character1"  placeholder="Character 1" onchange="activateDealsButton()">
 					<select class="form-control" id="realm1">
@@ -171,19 +187,54 @@
 						<option>Proudmoore</option>
 						<option>4</option>
 					</select>
-				</div>	
-				<br/>
-				<button type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()">Find Deals</button>
+				</div>
+				<table class="table">
+					<tr>
+						<td class="toggleTd">
+							<label class="switch">
+								<input id="commonSlider" type="checkbox" checked >
+								<span class="slider round"></span>
+							</label>
+						</td>
+						<td class="toggleTd">
+							<label class="switch">
+								<input id="greenSlider" type="checkbox" checked >
+								<span class="slider round"></span>
+							</label>
+						</td>
+						<td class="toggleTd">
+							<label class="switch">
+								<input id="blueSlider" type="checkbox" checked >
+								<span class="slider round"></span>
+							</label>
+						</td class="toggleTd">
+						<td class="toggleTd">
+							<label class="switch">
+								<input  id="epicSlider" type="checkbox" checked>
+								<span class="slider round sliderEpic"></span>
+							</label>
+						</td>
+						<td class="toggleTd">
+							<label class="switch">
+								<input  id="leggoSlider" type="checkbox" checked>
+								<span class="slider round sliderEpic"></span>
+							</label>
+						</td>
+					</tr>
+				</table>
+				<button type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()" style="margin-bottom:20px;">Find Deals</button>
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">
 			<div id="buttonBar" class="btn-group btn-group-justified">
-				<!--
-				<a href="#cenarion-circle" class="btn btn-primary btn-bar">Cenarion Circle</a>
-				<a href="#wyrmrest-accord" class="btn btn-primary btn-bar">Wyrmrest Accord</a>
-				<a href="#proudmoore" class="btn btn-primary btn-bar">Proudmoore</a>
-				<a href="#" class="btn btn-primary btn-bar">Emerald Dream</a>
-				-->
+			</div>
+			<br/>
+			<br/>
+			<div id="loadingBar" style="display:none;">
+				<center><h4>Loading</h4></center>
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#00b386;"></div>
+				</div>
 			</div>
 			<div id="tableArea">
 				<center>

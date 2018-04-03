@@ -158,6 +158,14 @@ function calculateDailyMarketValues()
 	$removeDailySql = "DELETE FROM auctions_daily_pet;" ;
 	$conn->query($removeDailySql);
 	
+	// Clear out old 14-day avg
+	$removeHist = "DELETE FROM market_value_pets_hist;" ;
+	$conn->query($removeHist);
+	
+	// Clear out old 14-day avg
+	$addHist = "INSERT INTO market_value_pets_hist (species_id, market_value_hist) SELECT species_id, market_value_hist FROM market_value_pets_historical;" ;
+	$conn->query($addHist);
+	
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
 	customLog ("INFO", "Market Value Calculation time: " . $timeDiffMv);

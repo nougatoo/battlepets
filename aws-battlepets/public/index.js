@@ -4,7 +4,7 @@
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+    if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
         document.getElementById("backFooter").style.display = "";
     } else {
         document.getElementById("backFooter").style.display = "none";
@@ -26,6 +26,11 @@ function findDeals() {
 	$('#tableArea')[0].innerHTML = "";
 	$('#buttonBar')[0].innerHTML = "";
 	
+	var showCommon = $('#commonSlider').is(':checked');
+	var showGreen = $('#greenSlider').is(':checked');
+	var showBlue = $('#blueSlider').is(':checked');
+	var showEpic = $('#epicSlider').is(':checked');
+	var showLeggo = $('#leggoSlider').is(':checked');
 	/*
 	var char1 = $('#character1').val();
 	var char2 = $('#character2').val();
@@ -53,7 +58,12 @@ function findDeals() {
 	var data = {
 		"characters": [],
 		"realms": [],
-		"purpose": ""
+		"purpose": "",
+		showCommon: showCommon,
+		showGreen: showGreen,
+		showBlue: showBlue,
+		showEpic: showEpic,
+		showLeggo: showLeggo
 	};
 	
 	if(char1 && realm1) {
@@ -88,14 +98,15 @@ function findDeals() {
 		}
 	});
 	
-	
+	$('#loadingBar').show();
 	
 	data["purpose"] = "tableData";
 		$.ajax({
 		url: 'findDeals.php',
 		type: 'POST',
 		data: data,
-		success:function(response){			
+		success:function(response){
+			$('#loadingBar').hide();
 			$('#tableArea')[0].innerHTML += response;
 		}
 	});

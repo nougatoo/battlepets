@@ -1,6 +1,6 @@
 <?php
 
-require_once('util.php');
+require_once('../scripts/util.php');
 
 
 set_time_limit(0);
@@ -78,7 +78,7 @@ function getRealmData()
 		if ($conn->query($sql) === TRUE) {
 			//echo "New record created successfully";
 		} else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			echo "Error: " . $sql . "<br>";
 		}	
 		
 		// Parsing Connected Realms Data
@@ -89,7 +89,7 @@ function getRealmData()
 			{
 				$sql = "INSERT INTO realms_connected (slug_parent, slug_child)
 						VALUES ('" . $slug . "', '" . $childSlug . "')"
-						. "ON DUPLICATE KEY UPDATE "
+						. " ON DUPLICATE KEY UPDATE "
 						. "slug_parent='" . $slug . "', slug_child='" . $childSlug . "'";
 
 				if ($conn->query($sql) === TRUE) {

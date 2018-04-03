@@ -38,6 +38,7 @@ function dbConnect() {
 	
 	$dbserver = 'mysql:dbname=' . "battlepets". ';host=' . "battlepets-example.cqei6votoxra.us-east-2.rds.amazonaws.com";
 	$conn = new PDO($dbserver, "nougatoo", "Brandonbrien12!");
+	$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 	return $conn;
 		
@@ -74,9 +75,11 @@ function convertToWoWCurrency($value) {
 function getRealmNameFromSlug($slug)
 {
 	$conn = dbConnect();
-	$sql = "SELECT name FROM realms WHERE slug = '" . $slug. "'"; 
-	$result = $conn->query($sql);
-
+	
+	$result = $conn->prepare("SELECT name FROM realms WHERE slug = ?");
+	$result->bindParam(1, $slug);
+	$result->execute();
+	
 	while($row = $result->fetch()) {		
 		return $row['name'];
 	}

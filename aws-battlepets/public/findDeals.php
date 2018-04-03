@@ -117,7 +117,7 @@ else {
 	Finds good selling species_id from a given realm.
 */
 function findSellersForRealm($realm, $character)
-{
+{	
 	$conn = dbConnect();
 	
 	/*
@@ -137,7 +137,7 @@ function findSellersForRealm($realm, $character)
 					species_id, realm, MIN(buyout) as min_buyout
 				FROM (
 					SELECT 
-						id, species_id,  '".$realm."' as realm, buyout, bid, owner, time_left, quantity
+						id, species_id,  :realm as realm, buyout, bid, owner, time_left, quantity
 					FROM
 						auctions_hourly_pet
 					WHERE 
@@ -153,7 +153,10 @@ function findSellersForRealm($realm, $character)
 				min_buyout > (market_value_hist * 0.75);";
 		
 	$sellers = []; // species_id
-	$result = $conn->query($sql);
+	
+	$result = $conn->prepare($sql);
+	$result->bindParam(':realm', $realm);
+	$result->execute();
 
 	if($result) {
 		while($row = $result->fetch()) {		
@@ -164,8 +167,12 @@ function findSellersForRealm($realm, $character)
 	// Now we have a list of good sellers on this realm.
 	// Lets remove all species that i'm already selling
 	$currentlySelling = []; // Species_id
-	$sql = "SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE owner = '".$character."' and realm = '".$realm."'";
-	$sellingResult = $conn->query($sql);
+	
+	$sellingResult = $conn->prepare("SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE owner = ? and realm = ?");
+	$sellingResult->bindParam(1, $character);
+	$sellingResult->bindParam(2, $realm);
+	
+	$sellingResult->execute();
 
 	if($sellingResult) {		
 		while($row = $sellingResult->fetch()) {		
@@ -235,9 +242,10 @@ function buildingRealmRes($realm)
 	$conn = dbConnect();
 	$realmRes = "(realm =  '".$realm."'";
 	
-	$sql = "SELECT slug_child FROM realms_connected WHERE slug_parent = '". $realm . "'";
-	$result = $conn->query($sql);
-	
+	$result = $conn->prepare("SELECT slug_child FROM realms_connected WHERE slug_parent = ?");
+	$result->bindParam(1, $realm);	
+	$result->execute();	
+
 	if($result) {	
 		while($row = $result->fetch()) {
 			$realmRes .= " OR realm = '" . $row['slug_child'] . "'";

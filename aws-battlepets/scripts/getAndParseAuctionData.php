@@ -80,6 +80,7 @@ function getAndParseAuctionData()
 			customLog("ERROR","Index ".($i+2)." Url3 Not Found");
 		}
 
+		$startCurlTime = microtime(true);
 		
 		try {
 			// Curl multi handler
@@ -107,6 +108,10 @@ function getAndParseAuctionData()
 		} catch (Exception $e) {
 			customLog("ERROR", "Failed to get data");
 		}
+		
+		$endCurlTime = microtime(true);
+		$timeCurlDiff = $endCurlTime - $startCurlTime;
+		customLog ("INFO", "Time to complete curls: " . $timeCurlDiff);
 		
 		if($auctions && $ahRealms) {
 			// Creating slug map so we don't have to query db
@@ -140,7 +145,7 @@ function getAndParseAuctionData()
 	$conn->query($removeHourlySql);
 	
 	// Move this from the staging table to the real hourly table
-	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg;";							
+	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg ON DUPLICATE KEY UPDATE auctions_hourly_pet.bid = auctions_hourly_pet_stg.bid, auctions_hourly_pet.time_left=auctions_hourly_pet_stg.time_left;";
 	$conn->query($transferOutOfStgSql);
 	
 	// Add all this new data into the daily table as well
@@ -238,12 +243,13 @@ function insertAuctionData($auctions, $slugMaps)
 	$conn = dbConnect();
 	
 	$startTimeAuctions = microtime(true);
-		
+	
+	//$conn->query('START TRANSACTION');	
 	// Insert auctions for a realm in one transaction per realm
 	foreach($auctions as  $key => $currentRealmAh) {		
 	
-		$conn->query('START TRANSACTION;');
-		
+		//$conn->query('START TRANSACTION;');
+		$conn->beginTransaction();
 		// This could be optimized by adding more than one "values" but for now the speed is less
 		// than one second fpr 3 realms.
 		foreach ($currentRealmAh as $key2 => $currentAuction) {
@@ -262,7 +268,7 @@ function insertAuctionData($auctions, $slugMaps)
 			{
 				$speciesId = $currentAuction['petSpeciesId'];
 				
-				$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')". " ON DUPLICATE KEY UPDATE ". "bid='" . $bid  . "', time_left='" . $timeLeft  . "'";
+				$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
 
 				if ($conn->query($sql) === TRUE) {
 					//customLog "New record created successfully";
@@ -271,11 +277,12 @@ function insertAuctionData($auctions, $slugMaps)
 				}
 			}
 		}
-		
-		$conn->query('COMMIT;');
-		$conn->query('SET autocommit=1;');
+		$conn->commit();
+		//$conn->query('COMMIT;');
+		//$conn->query('SET autocommit=1;');
 	}
-	
+	//$conn->query('COMMIT;');
+
 	$endTimeAuctions = microtime(true);
 	$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
 	//customLog("auctionData","Time to complete auctions insert: " . $timeDiffAuctions);

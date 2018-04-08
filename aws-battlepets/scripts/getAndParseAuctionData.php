@@ -39,10 +39,19 @@ function getAndParseAuctionData()
 
 	curl_setopt($ch1, CURLOPT_HEADER, 0);
 	curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch1, CURLOPT_TIMEOUT, 120);
+	curl_setopt($ch1, CURLOPT_CONNECTTIMEOUT, 120);
+	
 	curl_setopt($ch2, CURLOPT_HEADER, 0);
 	curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch2, CURLOPT_TIMEOUT, 120);
+	curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 120);
+	
 	curl_setopt($ch3, CURLOPT_HEADER, 0);
 	curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch3, CURLOPT_TIMEOUT, 120);
+	curl_setopt($ch3, CURLOPT_CONNECTTIMEOUT, 120);
+	
 
 	$curls= array($ch1,$ch2,$ch3);
 	$numCurls = sizeof($curls);

@@ -22,7 +22,7 @@
 	<link rel="stylesheet" href="myCustomStyle.css">
 	<style>
 		.table {
-		  font-size: 14px !important;
+		  font-size: 12px !important;
 		}
 		
 		.affix {
@@ -268,6 +268,7 @@
 			</div>
 			<br/>
 			<br/>
+			<input class="form-control" id="dataFilter" type="text" placeholder="Search..">
 			<div id="loadingBar" style="display:none;">
 				<center><h4>Loading</h4></center>
 				<div class="progress">

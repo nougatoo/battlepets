@@ -1,14 +1,5 @@
 <?php
 
-/*
- WORKING HERE - TODO:
- - pass in the character names for each realm somehow.
- - I don't have to have duplicated code four times. Refactor into something managable with a for loop
- - Adding an echo for a load bar return would be cool!!!
-*/
-
-
-
 require_once('../scripts/util.php');
 
 
@@ -31,9 +22,15 @@ else {
 
 	for($i = 0; $i<sizeof($realms); $i++)
 	{
-
-		echo '<h3 id="'.$realms[$i].'">' . getRealmNameFromSlug($realms[$i]) . "</h3>";
-
+		// Show first realm data
+		if($i == 0)
+			echo '<div id="'.$realms[$i].'_Tables">';
+		else 
+			echo '<div id="'.$realms[$i].'_Tables" style="display:none;">';
+		
+		echo '<h2 id="'.$realms[$i].'">' . getRealmNameFromSlug($realms[$i]) . "</h2>";
+		echo '<br/>';
+		
 		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE);
 		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE);
 		
@@ -41,7 +38,6 @@ else {
 		{
 			if($realms[$i] === $realms[$j])
 				continue;
-		
 						
 			// Find good places to sell 
 			$goodSellers1 = findSellersForRealm($realms[$j], $characters[$j]);
@@ -50,7 +46,10 @@ else {
 			$goodDealsFiltered1 = array_intersect($goodDealsRawSpecies,$goodSellers1);
 
 			if(sizeof($goodDealsFiltered1) > 0)
-			{
+			{					
+				$totalBuy = 0;
+				$totalValue = 0;
+				
 				$tableHTML = '<table class="table table-striped table-hover">
 							<tr>
 								<th>Name</th>
@@ -65,7 +64,7 @@ else {
 				$subTableHTML = "";
 				
 				foreach($goodDealsRaw as $row) {
-
+				
 						if(in_array($row['species_id'], $goodDealsFiltered1))
 						{
 							$value = $row['market_value_hist'];
@@ -76,9 +75,9 @@ else {
 								continue;
 							elseif($value >= 100000000 && $value < 200000000 && !$showBlue)
 								continue;
-							elseif($value >= 50000000 && $value < 100000000 && !$showGreen)
+							elseif($value >= 30000000 && $value < 100000000 && !$showGreen)
 								continue;
-							elseif($value < 50000000 && !$showCommon)
+							elseif($value < 30000000 && !$showCommon)
 								continue;
 								
 							if($value > 500000000)
@@ -87,7 +86,7 @@ else {
 								$subTableHTML .= '<tr class="epicdeal">';
 							elseif($value > 100000000)
 								$subTableHTML .= '<tr class="bluedeal">';
-							elseif($value > 50000000)
+							elseif($value > 30000000)
 								$subTableHTML .= '<tr class="success">';
 							else
 								$subTableHTML.= "<tr>";
@@ -99,15 +98,29 @@ else {
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
 							$subTableHTML .=  "<td>" . getRealmNameFromSlug($realms[$j]). "</td>";
 							$subTableHTML .=  "</tr>";	
+							
+							$totalBuy += $row['minbuy'];
+							$totalValue += $value;
 						}			
 				}
 
+				$subTableHTML.= "<tr>";			
+				$subTableHTML .=  "<td>"."<b>Total <b/>"."</td>";
+				$subTableHTML .=  "<td>"."</td>";
+				$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
+				$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalBuy)."</b>"."</td>";
+				$subTableHTML .=  "<td>"."</td>";
+				$subTableHTML .=  "<td>"."</td>";
+				$subTableHTML .=  "</tr>";
+							
 				$tableHTML .=  $subTableHTML."</tbody></table><br/>"; 
 				
 				if($subTableHTML != "")
 					echo $tableHTML;
 			}
 		}
+		
+		echo '</div>';
 	}
 }
 
@@ -236,7 +249,9 @@ function findDealsForRealm($realm, $getSpecies)
 		return $goodDealsRaw;
 }
 
-
+/**
+	TODO
+*/
 function buildingRealmRes($realm) 
 {
 	$conn = dbConnect();
@@ -264,16 +279,18 @@ function buildingRealmRes($realm)
 function createButtonBar($realms)
 {
 	foreach($realms as $aRealm) {
-		$buttonBarHTML = '<a href="#';
-		
+		$buttonBarHTML = '<div class="btn-group">';
 		$realmName = getRealmNameFromSlug($aRealm);
-		$buttonBarHTML .= $aRealm . '" class="btn btn-primary btn-bar">'.$realmName.'</a>';
+		
+		$buttonBarHTML .= '<button type="button" class="btn btn-primary" id="button_'.$aRealm .'" onclick="showRealmTables(this)">'.$realmName.'</button></div>';
 			
 		echo $buttonBarHTML;
 		//customLog("findData", $buttonBarHTML);
 	}
 	
 }
+
+
 
 
 

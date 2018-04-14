@@ -1,5 +1,5 @@
-// TODO - mak the realms and characters arrays so that they can be dynamic in length
-/*
+
+
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 
@@ -11,12 +11,7 @@ function scrollFunction() {
     }
 }
 
-*/
 
-var realm1;
-var realm2;
-var realm3;
-var realm4;
 
 function activateDealsButton() {
 	
@@ -36,32 +31,30 @@ function findDeals() {
 	var showBlue = $('#blueSlider').is(':checked');
 	var showEpic = $('#epicSlider').is(':checked');
 	var showLeggo = $('#leggoSlider').is(':checked');
+	/*
+	var char1 = $('#character1').val();
+	var char2 = $('#character2').val();
+	var char3 = $('#character3').val();
+	var char4 = $('#character4').val();
 	
-	if($('#character1').val() != "Test") {
-		var char1 = $('#character1').val();
-		var char2 = $('#character2').val();
-		var char3 = $('#character3').val();
-		var char4 = $('#character4').val();
-		
-		realm1 = $('#realm1').val();
-		realm2 = $('#realm2').val();
-		realm3 = $('#realm3').val();
-		realm4 = $('#realm4').val();
-	}
-	else {
-		// For faster testing...
+	var realm1 = $('#realm1').val();
+	var realm2 = $('#realm2').val();
+	var realm3 = $('#realm3').val();
+	var realm4 = $('#realm4').val();
+	*/
 	
-		char1 = 'Irone';
-		char2 = 'valamyr';
-		char3 = 'Lladox';
-		char4 = 'Åurd';
-		
-		realm1 = 'cenarion-circle';
-		realm2 = 'wyrmrest-accord';
-		realm3 = 'proudmoore';
-		realm4 = 'emerald-dream';	
-	}
-		
+	// For faster testing...
+	
+	char1 = 'Irone';
+	char2 = 'valamyr';
+	char3 = 'Lladox';
+	char4 = 'Åurd';
+	
+	realm1 = 'cenarion-circle';
+	realm2 = 'wyrmrest-accord';
+	realm3 = 'proudmoore';
+	realm4 = 'emerald-dream';
+	
 	var data = {
 		"characters": [],
 		"realms": [],
@@ -120,59 +113,7 @@ function findDeals() {
 	
 }
 
-/**
-	TODO
-	
-*/
-function showRealmTables(mouseevent)
-{
-		var realmName = mouseevent.id.split("_")[1];
-		var e;
-		
-		if(realm1 != realmName)
-			document.getElementById(realm1 + "_Tables").style.display = "none";
-		else
-			document.getElementById(realm1 + "_Tables").style.display = "";
-	
-		if(realm2 != realmName)
-			document.getElementById(realm2 + "_Tables").style.display = "none";
-		else
-			document.getElementById(realm2 + "_Tables").style.display = "";		
-		
-		if(realm3 != realmName)
-			document.getElementById(realm3 + "_Tables").style.display = "none";
-		else
-			document.getElementById(realm3 + "_Tables").style.display = "";	
-		
-		if(realm4 != realmName)
-			document.getElementById(realm4 + "_Tables").style.display = "none";
-		else
-			document.getElementById(realm4 + "_Tables").style.display = "";
-	
+function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
-
-
-$(document).ready(function(){
-  $("#dataFilter").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable1 tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-	
-  });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -115,6 +115,8 @@ function findDeals() {
 		success:function(response){
 			$('#loadingBar').hide();
 			$('#tableArea')[0].innerHTML += response;
+			$('#dataFilter').show();
+			$('#buttonBar').show();
 		}
 	});
 	

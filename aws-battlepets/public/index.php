@@ -264,11 +264,11 @@
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">
-			<div id="buttonBar" class="btn-group btn-group-justified">
+			<div id="buttonBar" class="btn-group btn-group-justified" style="display:none;">
 			</div>
 			<br/>
 			<br/>
-			<input class="form-control" id="dataFilter" type="text" placeholder="Search..">
+			<input class="form-control" id="dataFilter" type="text" placeholder="Search.." style="display:none;">
 			<div id="loadingBar" style="display:none;">
 				<center><h4>Loading</h4></center>
 				<div class="progress">

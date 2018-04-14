@@ -27,9 +27,17 @@ function activateDealsButton() {
 
 function findDeals() {
 	
+	if($("#findDealsButton").hasClass("disabled"))
+		return;
+	
 	// Clear out the garbage section
 	$('#tableArea')[0].innerHTML = "";
 	$('#buttonBar')[0].innerHTML = "";
+	
+	$('#dataFilter').hide();
+	$('#buttonBar').hide();
+	
+	 $('#findDealsButton').addClass('disabled');
 	
 	var showCommon = $('#commonSlider').is(':checked');
 	var showGreen = $('#greenSlider').is(':checked');
@@ -117,6 +125,7 @@ function findDeals() {
 			$('#tableArea')[0].innerHTML += response;
 			$('#dataFilter').show();
 			$('#buttonBar').show();
+			activateDealsButton();
 		}
 	});
 	

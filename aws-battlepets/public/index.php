@@ -260,7 +260,7 @@
 						</td>
 					</tr>
 				</table>
-				<button type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()" style="margin-bottom:20px;">Find Deals</button>
+				<button id="findDealsButton" type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()" style="margin-bottom:20px;">Find Deals</button>
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">

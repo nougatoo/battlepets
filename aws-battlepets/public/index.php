@@ -112,14 +112,6 @@
 
 <body>
 
-<!--
-<div class="container-fluid" style="background-color:#F44336;color:#fff;height:200px;">
-	<h1>Bootstrap Affix Example</h1>
-	<h3>Fixed (sticky) navbar on scroll</h3>
-	<p>Scroll this page to see how the navbar behaves with data-spy="affix".</p>
-	<p>The navbar is attached to the top of the page after you have scrolled a specified amount of pixels.</p>
-</div> -->
-
 <nav class="navbar navbar-inverse" data-offset-top="1" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -226,41 +218,75 @@
 						?>
 					</select>
 				</div>
-				<table class="table">
-					<tr>
-						<td class="toggleTd">
-							<label class="switch">
-								<input id="commonSlider" type="checkbox" checked >
-								<span class="slider round"></span>
-							</label>
-						</td>
-						<td class="toggleTd">
-							<label class="switch">
-								<input id="greenSlider" type="checkbox" checked >
-								<span class="slider round"></span>
-							</label>
-						</td>
-						<td class="toggleTd">
-							<label class="switch">
-								<input id="blueSlider" type="checkbox" checked >
-								<span class="slider round"></span>
-							</label>
-						</td class="toggleTd">
-						<td class="toggleTd">
-							<label class="switch">
-								<input  id="epicSlider" type="checkbox" checked>
-								<span class="slider round sliderEpic"></span>
-							</label>
-						</td>
-						<td class="toggleTd">
-							<label class="switch">
-								<input  id="leggoSlider" type="checkbox" checked>
-								<span class="slider round sliderEpic"></span>
-							</label>
-						</td>
-					</tr>
-				</table>
-				<button id="findDealsButton" type="button" class="btn btn-primary btn-block" id="findDealsButton" onclick="findDeals()" style="margin-bottom:20px;">Find Deals</button>
+				<button id="showOptions" type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#optionsDiv">Show Options</button>
+				<div id="optionsDiv" class="collapse">
+					<h4 style="padding-left:8px;">Deal Qualities</h4>
+					<table class="table">
+						<tr>
+							<td class="toggleTd" style="width: 20%">
+									<label class="switch">
+										<input id="commonSlider" type="checkbox" checked >
+										<span class="slider round"></span>
+									</label>
+							</td>
+							<td class="toggleTd" style="width: 20%">								
+									<label class="switch">
+										<input id="greenSlider" type="checkbox" checked >
+										<span class="slider round"></span>
+									</label>						
+							</td>
+							<td class="toggleTd" style="width: 20%">
+									<label class="switch">
+										<input id="blueSlider" type="checkbox" checked >
+										<span class="slider round"></span>
+									</label>								
+							</td >
+							<td class="toggleTd" style="width: 20%">
+								
+									<label class="switch">
+										<input  id="epicSlider" type="checkbox" checked>
+										<span class="slider round sliderEpic"></span>
+									</label>								
+							</td>
+							<td class="toggleTd" style="width: 20%">
+								
+									<label class="switch">
+										<input  id="leggoSlider" type="checkbox" checked>
+										<span class="slider round sliderEpic"></span>
+									</label>							
+							</td>
+						</tr>
+					</table>
+					<h4 style="padding-left:8px;">Other</h4>
+					<table class="table">
+						<tr>
+							<td class="toggleTd" style="width: 20%">
+									<label class="switch">
+										<input id="snipesSlider" type="checkbox" checked >
+										<span class="slider round basicSlider"></span>
+									</label>
+							</td>			
+							<td class="toggleTd" style="width: 20%">
+									<label class="switch">
+										<input id="collectedSlider" type="checkbox" checked >
+										<span class="slider round basicSlider"></span>
+									</label>
+							</td>				
+							<td class="toggleTd" style="width: 20%">
+							</td>				
+							<td class="toggleTd" style="width: 20%">
+							</td>				
+							<td class="toggleTd" style="width: 20%">
+							</td>
+						</tr>
+						<tr>
+							<td>Show Snipes </td>			
+							<td>Include Collected Pets</td>						
+						</tr>					
+					</table>
+				</div>
+				<br/>
+				<button id="findDealsButton" type="button" class="btn btn-primary btn-block" onclick="findDeals()">Find Deals</button>
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">
@@ -282,12 +308,6 @@
 				</center>
 			</div>
 		</div>
-	</div>
-	<div class="row" id="row2">
-		<div class="col-sm-12">
-			<div id="backFooter" class="footer navbar-fixed-bottom" style="background-color:#222;color:white;display:none;">
-				<h5 onclick="topFunction()"><center>Back to top</center></h5>
-			</div>
 	</div>
 </div>
 

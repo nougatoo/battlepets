@@ -18,6 +18,17 @@ var realm2;
 var realm3;
 var realm4;
 
+
+$(document).ready(function(){
+  $("#dataFilter").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable1 tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+	
+  });
+});
+
 function activateDealsButton() {
 	
 	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
@@ -45,11 +56,14 @@ function findDeals() {
 	var showEpic = $('#epicSlider').is(':checked');
 	var showLeggo = $('#leggoSlider').is(':checked');
 	
-	if($('#character1').val() != "Test") {
-		var char1 = $('#character1').val();
-		var char2 = $('#character2').val();
-		var char3 = $('#character3').val();
-		var char4 = $('#character4').val();
+	var showSnipes = $('#snipesSlider').is(':checked');
+	var incCollected = $('#collectedSlider').is(':checked');
+	
+	if($('#character1').val().replace(/\s/g, '') != "Test") {
+		var char1 = $('#character1').val().replace(/\s/g, '');
+		var char2 = $('#character2').val().replace(/\s/g, '');
+		var char3 = $('#character3').val().replace(/\s/g, '');
+		var char4 = $('#character4').val().replace(/\s/g, '');
 		
 		realm1 = $('#realm1').val();
 		realm2 = $('#realm2').val();
@@ -78,7 +92,9 @@ function findDeals() {
 		showGreen: showGreen,
 		showBlue: showBlue,
 		showEpic: showEpic,
-		showLeggo: showLeggo
+		showLeggo: showLeggo,
+		showSnipes: showSnipes,
+		incCollected: incCollected
 	};
 	
 	if(char1 && realm1) {
@@ -162,18 +178,77 @@ function showRealmTables(mouseevent)
 	
 }
 
+/**
+	TODO
+*/
+function showOptions()
+{
+	if($('#optionsDiv:visible').length == 0)
+		$('#optionsDiv').show();
+	else
+		$('#optionsDiv').hide();
+}
 
-$(document).ready(function(){
-  $("#dataFilter").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable1 tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
+
+/**
+	TODO
+*/
+function sortTable(mouseevent) {
+	/*
+	var table, rows, allRows,htmlRows, switching, i, x, y, shouldSwitch, startIndex, endIndex;
+
+	table = mouseevent.parentElement.parentElement.parentElement;
+	switching = true;
+	htmlRows = table.getElementsByTagName("TR");
+	allRows = [].slice.call(htmlRows);
+
+	var totalIndex = [];
+	totalIndex.push(0);
+	// Find where the total rows are...do a different sort for each
+	for(var i = 0; i <allRows.length; i++)
+	{
+		if(allRows[i].className == "totalRow")
+			totalIndex.push(i);
+	}
+
+	for(var j = 0; j < totalIndex.length; j++)
+	{	
+
+		while (switching) {
+			switching = false;
+			//rows = table.getElementsByTagName("TR");
+
+			startIndex = totalIndex[j] + 1;
+				
+			if((totalIndex[j]+1) > allRows.length)
+				endIndex = allRows.length;
+			else
+				endIndex = totalIndex[j+1];
 	
-  });
-});
+			for (i = startIndex; i < endIndex; i++) {
+				htmlRows = table.getElementsByTagName("TR");
+				allRows = [].slice.call(htmlRows);
+				rows = allRows.slice(startIndex, endIndex);
+				
+				shouldSwitch = false;
+				x = rows[i].getElementsByTagName("TD")[0];
+				y = rows[i + 1].getElementsByTagName("TD")[0];
 
+				if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+				shouldSwitch= true;
+				}
+				
+				if (shouldSwitch) {
+					htmlRows[i].parentNode.insertBefore(htmlRows[i + 1], htmlRows[i]);
+					switching = true;
+				}
 
+			}
+
+		}
+	}
+	*/
+}
 
 
 

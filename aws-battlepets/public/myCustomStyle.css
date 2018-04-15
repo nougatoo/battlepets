@@ -49,6 +49,12 @@
 }
 */
 
+#snipesSlider:checked + span {
+  background-color: #c2e2b6;
+}
+#collectedSlider:checked + span {
+  background-color: #c2e2b6;
+}
 #commonSlider:checked + span {
   background-color: #d9d9d9;
 }
@@ -86,4 +92,10 @@ input:checked + .slider:before {
 
 .toggleTd {
 	border-top: none !important;
+}
+
+
+tr.totalRow {
+	background-color:#b3b3b396 !important;
+	
 }

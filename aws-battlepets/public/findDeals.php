@@ -14,6 +14,12 @@ $showEpic = $_POST['showEpic'] == "true";
 $showLeggo = $_POST['showLeggo'] == "true";
 $showSnipes = $_POST['showSnipes'] == "true";
 $incCollected = $_POST['incCollected'] == "true";
+$maxBuyPerc = $_POST['maxBuyPerc'];
+
+if(!is_numeric($maxBuyPerc)) {
+	echo ("Max buy Percent is not a number");
+	return;
+}
 
 //$characters = json_decode($characters, true);
 
@@ -33,8 +39,10 @@ else {
 		echo '<h2 id="'.$realms[$i].'">' . getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
 		echo '<br/>';
 		
-		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $configs['maxGblBuyPercent']);
-		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $configs['maxGblBuyPercent']);
+		//$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $configs['maxGblBuyPercent']);
+		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $maxBuyPerc);
+		//$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $configs['maxGblBuyPercent']);
+		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $maxBuyPerc);
 		
 		$tableHTML = '<table class="table table-striped table-hover">
 							<tr>
@@ -69,7 +77,7 @@ else {
 				
 						if(in_array($row['species_id'], $goodDealsFiltered))
 						{
-							$value = $row['market_value_hist'];
+							$value = $row['market_value_hist_median'];
 							
 							if($value >= $configs["threshLeggo"] && !$showLeggo)
 								continue;
@@ -94,7 +102,7 @@ else {
 								$subTableHTML.= "<tr>";
 							
 							$subTableHTML .= "<td>" . $row['name'] ."</td>";
-							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist']) . "</td>";
+							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
 							$subTableHTML .=  "<td>" . getRealmNameFromSlug($realms[$j]). "</td>";
@@ -145,7 +153,7 @@ function findSellersForRealm($realm, $character)
 	$realmRes = buildingRealmRes($realm);	
 	$sql = "
 			SELECT 
-				sell_realm.species_id, realm, realms.name as sell_realm_name, min_buyout, market_value_hist
+				sell_realm.species_id, realm, realms.name as sell_realm_name, min_buyout, market_value_hist_median
 			FROM (
 				SELECT 
 					species_id, realm, MIN(buyout) as min_buyout
@@ -159,12 +167,12 @@ function findSellersForRealm($realm, $character)
 					) a
 				GROUP by species_id, realm
 				) sell_realm
-			INNER JOIN market_value_pets_hist
-				ON sell_realm.species_id = market_value_pets_hist.species_id
+			INNER JOIN market_value_pets_hist_median
+				ON sell_realm.species_id = market_value_pets_hist_median.species_id
 			INNER JOIN realms
 				ON sell_realm.realm = realms.slug
 			WHERE 
-				min_buyout > (market_value_hist * ".$configs["minGblSellPercent"].");";
+				min_buyout > (market_value_hist_median * ".$configs["minGblSellPercent"].");";
 		
 	$sellers = []; // species_id
 	
@@ -213,22 +221,22 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 		SELECT 
 			pets.species_id, 
 			pets.name, 
-			floor(market_value_pets_historical.market_value_hist) as market_value_hist, 
+			floor(market_value_pets_hist_median.market_value_hist_median) as market_value_hist_median, 
 			buy_realm.minbuy,
-			round(buy_realm.minbuy/market_value_hist*100,2) as percent_of_market, 
+			round(buy_realm.minbuy/market_value_hist_median*100,2) as percent_of_market, 
 			buy_realm.realm,
 			buy_realm.buy_realm_name
 		FROM 
-			market_value_pets_historical
+			market_value_pets_hist_median
 		INNER JOIN pets 
-			ON pets.species_id = market_value_pets_historical.species_id
+			ON pets.species_id = market_value_pets_hist_median.species_id
 		INNER JOIN 
 			(SELECT min(buyout) as minbuy, species_id, realm, realms.name as buy_realm_name FROM auctions_hourly_pet INNER JOIN realms ON realms.slug = realm WHERE buyout > 0  AND ".$realmRes. "GROUP BY species_id, realm) buy_realm
 			ON pets.species_id = buy_realm.species_id
 		WHERE 
 			".$realmRes." AND 
-			buy_realm.minbuy < (market_value_hist * ".$minMarketPercent.") AND
-			market_value_hist - buy_realm.minbuy > ".$configs["minGblBuyAmount"]."
+			buy_realm.minbuy < (market_value_hist_median * ".$minMarketPercent.") AND
+			market_value_hist_median - buy_realm.minbuy > ".$configs["minGblBuyAmount"]."
 		ORDER BY percent_of_market;";
 
 	$goodDealsRawSpecies = [];
@@ -318,7 +326,7 @@ function buildSnipesTables($realm)
 	
 	foreach($snipeDeals as $row) {
 
-		$value = $row['market_value_hist'];
+		$value = $row['market_value_hist_median'];
 		
 		if($value >=  $configs["threshLeggo"] && !$showLeggo)
 			continue;
@@ -343,7 +351,7 @@ function buildSnipesTables($realm)
 			$subTableHTML.= "<tr>";
 		
 		$subTableHTML .= "<td>" . $row['name'] ."</td>";
-		$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist']) . "</td>";
+		$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 		$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 		$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
 		$subTableHTML .=  "</tr>";	
@@ -356,12 +364,10 @@ function buildSnipesTables($realm)
 	if($subTableHTML == "")
 			$emptyTable = true;
 		
-	$subTableHTML.= "<tr>";			
+	$subTableHTML.= '<tr class="totalRow">';			
 	$subTableHTML .=  "<td>"."<b>Total<b/>"."</td>";
-	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalBuy)."</b>"."</td>";
-	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "</tr>";
 	

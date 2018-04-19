@@ -146,7 +146,7 @@
 							
 							if($result) {
 								while($row = $result->fetch()) {
-									echo ('<option value="'.$row[slug].'">'.$row['name'].'</option>');
+									echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
 								}	
 							}
 						?>
@@ -168,7 +168,7 @@
 							
 							if($result) {
 								while($row = $result->fetch()) {
-									echo ('<option value="'.$row[slug].'">'.$row['name'].'</option>');
+									echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
 								}	
 							}
 						?>
@@ -190,7 +190,7 @@
 							
 							if($result) {
 								while($row = $result->fetch()) {
-									echo ('<option value="'.$row[slug].'">'.$row['name'].'</option>');
+									echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
 								}	
 							}
 						?>
@@ -212,7 +212,7 @@
 							
 							if($result) {
 								while($row = $result->fetch()) {
-									echo ('<option value="'.$row[slug].'">'.$row['name'].'</option>');
+									echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
 								}	
 							}
 						?>
@@ -273,6 +273,20 @@
 									</label>
 							</td>				
 							<td class="toggleTd" style="width: 20%">
+								<div class="form-group">
+									<select class="form-control" id="selectMaxBuy" style="font-size: 12px;padding-right: 2px;">
+										<?php
+											require_once('../scripts/util.php');
+											
+											for($i = 10; $i<100; $i+=5) {
+												if($i == 50)
+													echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
+												else
+													echo ('<option value="'.($i/100).'">'.$i.'%</option>');
+											}
+										?>
+									</select>
+								</div>
 							</td>				
 							<td class="toggleTd" style="width: 20%">
 							</td>				
@@ -282,6 +296,7 @@
 						<tr>
 							<td>Show Snipes </td>			
 							<td>Include Collected Pets</td>						
+							<td>Max Buy %</td>						
 						</tr>					
 					</table>
 				</div>

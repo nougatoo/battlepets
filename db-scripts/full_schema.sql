@@ -199,6 +199,12 @@ DROP TABLE IF EXISTS `battlepets`.`market_value_pets_historical`;
 USE `battlepets`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `battlepets`.`market_value_pets_historical` AS select `battlepets`.`market_value_pets`.`species_id` AS `species_id`,avg(`battlepets`.`market_value_pets`.`market_value`) AS `market_value_hist` from `battlepets`.`market_value_pets` where ((`battlepets`.`market_value_pets`.`date` >= (curdate() - interval 14 day)) and (`battlepets`.`market_value_pets`.`date` < (curdate() + interval 1 day))) group by `battlepets`.`market_value_pets`.`species_id`;
 
+
+CREATE TABLE `battlepets`.`market_value_pets_hist_median` (
+  `species_id` INT(11) NOT NULL,
+  `market_value_hist_median` DECIMAL(30,10) NULL,
+  PRIMARY KEY (`species_id`));
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

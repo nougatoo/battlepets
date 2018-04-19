@@ -58,6 +58,7 @@ function findDeals() {
 	
 	var showSnipes = $('#snipesSlider').is(':checked');
 	var incCollected = $('#collectedSlider').is(':checked');
+	var maxBuyPerc = $('#selectMaxBuy').val();
 	
 	if($('#character1').val().replace(/\s/g, '') != "Test") {
 		var char1 = $('#character1').val().replace(/\s/g, '');
@@ -94,7 +95,8 @@ function findDeals() {
 		showEpic: showEpic,
 		showLeggo: showLeggo,
 		showSnipes: showSnipes,
-		incCollected: incCollected
+		incCollected: incCollected,
+		maxBuyPerc: maxBuyPerc
 	};
 	
 	if(char1 && realm1) {

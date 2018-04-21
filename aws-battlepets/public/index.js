@@ -43,10 +43,10 @@ function findDeals() {
 	
 	// Clear out the garbage section
 	$('#tableArea')[0].innerHTML = "";
-	$('#buttonBar')[0].innerHTML = "";
+	$('#realmTabs')[0].innerHTML = "";
 	
 	$('#dataFilter').hide();
-	$('#buttonBar').hide();
+	$('#realmTabs').hide();
 	
 	 $('#findDealsButton').addClass('disabled');
 	
@@ -119,7 +119,7 @@ function findDeals() {
 		data["realms"].push(realm4);
 	}
 	
-	data["purpose"] = "buttonBar";
+	data["purpose"] = "realmTabs";
 	
 	
 	$.ajax({
@@ -127,7 +127,7 @@ function findDeals() {
 		type: 'POST',
 		data: data,
 		success:function(response){			
-			$('#buttonBar')[0].innerHTML += response;
+			$('#realmTabs')[0].innerHTML += response;
 		}
 	});
 	
@@ -142,7 +142,7 @@ function findDeals() {
 			$('#loadingBar').hide();
 			$('#tableArea')[0].innerHTML += response;
 			$('#dataFilter').show();
-			$('#buttonBar').show();
+			$('#realmTabs').show();
 			activateDealsButton();
 		}
 	});

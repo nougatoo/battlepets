@@ -110,7 +110,7 @@
 </head>
 
 
-<body>
+<body style="overflow: scroll;">
 
 <nav class="navbar navbar-inverse" data-offset-top="1" id="top" style="background-color:#333;">
 	<div class="container-fluid">
@@ -218,105 +218,114 @@
 						?>
 					</select>
 				</div>
-				<button id="showOptions" type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#optionsDiv">Show Options</button>
-				<div id="optionsDiv" class="collapse">
-					<h4 style="padding-left:8px;">Deal Qualities</h4>
-					<table class="table">
-						<tr>
-							<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="commonSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>
-							</td>
-							<td class="toggleTd" style="width: 20%">								
-									<label class="switch">
-										<input id="greenSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>						
-							</td>
-							<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="blueSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>								
-							</td >
-							<td class="toggleTd" style="width: 20%">
-								
-									<label class="switch">
-										<input  id="epicSlider" type="checkbox" checked>
-										<span class="slider round sliderEpic"></span>
-									</label>								
-							</td>
-							<td class="toggleTd" style="width: 20%">
-								
-									<label class="switch">
-										<input  id="leggoSlider" type="checkbox" checked>
-										<span class="slider round sliderEpic"></span>
-									</label>							
-							</td>
-						</tr>
-					</table>
-					<h4 style="padding-left:8px;">Other</h4>
-					<table class="table">
-						<tr>
-							<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="snipesSlider" type="checkbox" checked >
-										<span class="slider round basicSlider"></span>
-									</label>
-							</td>			
-							<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="collectedSlider" type="checkbox" checked >
-										<span class="slider round basicSlider"></span>
-									</label>
-							</td>				
-							<td class="toggleTd" style="width: 20%">
-								<div class="form-group">
-									<select class="form-control" id="selectMaxBuy" style="font-size: 12px;padding-right: 2px;">
-										<?php
-											require_once('../scripts/util.php');
-											
-											for($i = 10; $i<100; $i+=5) {
-												if($i == 50)
-													echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
-												else
-													echo ('<option value="'.($i/100).'">'.$i.'%</option>');
-											}
-										?>
-									</select>
-								</div>
-							</td>				
-							<td class="toggleTd" style="width: 20%">
-							</td>				
-							<td class="toggleTd" style="width: 20%">
-							</td>
-						</tr>
-						<tr>
-							<td>Show Snipes </td>			
-							<td>Include Collected Pets</td>						
-							<td>Max Buy %</td>						
-						</tr>					
-					</table>
+				<div class="panel panel-default">
+				<!--<button id="showOptions" type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#optionsDiv">Show Options</button>-->
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<center><a data-toggle="collapse" href="#optionsCollapse" style="color:black;">Show Options</a></center>
+						</h4>
+					</div>
+					<div id="optionsCollapse" class="panel-collapse collapse">
+						<div id="optionsDiv" class="panel-body">
+							<h4 style="padding-left:8px;">Deal Qualities</h4>
+							<table class="table">
+								<tr>
+									<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="commonSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>
+									</td>
+									<td class="toggleTd" style="width: 20%">								
+											<label class="switch">
+												<input id="greenSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>						
+									</td>
+									<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="blueSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>								
+									</td >
+									<td class="toggleTd" style="width: 20%">
+										
+											<label class="switch">
+												<input  id="epicSlider" type="checkbox" checked>
+												<span class="slider round sliderEpic"></span>
+											</label>								
+									</td>
+									<td class="toggleTd" style="width: 20%">
+										
+											<label class="switch">
+												<input  id="leggoSlider" type="checkbox" checked>
+												<span class="slider round sliderEpic"></span>
+											</label>							
+									</td>
+								</tr>
+							</table>
+							<h4 style="padding-left:8px;">Other</h4>
+							<table class="table">
+								<tr>
+									<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="snipesSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+									</td>			
+									<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="collectedSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+									</td>				
+									<td class="toggleTd" style="width: 20%">
+										<div class="form-group">
+											<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;">
+												<?php
+													require_once('../scripts/util.php');
+													
+													for($i = 10; $i<100; $i+=5) {
+														if($i == 50)
+															echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
+														else
+															echo ('<option value="'.($i/100).'">'.$i.'%</option>');
+													}
+												?>
+											</select>
+										</div>
+									</td>				
+									<td class="toggleTd" style="width: 20%">
+									</td>				
+									<td class="toggleTd" style="width: 20%">
+									</td>
+								</tr>
+								<tr>
+									<td>Show Snipes </td>			
+									<td>Include Collected Pets</td>						
+									<td>Max Buy %</td>						
+								</tr>					
+							</table>
+						</div>
+					</div>
 				</div>
 				<br/>
 				<button id="findDealsButton" type="button" class="btn btn-primary btn-block" onclick="findDeals()">Find Deals</button>
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">
-			<div id="buttonBar" class="btn-group btn-group-justified" style="display:none;">
+			<div id="realmTabs">
 			</div>
 			<br/>
 			<br/>
-			<input class="form-control" id="dataFilter" type="text" placeholder="Search.." style="display:none;">
+			<input class="form-control" id="dataFilter" type="text" placeholder="Search..." style="display:none;">
 			<div id="loadingBar" style="display:none;">
 				<center><h4>Loading</h4></center>
 				<div class="progress">
 					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
 				</div>
 			</div>
-			<div id="tableArea">
+			<div id="tableArea" class="tab-content">
 				<center>
 					<h1>Please select at least two characters</h1>
 					<br/>

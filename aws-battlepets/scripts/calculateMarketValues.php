@@ -174,7 +174,9 @@ function calculateDailyMarketValues()
 	customLog ("INFO", "Market Value Calculation time: " . $timeDiffMv);
 }
 
-
+/**
+	TODO
+*/
 function calculateRegionMedian()
 {
 		

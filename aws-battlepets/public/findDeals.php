@@ -23,20 +23,24 @@ if(!is_numeric($maxBuyPerc)) {
 
 //$characters = json_decode($characters, true);
 
-if($purpose == "buttonBar") {
-	createButtonBar($realms);
+if($purpose == "realmTabs") {
+	createRealmTabs($realms);
 }
 else {
 
+
+	$tableHTML ="";
 	for($i = 0; $i<sizeof($realms); $i++)
 	{
+		
 		// Show first realm data
 		if($i == 0)
-			echo '<div id="'.$realms[$i].'_Tables">';
+			echo '<div id="'.$realms[$i].'_tab" class="tab-pane fade in active">';
 		else 
-			echo '<div id="'.$realms[$i].'_Tables" style="display:none;">';
+			echo '<div id="'.$realms[$i].'_tab" class="tab-pane fade">';
 		
-		echo '<h2 id="'.$realms[$i].'">' . getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
+		//echo '<h2 id="'.$realms[$i].'"> <a data-toggle="collapse" href=#"'."asdfasdf".'"'. getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
+		//echo '<h2 id="'.$realms[$i].'">'. getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
 		echo '<br/>';
 		
 		//$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $configs['maxGblBuyPercent']);
@@ -44,21 +48,33 @@ else {
 		//$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $configs['maxGblBuyPercent']);
 		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $maxBuyPerc);
 		
-		$tableHTML = '<table class="table table-striped table-hover">
-							<tr>
-								<th onclick="sortTable(this)">Name</th>
-								<th>Global Market Value</th>
-								<th>Min Buy</th>
-								<th>% Global Market Value</th>
-								<th>Realm to Sell On</th>
-							</tr>
-							<tbody id="myTable1">';
+
+							
 		// Each iteration of this loop will attempt to create a cross realms deal table
 		for($j = 0; $j<sizeof($realms); $j++)
 		{
 			if($realms[$i] === $realms[$j])
 				continue;
-						
+		
+		
+	  
+			$tableHTML =	'<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+											  <a data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'">'.getRealmNameFromSlug($realms[$j]) .'</a>
+											</h4>
+										</div>
+										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in">
+											<table class="table table-striped table-hover">
+												<tr>
+													<th onclick="sortTable(this)">Name</th>
+													<th>Global Market Value</th>
+													<th>Min Buy</th>
+													<th>% Global Market Value</th>
+													<th>Realm to Sell On</th>
+												</tr>
+												<tbody id="myTable1">';			
+					
 			// Find good places to sell 
 			$goodSellers = findSellersForRealm($realms[$j], $characters[$j]);
 
@@ -124,15 +140,17 @@ else {
 				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'</td>';
 				$subTableHTML .=  '</tr>';
 				//$subTableHTML .= '<tr style="background-color:white;"><td style="color:#ddd0;">asdf</td><td/><td/><td><td/></tr>'; // Blank Row
-							
+				$subTableHTML .= "</tbody></table></div></div>"; 	
 				$tableHTML .=  $subTableHTML;
+				
+				if(!$emptyTable)
+					echo $tableHTML;
 			}
 		}
 		
-		$tableHTML .= "</tbody></table><br/>"; 
+
 				
-		//if(!$emptyTable)
-		echo $tableHTML;
+
 		
 		if($showSnipes)		
 			echo (buildSnipesTables($realms[$i]));
@@ -282,20 +300,24 @@ function buildingRealmRes($realm)
 
 
 /**
-	TODO
+	TODO - rename
 */
-function createButtonBar($realms)
+function createRealmTabs($realms)
 {
-	foreach($realms as $aRealm) {
-		$buttonBarHTML = '<div class="btn-group">';
+	echo '<ul class="nav nav-tabs">';
+	
+	foreach($realms as $key=> $aRealm) {
+		$realmTabHTML = '';
 		$realmName = getRealmNameFromSlug($aRealm);
 		
-		$buttonBarHTML .= '<button type="button" class="btn btn-primary" id="button_'.$aRealm .'" onclick="showRealmTables(this)">'.$realmName.'</button></div>';
-			
-		echo $buttonBarHTML;
-		//customLog("findData", $buttonBarHTML);
-	}
+		if($key == 0)
+			$realmTabHTML .= '<li class="active" onclick="alert()"><a data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
+		else
+			$realmTabHTML .= '<li><a data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
 	
+		echo $realmTabHTML;
+	}	
+	echo '</ul>';	
 }
 
 /**
@@ -311,17 +333,27 @@ function buildSnipesTables($realm)
 	$snipeDeals = findDealsForRealm($realm, FALSE, $configs['maxGblSnipePercent']);
 		
 	// $tableHTML .= '<h2><a data-toggle="collapse" href="'.getRealmNameFromSlug($realm).'_Tables>"'.getRealmNameFromSlug($realm). " - Snipes" . "</a></h2>";
-	$tableHTML .= '<h2>'.getRealmNameFromSlug($realm). " - Snipes" . "</h2>";
-	$tableHTML .= '<br/>';
+	//$tableHTML .= '<h2>'.getRealmNameFromSlug($realm). " - Snipes" . "</h2>";
+	//$tableHTML .= '<br/>';
 	
-	$tableHTML .= '<table class="table table-striped table-hover">
-						<tr>
-							<th>Name</th>
-							<th>Global Market Value</th>
-							<th>Min Buy</th>
-							<th>% Global Market Value</th>
-						</tr>
-						<tbody id="myTable1">';				
+	
+	$tableHTML = 	'<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+									  <a data-toggle="collapse" href="#'.$realm.'_snipes">Snipes</a>
+									</h4>
+								</div>
+								<div id="'.$realm.'_snipes" class="panel-collapse collapse in">
+									<table class="table table-striped table-hover">
+										<tr>
+											<th>Name</th>
+											<th>Global Market Value</th>
+											<th>Min Buy</th>
+											<th>% Global Market Value</th>
+										</tr>
+										<tbody id="myTable1">';
+									
+
 	$subTableHTML = "";
 	
 	foreach($snipeDeals as $row) {
@@ -371,7 +403,7 @@ function buildSnipesTables($realm)
 	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "</tr>";
 	
-	$tableHTML .=  $subTableHTML."</tbody></table><br/>"; 
+	$tableHTML .=  $subTableHTML."</tbody></table></div></div><br/>"; 
 			
 	if(!$emptyTable)
 		return $tableHTML;

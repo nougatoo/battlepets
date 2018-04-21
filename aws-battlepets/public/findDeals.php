@@ -28,7 +28,19 @@ if($purpose == "realmTabs") {
 }
 else {
 
-
+	// TODO - PUT THIS IN FUNCTION
+	$petsAPIResponse = file_get_contents('https://us.api.battle.net/wow/character/cenarion-circle/irone?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
+	$results = json_decode($petsAPIResponse, true);	
+	$cagedPetsRaw = $results['pets']['collected'];
+	$cagedPetsProc = [];
+	
+	for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
+	{
+		array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
+	}
+	
+	$cagedCounts = array_count_values($cagedPetsProc);
+	
 	$tableHTML ="";
 	for($i = 0; $i<sizeof($realms); $i++)
 	{
@@ -61,7 +73,7 @@ else {
 			$tableHTML =	'<div class="panel panel-default">
 										<div class="panel-heading">
 											<h4 class="panel-title">
-											  <a data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'">'.getRealmNameFromSlug($realms[$j]) .'</a>
+											  <span class="glyphicon glyphicon-chevron-right" style="padding-right:"5px"></span><a data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'">'.getRealmNameFromSlug($realms[$j]) .'</a>
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in">
@@ -117,7 +129,7 @@ else {
 							else
 								$subTableHTML.= "<tr>";
 							
-							$subTableHTML .= "<td>" . $row['name'] ."</td>";
+							$subTableHTML .= "<td>" . $row['name'].'<span class="badge" style="margin-left: 5px;background-color:#5f5f5f;font-size: 10px;">'.$cagedCounts[$row['species_id']].'</span>'."</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";

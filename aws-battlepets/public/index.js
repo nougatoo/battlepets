@@ -29,6 +29,8 @@ $(document).ready(function(){
   });
 });
 
+
+
 function activateDealsButton() {
 	
 	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
@@ -144,6 +146,8 @@ function findDeals() {
 			$('#dataFilter').show();
 			$('#realmTabs').show();
 			activateDealsButton();
+			
+			testFunction();
 		}
 	});
 	
@@ -251,9 +255,6 @@ function sortTable(mouseevent) {
 	}
 	*/
 }
-
-
-
 
 
 

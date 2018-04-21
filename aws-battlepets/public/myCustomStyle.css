@@ -1,3 +1,101 @@
+.table {
+  font-size: 12px !important;
+}
+
+.affix {
+	top: 0;
+	width: 100%;
+	z-index: 9999 !important;
+}
+
+.affix + .container-fluid {
+	padding-top: 70px;
+}
+
+/*
+.btn-primary {
+	background-color:#333; 
+	border-color:#333;
+
+}
+
+.btn-primary:hover {
+	background-color:#1a1a1a; 
+	border-color:#1a1a1a;
+
+}
+
+.btn-primary:focus {
+	background-color:#333 !important; 
+	border-color:#333 !important;
+
+}
+
+.btn-primary:active {
+	background-color:#1a1a1a !important; 
+	border-color:#1a1a1a !important;
+
+}
+
+.btn-bar {
+	font-size: 16px !important;
+	background-color:#333; 
+	border-color:#333;
+
+}
+
+.btn-bar:hover {
+	background-color:#1a1a1a; 
+	border-color:#1a1a1a;
+
+}
+
+.btn-bar:focus {
+	background-color:#1a1a1a !important; 
+	border-color:#1a1a1a !important;
+
+}
+
+#backFooter {
+	height: 30px !important;
+}
+*/
+.leggodeal {
+  background-color: #ffebcc !important;
+}
+.leggodeal:hover,
+.leggodeal:focus {
+  background-color: #ffe0b3 !important;
+}
+
+.epicdeal {
+  background-color: #e0d6f5 !important;
+}
+.epicdeal:hover,
+.epicdeal:focus {
+  background-color: #d1c2f0 !important;
+}
+
+.bluedeal {
+  background-color: #cce0ff !important;
+}
+.bluedeal:hover,
+.bluedeal:focus {
+  background-color: #b3d1ff !important;
+}
+.panel-heading .realmCollapse:after {
+	/* symbol for "opening" panels */
+	font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+	content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+	float: right;        /* adjust as needed */
+	color: grey;         /* adjust as needed */
+}
+.panel-heading .realmCollapse.collapsed:after {
+	/* symbol for "collapsed" panels */
+	content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+
 .switch {
   position: relative;
   display: inline-block;
@@ -96,6 +194,7 @@ input:checked + .slider:before {
 
 
 tr.totalRow {
-	background-color:#b3b3b396 !important;
+	/*background-color:#b3b3b396 !important;*/
+	font-size: 13px;
 	
-}
+} 

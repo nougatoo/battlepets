@@ -27,12 +27,14 @@ $(document).ready(function(){
     });
 	
   });
+  
+  // Glyphcon is loading wrong way..manually hide to trigger event that corrects it
+  $('#optionsCollapse').collapse("hide");
 });
 
 
 
-function activateDealsButton() {
-	
+function activateDealsButton() {	
 	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
 	 $('#findDealsButton').removeClass('disabled');
 }

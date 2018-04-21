@@ -28,7 +28,6 @@ if($purpose == "realmTabs") {
 }
 else {
 
-	// TODO - PUT THIS IN FUNCTION
 	$petsAPIResponse = file_get_contents('https://us.api.battle.net/wow/character/cenarion-circle/irone?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected'];
@@ -50,25 +49,17 @@ else {
 			echo '<div id="'.$realms[$i].'_tab" class="tab-pane fade in active">';
 		else 
 			echo '<div id="'.$realms[$i].'_tab" class="tab-pane fade">';
-		
-		//echo '<h2 id="'.$realms[$i].'"> <a data-toggle="collapse" href=#"'."asdfasdf".'"'. getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
-		//echo '<h2 id="'.$realms[$i].'">'. getRealmNameFromSlug($realms[$i]) . " - Cross Realm Deals</h2>";
+
 		echo '<br/>';
 		
-		//$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $configs['maxGblBuyPercent']);
 		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $maxBuyPerc);
-		//$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $configs['maxGblBuyPercent']);
 		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $maxBuyPerc);
-		
-
 							
 		// Each iteration of this loop will attempt to create a cross realms deal table
 		for($j = 0; $j<sizeof($realms); $j++)
 		{
 			if($realms[$i] === $realms[$j])
 				continue;
-		
-		
 	  
 			$tableHTML =	'<div class="panel panel-default">
 										<div class="panel-heading">
@@ -130,7 +121,10 @@ else {
 							else
 								$subTableHTML.= "<tr>";
 							
-							$subTableHTML .= "<td>" . $row['name'].'<span class="badge" style="margin-left: 5px;background-color:#5f5f5f;font-size: 10px;">'.$cagedCounts[$row['species_id']].'</span>'."</td>";
+							if($incCollected)
+								$subTableHTML .= "<td>" . $row['name'].'<span class="badge" style="margin-left: 5px;background-color:#5f5f5f;font-size: 10px;">'.$cagedCounts[$row['species_id']].'</span>'."</td>";
+							else
+								$subTableHTML .= "<td>" . $row['name']."</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
@@ -146,11 +140,11 @@ else {
 					$emptyTable = true;
 				
 				$subTableHTML .= '<tr class="totalRow">';			
-				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'<b>Total <b/>'.'</td>';
-				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
-				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'<b>'.convertToWoWCurrency($totalBuy).'</b>'.'</td>';
-				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'</td>';
-				$subTableHTML .=  '<td style="border-bottom: 1px solid black;">'.'</td>';
+				$subTableHTML .=  '<td>'.'<b>Total <b/>'.'</td>';
+				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
+				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalBuy).'</b>'.'</td>';
+				$subTableHTML .=  '<td>'.'</td>';
+				$subTableHTML .=  '<td>'.'</td>';
 				$subTableHTML .=  '</tr>';
 				//$subTableHTML .= '<tr style="background-color:white;"><td style="color:#ddd0;">asdf</td><td/><td/><td><td/></tr>'; // Blank Row
 				$subTableHTML .= "</tbody></table></div></div>"; 	
@@ -161,17 +155,12 @@ else {
 			}
 		}
 		
-
-				
-
-		
 		if($showSnipes)		
 			echo (buildSnipesTables($realms[$i]));
 		
 		echo '</div>';
 	}
 }
-
 
 
 /**
@@ -342,13 +331,7 @@ function buildSnipesTables($realm)
 	$totalBuy = 0;
 	$totalValue = 0;
 	$emptyTable = false;
-	
 	$snipeDeals = findDealsForRealm($realm, FALSE, $configs['maxGblSnipePercent']);
-		
-	// $tableHTML .= '<h2><a data-toggle="collapse" href="'.getRealmNameFromSlug($realm).'_Tables>"'.getRealmNameFromSlug($realm). " - Snipes" . "</a></h2>";
-	//$tableHTML .= '<h2>'.getRealmNameFromSlug($realm). " - Snipes" . "</h2>";
-	//$tableHTML .= '<br/>';
-	
 	
 	$tableHTML = 	'<div class="panel panel-default">
 								<div class="panel-heading">

@@ -313,7 +313,7 @@ function createRealmTabs($realms)
 		$realmName = getRealmNameFromSlug($aRealm);
 		
 		if($key == 0)
-			$realmTabHTML .= '<li class="active" onclick="alert()"><a data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
+			$realmTabHTML .= '<li class="active"><a data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
 		else
 			$realmTabHTML .= '<li><a data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
 	

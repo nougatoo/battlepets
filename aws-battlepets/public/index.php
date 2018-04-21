@@ -205,7 +205,7 @@
 												require_once('../scripts/util.php');
 												
 												for($i = 10; $i<100; $i+=5) {
-													if($i == 50)
+													if($i == 55) // Default is 55
 														echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
 													else
 														echo ('<option value="'.($i/100).'">'.$i.'%</option>');

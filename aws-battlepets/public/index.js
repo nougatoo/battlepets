@@ -138,7 +138,7 @@ function findDeals() {
 	$('#loadingBar').show();
 	
 	data["purpose"] = "tableData";
-		$.ajax({
+	$.ajax({
 		url: 'findDeals.php',
 		type: 'POST',
 		data: data,

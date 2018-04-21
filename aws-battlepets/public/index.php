@@ -35,6 +35,7 @@
 			padding-top: 70px;
 		}
 		
+		/*
 		.btn-primary {
 			background-color:#333; 
 			border-color:#333;
@@ -81,7 +82,7 @@
 		#backFooter {
 			height: 30px !important;
 		}
-		
+		*/
 		.leggodeal {
 		  background-color: #ffebcc !important;
 		}
@@ -105,7 +106,17 @@
 		.bluedeal:focus {
 		  background-color: #b3d1ff !important;
 		}
-		
+		.panel-heading .realmCollapse:after {
+			/* symbol for "opening" panels */
+			font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+			content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+			float: right;        /* adjust as needed */
+			color: grey;         /* adjust as needed */
+		}
+		.panel-heading .realmCollapse.collapsed:after {
+			/* symbol for "collapsed" panels */
+			content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+		}
 	</style>
 </head>
 
@@ -222,7 +233,7 @@
 				<!--<button id="showOptions" type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#optionsDiv">Show Options</button>-->
 					<div class="panel-heading">
 						<h4 class="panel-title">
-							<center><a data-toggle="collapse" href="#optionsCollapse" style="color:black;">Show Options</a></center>
+							<center><a class="realmCollapse" data-toggle="collapse" href="#optionsCollapse" style="color:black;">Show Options</a></center>
 						</h4>
 					</div>
 					<div id="optionsCollapse" class="panel-collapse collapse">
@@ -309,8 +320,7 @@
 						</div>
 					</div>
 				</div>
-				<br/>
-				<button id="findDealsButton" type="button" class="btn btn-primary btn-block" onclick="findDeals()">Find Deals</button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()" style="color: #333;background-color: #f5f5f5;border-color: #ddd;"><h4>Find Deals <span class="glyphicon glyphicon-search"></span></h4></button>
 			</div>
 		</div>
 		<div id="dataSection" class="col-sm-9" id="row1col2">
@@ -318,7 +328,7 @@
 			</div>
 			<br/>
 			<br/>
-			<input class="form-control" id="dataFilter" type="text" placeholder="Search..." style="display:none;">
+			<input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;">
 			<div id="loadingBar" style="display:none;">
 				<center><h4>Loading</h4></center>
 				<div class="progress">

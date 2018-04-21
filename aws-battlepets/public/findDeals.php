@@ -73,7 +73,8 @@ else {
 			$tableHTML =	'<div class="panel panel-default">
 										<div class="panel-heading">
 											<h4 class="panel-title">
-											  <span class="glyphicon glyphicon-chevron-right" style="padding-right:"5px"></span><a data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'">'.getRealmNameFromSlug($realms[$j]) .'</a>
+											  
+											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'">'.getRealmNameFromSlug($realms[$j]) .'</a>
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in">
@@ -352,7 +353,7 @@ function buildSnipesTables($realm)
 	$tableHTML = 	'<div class="panel panel-default">
 								<div class="panel-heading">
 									<h4 class="panel-title">
-									  <a data-toggle="collapse" href="#'.$realm.'_snipes">Snipes</a>
+									  <a class="realmCollapse"data-toggle="collapse" href="#'.$realm.'_snipes">Snipes</a>
 									</h4>
 								</div>
 								<div id="'.$realm.'_snipes" class="panel-collapse collapse in">

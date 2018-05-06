@@ -27,14 +27,11 @@
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 18px;">Battle Pets</a>
+			<a class="navbar-brand" href="#" style="font-size: 25px;color: #a9e7ff;letter-spacing: 1px;">Battle Pets &#9876;</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li><a href="http://battletpets-testing.us-east-2.elasticbeanstalk.com"  style="font-size: 18px;">Home</a></li>
-			<li  class="active"><a href="viewAllPets.php" style="font-size: 18px;">All Pets</a></li>
-		</ul>
-		<ul class="nav navbar-nav navbar-right">
-			<li><a href="#" style="font-size: 18px;">About me</a></li>
+			<li><a href="http://battletpets-testing.us-east-2.elasticbeanstalk.com"  style="font-size: 16px;     color: #a9e7ff;">Home</a></li>
+			<li  class="active"><a href="viewAllPets.php" style="font-size: 16px;">All Pets</a></li>
 		</ul>
 	</div>
 </nav>

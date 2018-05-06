@@ -310,7 +310,7 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h4><span class="label label-default">Brandon Brien - brandon2.brien@gmail.com - Frequently Asked Questions</span></h4>
+			  <h5><span>Brandon Brien - brandon2.brien@gmail.com - Frequently Asked Questions</span></h5>
 	</center>
 </footer>
 </body>

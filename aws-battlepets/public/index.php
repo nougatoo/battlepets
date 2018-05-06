@@ -55,11 +55,129 @@
 	<div class="row" id="row3" style="display:none">
 		<div class="col-sm-3" id="row3col1" style="padding-right: 0px;">
 			<div id="realmSpy" data-spy="affix" data-offset-top="50">
+				<div id="realmSpyDynammic">
+				
+				</div>
+				<div id="realmSpySatic">
+					<div class="form-group has-feedback">
+						<input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
+						<i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i>
+					</div>
+					<div class="panel panel-default" style="border: 1px solid #e0e0e0; margin-bottom: 0px;">
+						<div class="panel-heading" style="border: none; background-color: white;">
+							<h3 class="panel-title">
+								<a class="realmCollapse" data-toggle="collapse" href="#optionsCollapse"  style="color:black; color: #00000094; font-weight: bold;">Options</a>
+							</h3>
+						</div>
+						<div id="optionsCollapse" class="panel-collapse collapse">
+							<div id="optionsDiv" class="panel-body">
+								<h4 style="padding-left:8px;">Deal Qualities</h4>
+								<table class="table">
+									<tr>
+										<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="commonSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>
+										</td>
+										<td class="toggleTd" style="width: 20%">								
+											<label class="switch">
+												<input id="greenSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>						
+										</td>
+										<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="blueSlider" type="checkbox" checked >
+												<span class="slider round"></span>
+											</label>								
+										</td >
+										<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input  id="epicSlider" type="checkbox" checked>
+												<span class="slider round sliderEpic"></span>
+											</label>								
+										</td>
+										<td class="toggleTd" style="width: 20%">	
+											<label class="switch">
+												<input  id="leggoSlider" type="checkbox" checked>
+												<span class="slider round sliderEpic"></span>
+											</label>							
+										</td>
+									</tr>
+								</table>
+								<h4 style="padding-left:8px;">Other</h4>
+								<table class="table">
+									<tr>
+										<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="snipesSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+										</td>			
+										<td class="toggleTd" style="width: 20%">
+											<label class="switch">
+												<input id="collectedSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+										</td>				
+										<td class="toggleTd" style="width: 20%">
+											<div class="form-group">
+												<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;">';
+													<?php
+														for($i = 10; $i<100; $i+=5) {
+															if($i == 55) // Default is 55
+																echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
+															else
+																echo ('<option value="'.($i/100).'">'.$i.'%</option>');
+														}
+													?>
+											</select>
+											</div>
+										</td>				
+										<td class="toggleTd" style="width: 20%">
+										</td>				
+										<td class="toggleTd" style="width: 20%">
+										</td>
+									</tr>
+									<tr>
+										<td>Show Snipes </td>			
+										<td>Show Amount Caged</td>						
+										<td>Max Buy %</td>						
+									</tr>					
+								</table>
+							</div>
+						</div>
+					</div>
+					<div id="helpSection" style="float:right; color: #ababab;cursor: pointer;">
+						<h2>
+								<span class="glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#myModal"/>
+						</h2>
+					</div>
+					<div id="myModal" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Help</h4>
+								</div>
+								<div class="modal-body">
+									<p>In the future, this will help you!</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>	
 		<div id="dataSection" class="col-sm-6" id="row3col2">
 			<h1 style="padding-bottom: 15px;">
-					<span class="label label-default">Sell</span>
+					<span class="label label-default colHeader">Sell</span>
 			</h1>
 			<div id="realmTabs" >
 			</div>
@@ -83,7 +201,7 @@
 		<div class="col-sm-3" id="row3col3" style="padding-left: 0px;">
 			<div id="charactersSpy" data-spy="affix" data-offset-top="50">
 				<h1 style="padding-bottom: 15px;">
-					<span class="label label-default">Find</span>
+					<span class="label label-default colHeader">Find</span>
 				</h1>
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
@@ -181,7 +299,7 @@
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search"></span></h4></button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: grey;"></span></h4></button>
 				<br/>
 				<div id="loadingBarb" style="display:none;">
 					<div class="progress">
@@ -197,7 +315,7 @@
 		<div class="col-sm-4" id="row4col2" >
 			<div id="charactersSpy" data-spy="affix" data-offset-top="50">
 				<h1 style="padding-bottom: 15px;">
-					<span class="label label-default">Find</span>
+					<span class="label label-default colHeader">Find</span>
 				</h1>
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
@@ -295,7 +413,7 @@
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search"></span></h4></button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: grey;"></span></h4></button>
 				<br/>
 				<div id="loadingBar" style="display:none;">
 					<div class="progress">
@@ -310,7 +428,7 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><span>Brandon Brien - brandon2.brien@gmail.com - Frequently Asked Questions</span></h5>
+			  <h5><span><b>Brandon Brien - Contact - FAQ<b></span></h5>
 	</center>
 </footer>
 </body>

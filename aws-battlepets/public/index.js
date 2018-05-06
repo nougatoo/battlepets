@@ -40,7 +40,7 @@ function findDeals() {
 	// Clear out the garbage section
 	$('#tableArea')[0].innerHTML = "";
 	$('#realmTabs')[0].innerHTML = "";
-	$('#realmSpy')[0].innerHTML = "";
+	$('#realmSpyDynammic')[0].innerHTML = "";
 	
 	$('#dataFilter').hide();
 	$('#realmTabs').hide();
@@ -152,7 +152,7 @@ function findDeals() {
 		type: 'POST',
 		data: data,
 		success:function(response){			
-			$('#realmSpy')[0].innerHTML += response;
+			$('#realmSpyDynammic')[0].innerHTML += response;
 		}
 	});
 	

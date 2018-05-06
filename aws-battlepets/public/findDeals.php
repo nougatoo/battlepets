@@ -61,14 +61,13 @@ else {
 	  
 			$tableHTML =	'<div class="panel panel-default realmPanel">
 										<div class="panel-heading realmPanelHeading">
-											<h4 class="panel-title">
-											  
+											<h4 class="panel-title">	  
 											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'"><b>'.getRealmNameFromSlug($realms[$j]) .'</b></a>
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in realmPanelCollapse">
-											<table class="table table-striped table-hover realmTable">
-												<tr style="background-color:white;">
+											<table class="table table-hover realmTable">
+												<tr style="background-color:white; color: #6b6b6b;">
 													<th onclick="sortTable(this)" class="realmTableHeader">Name</th>
 													<th class="realmTableHeader">Min Buy</th>
 													<th class="realmTableHeader">Global Market Value</th>
@@ -138,8 +137,8 @@ else {
 				
 				$subTableHTML .= '<tr class="totalRow">';			
 				$subTableHTML .=  '<td>'.'<b>Total <b/>'.'</td>';
-				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalBuy).'</b>'.'</td>';
+				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'</td>';
 				$subTableHTML .=  '</tr>';
 				//$subTableHTML .= '<tr style="background-color:white;"><td style="color:#ddd0;">asdf</td><td/><td/><td><td/></tr>'; // Blank Row
@@ -303,7 +302,7 @@ function buildingRealmRes($realm)
 function createRealmTabs($realms)
 {
 	echo '<h1 style="padding-bottom: 15px;">
-				<span class="label label-default">Buy</span>
+				<span class="label label-default colHeader">Buy</span>
 			</h1>';
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
@@ -322,8 +321,10 @@ function createRealmTabs($realms)
 	echo '</ul>';	
 	
 
-	echo '<div class="form-group has-feedback"><input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;"><i class="form-control-feedback glyphicon glyphicon-filter"></i></div>';
-	
+	/*
+	echo '<div class="form-group has-feedback"><input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;box-shadow: none; border: 1px solid #e0e0e0;"><i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i></div>';
+	*/
+	/*
 	echo '<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 				<div class="panel-heading" style="border: none; background-color: white;">
 					<h3 class="panel-title">
@@ -410,6 +411,7 @@ function createRealmTabs($realms)
 					</div>
 				</div>
 			</div>';
+			*/
 }
 
 /**
@@ -443,7 +445,7 @@ function buildSnipesTables($realm)
 								</div>
 								<div id="'.$realm.'_snipes" class="panel-collapse collapse in realmPanelCollapse">
 									<table class="table table-striped table-hover realmTable">
-										<tr  style="background-color:white;">
+										<tr  style="background-color:white; color: #6b6b6b;">
 											<th class="realmTableHeader">Name</th>
 											<th class="realmTableHeader">Min Buy</th>
 											<th class="realmTableHeader">Global Market Value</th>
@@ -496,8 +498,8 @@ function buildSnipesTables($realm)
 		
 	$subTableHTML.= '<tr class="totalRow">';			
 	$subTableHTML .=  "<td>"."<b>Total<b/>"."</td>";
-	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalBuy)."</b>"."</td>";
+	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "</tr>";
 	

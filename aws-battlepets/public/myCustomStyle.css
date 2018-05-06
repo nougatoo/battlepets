@@ -19,8 +19,9 @@
 	}
 }
 
-
-
+.modal-open {
+    padding-right: 0px !important;
+}
 
 /*
 .btn-primary {
@@ -314,8 +315,10 @@ tr.totalRow {
     /* border-top: 4px solid #a9e7ff; */
 }
 
-.label-default {
-    background-color: #505050 !important;
+.colHeader {
+    background-color: white !important;
+	border-top: 3px solid #a9e7ff;
+	color: #6b6b6b;
 }
 
 

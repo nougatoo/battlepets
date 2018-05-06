@@ -17,19 +17,11 @@ var realm1;
 var realm2;
 var realm3;
 var realm4;
+var firstSearch = true;
 
 
 $(document).ready(function(){
-  $("#dataFilter").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable1 tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-	
-  });
-  
-  // Glyphcon is loading wrong way..manually hide to trigger event that corrects it
-  $('#optionsCollapse').collapse("hide");
+
 });
 
 
@@ -48,9 +40,11 @@ function findDeals() {
 	// Clear out the garbage section
 	$('#tableArea')[0].innerHTML = "";
 	$('#realmTabs')[0].innerHTML = "";
+	$('#realmSpy')[0].innerHTML = "";
 	
 	$('#dataFilter').hide();
 	$('#realmTabs').hide();
+	$('#realmSpy').hide();
 	
 	 $('#findDealsButton').addClass('disabled');
 	
@@ -62,7 +56,8 @@ function findDeals() {
 	
 	var showSnipes = $('#snipesSlider').is(':checked');
 	var incCollected = $('#collectedSlider').is(':checked');
-	var maxBuyPerc = $('#selectMaxBuy').val();
+	//var maxBuyPerc = $('#selectMaxBuy').val();
+	var maxBuyPerc = 0.55;
 	
 	if($('#character1').val().replace(/\s/g, '') != "Test") {
 		var char1 = $('#character1').val().replace(/\s/g, '');
@@ -88,7 +83,8 @@ function findDeals() {
 		realm3 = 'proudmoore';
 		realm4 = 'emerald-dream';	
 	}
-		
+	
+	/*
 	var data = {
 		"characters": [],
 		"realms": [],
@@ -101,6 +97,20 @@ function findDeals() {
 		showSnipes: showSnipes,
 		incCollected: incCollected,
 		maxBuyPerc: maxBuyPerc
+	};
+	*/
+	var data = {
+		"characters": [],
+		"realms": [],
+		"purpose": "",
+		showCommon: true,
+		showGreen: true,
+		showBlue: true,
+		showEpic: true,
+		showLeggo: true,
+		showSnipes: true,
+		incCollected: true,
+		maxBuyPerc: 0.55
 	};
 	
 	if(char1 && realm1) {
@@ -131,7 +141,7 @@ function findDeals() {
 		type: 'POST',
 		data: data,
 		success:function(response){			
-			$('#realmTabs')[0].innerHTML += response;
+			$('#realmSpy')[0].innerHTML += response;
 		}
 	});
 	
@@ -143,13 +153,31 @@ function findDeals() {
 		type: 'POST',
 		data: data,
 		success:function(response){
+			$('#row4').hide();
 			$('#loadingBar').hide();
+			
+			$('#row3').show();
+			// Transfer over the character selection
+			// Need to get character values
+			if(firstSearch == true) {
+				$('#row3col3')[0].innerHTML = $('#row4col2')[0].innerHTML;
+				$('#row4col2')[0].innerHTML = "";
+				firstSearch = false;
+			}
 			$('#tableArea')[0].innerHTML += response;
 			$('#dataFilter').show();
-			$('#realmTabs').show();
+			$('#realmSpy').show();
 			activateDealsButton();
 			
-			testFunction();
+			$("#dataFilter").on("keyup", function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable1 tr").filter(function() {
+				  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+			});
+			
+		  // Glyphcon is loading wrong way..manually hide to trigger event that corrects it
+		$('#optionsCollapse').collapse("hide");
 		}
 	});
 	

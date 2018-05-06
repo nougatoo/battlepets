@@ -2,15 +2,25 @@
   font-size: 12px !important;
 }
 
-.affix {
-	top: 0;
-	width: 100%;
-	z-index: 9999 !important;
+@media only screen and (max-width: 1441px) {
+	.affix {
+		position: static;
+	}
 }
 
-.affix + .container-fluid {
-	padding-top: 70px;
+
+
+@media only screen and (max-width: 20000px) {
+	.affix {
+		top: 20px;
+		width:inherit;
+		z-index: 9999 !important;
+		padding-right: 15px !important;
+	}
 }
+
+
+
 
 /*
 .btn-primary {
@@ -196,5 +206,119 @@ input:checked + .slider:before {
 tr.totalRow {
 	/*background-color:#b3b3b396 !important;*/
 	font-size: 13px;
-	
+	background-color:white !important;
 } 
+
+.realmPanel {
+	border: 1px solid #e0e0e0 !important;
+}
+
+.realmPanelHeading {
+	border: none; background-color: white !important;
+}
+
+.realmCollapse {
+	color: #00000094 !important;
+}
+
+.realmPanelCollapse {
+	padding-left:15px !important;
+	padding-right:15px !important;
+}
+
+.realmTable {
+	border-top: 2px solid #54cfff80 !important;
+}
+
+.realmTableHeader {
+	border:none !important;
+	padding-top: 15px !important;
+}
+
+.realmTableBody {
+	border-top:none !important;
+}
+
+.realmTableBadge {
+	margin-left: 5px !important;
+	background-color:#5f5f5f !important;
+	font-size: 10px !important;
+}
+
+.buyRealmList {
+	font-weight: bold;
+    border-left: 5px solid #54cfff00;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+	color: #6b6b6b85;
+
+}	
+
+#realmSpy {
+	/*
+	Position: fixed;
+    width: inherit;
+	*/
+}
+
+.navbar-nab>li.active {
+	style="font-size: 18px;"
+	
+}
+.nav-stacked>li>a {
+	padding-left: 8px;
+	border-radius: 2px;
+	font-size: 18px;
+}
+.nav-stacked > li.active > a{
+	border-left: 5px solid #54cfff80;
+	background: white;
+	color: #00000094 !important;
+}
+
+.nav-stacked > li.active {
+	border: 1px solid #e0e0e0;
+}
+
+.nav-stacked > li{
+	border: none;
+}
+
+.charInput {
+	border: none;
+    background-color: #8a8a8a26;
+    box-shadow: none;
+}
+
+.realmInput {
+	border: none;
+    background-color: #8a8a8a26;
+    box-shadow: none;
+}
+
+.charFormGroup {
+	padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#findDealsButton {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
+
+
+
+
+
+
+
+

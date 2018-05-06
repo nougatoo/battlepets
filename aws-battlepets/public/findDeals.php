@@ -69,14 +69,16 @@ else {
 											<table class="table table-hover realmTable">
 												<tr style="background-color:white; color: #6b6b6b;">
 													<th onclick="sortTable(this)" class="realmTableHeader">Name</th>
-													<th class="realmTableHeader">Min Buy</th>
-													<th class="realmTableHeader">Global Market Value</th>
-													<th class="realmTableHeader">% Global Market Value</th>
+													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$j]).' Price</th>
+													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$i]).' Price</th>
+													<th class="realmTableHeader">Market Value</th>
+													<th class="realmTableHeader">% Market Value</th>
 												</tr>
 												<tbody id="myTable1" class="realmTableBody">';			
 					
 			// Find good places to sell 
-			$goodSellers = findSellersForRealm($realms[$j], $characters[$j]);
+			$goodSellers = findSellersForRealm($realms[$j], $characters[$j], false);
+			$goodSellersPrice = findSellersForRealm($realms[$j], $characters[$j], true);
 
 			// Now that good sells contains only good selling pets that i do not own, we find good selling pets which are also good deals
 			$goodDealsFiltered = array_intersect($goodDealsRawSpecies,$goodSellers);
@@ -84,6 +86,7 @@ else {
 			if(sizeof($goodDealsFiltered) > 0)
 			{					
 				$totalBuy = 0;
+				$totalSell = 0;
 				$totalValue = 0;
 				$emptyTable = false;
 	
@@ -122,12 +125,14 @@ else {
 								$subTableHTML .= "<td>" . $row['name'].'<span class="badge realmTableBadge">'.$cagedCounts[$row['species_id']].'</span>'."</td>";
 							else
 								$subTableHTML .= "<td>" . $row['name']."</td>";
+							$subTableHTML .=  "<td>" . convertToWoWCurrency($goodSellersPrice[$row['species_id']]). "%</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
 							$subTableHTML .=  "</tr>";	
 							
 							$totalBuy += $row['minbuy'];
+							$totalSell += $goodSellersPrice[$row['species_id']];
 							$totalValue += $value;
 						}			
 				}
@@ -137,6 +142,7 @@ else {
 				
 				$subTableHTML .= '<tr class="totalRow">';			
 				$subTableHTML .=  '<td>'.'<b>Total <b/>'.'</td>';
+				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalSell).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalBuy).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'</td>';
@@ -144,6 +150,7 @@ else {
 				
 				// TODO - add real last updated
 				$subTableHTML .= '<tr>
+												<td></td>
 												<td></td>
 												<td></td>
 												<td></td>
@@ -171,7 +178,7 @@ else {
 /**
 	Finds good selling species_id from a given realm.
 */
-function findSellersForRealm($realm, $character)
+function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
 	global $configs;
 	$conn = dbConnect();	
@@ -200,6 +207,7 @@ function findSellersForRealm($realm, $character)
 				min_buyout > (market_value_hist_median * ".$configs["minGblSellPercent"].");";
 		
 	$sellers = []; // species_id
+	$sellersAndPrice = []; // Array to hold the sells are buy price
 	
 	$result = $conn->prepare($sql);
 	$result->bindParam(':realm', $realm);
@@ -208,6 +216,7 @@ function findSellersForRealm($realm, $character)
 	if($result) {
 		while($row = $result->fetch()) {		
 				array_push($sellers, $row['species_id']);		
+				$sellersAndPrice[$row['species_id']] = $row['min_buyout'];		
 		}
 	}
 
@@ -228,7 +237,10 @@ function findSellersForRealm($realm, $character)
 
 	$sellers = array_diff($sellers,$currentlySelling);
 
-	return $sellers;	
+	if($returnPriceArray)
+		return $sellersAndPrice;
+	else
+		return $sellers;	
 }
 
 /**
@@ -311,9 +323,11 @@ function buildingRealmRes($realm)
 */
 function createRealmTabs($realms)
 {
+	/*
 	echo '<h1 style="padding-bottom: 15px;">
 				<span class="label label-default colHeader">Buy</span>
 			</h1>';
+		*/
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
 	foreach($realms as $key=> $aRealm) {
@@ -321,107 +335,14 @@ function createRealmTabs($realms)
 		$realmName = getRealmNameFromSlug($aRealm);
 		
 		if($key == 0)
-			$realmTabHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
+			$realmTabHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
 		else
-			$realmTabHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'</a></li>';
+			$realmTabHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></a></li>';
 	
 		echo $realmTabHTML;
 	}	
 	
 	echo '</ul>';	
-	
-
-	/*
-	echo '<div class="form-group has-feedback"><input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;box-shadow: none; border: 1px solid #e0e0e0;"><i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i></div>';
-	*/
-	/*
-	echo '<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
-				<div class="panel-heading" style="border: none; background-color: white;">
-					<h3 class="panel-title">
-						<a class="realmCollapse" data-toggle="collapse" href="#optionsCollapse"  style="color:black; color: #00000094; font-weight: bold;">Options</a>
-					</h3>
-				</div>
-				<div id="optionsCollapse" class="panel-collapse collapse">
-					<div id="optionsDiv" class="panel-body">
-						<h4 style="padding-left:8px;">Deal Qualities</h4>
-						<table class="table">
-							<tr>
-								<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="commonSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>
-								</td>
-								<td class="toggleTd" style="width: 20%">								
-									<label class="switch">
-										<input id="greenSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>						
-								</td>
-								<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="blueSlider" type="checkbox" checked >
-										<span class="slider round"></span>
-									</label>								
-								</td >
-								<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input  id="epicSlider" type="checkbox" checked>
-										<span class="slider round sliderEpic"></span>
-									</label>								
-								</td>
-								<td class="toggleTd" style="width: 20%">	
-									<label class="switch">
-										<input  id="leggoSlider" type="checkbox" checked>
-										<span class="slider round sliderEpic"></span>
-									</label>							
-								</td>
-							</tr>
-						</table>
-						<h4 style="padding-left:8px;">Other</h4>
-						<table class="table">
-							<tr>
-								<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="snipesSlider" type="checkbox" checked >
-										<span class="slider round basicSlider"></span>
-									</label>
-								</td>			
-								<td class="toggleTd" style="width: 20%">
-									<label class="switch">
-										<input id="collectedSlider" type="checkbox" checked >
-										<span class="slider round basicSlider"></span>
-									</label>
-								</td>				
-								<td class="toggleTd" style="width: 20%">
-									<div class="form-group">
-										<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;">';
-												
-	for($i = 10; $i<100; $i+=5) {
-		if($i == 55) // Default is 55
-			echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
-		else
-			echo ('<option value="'.($i/100).'">'.$i.'%</option>');
-	}
-	
-	echo							'</select>
-									</div>
-								</td>				
-								<td class="toggleTd" style="width: 20%">
-								</td>				
-								<td class="toggleTd" style="width: 20%">
-								</td>
-							</tr>
-							<tr>
-								<td>Show Snipes </td>			
-								<td>Show Amount Caged</td>						
-								<td>Max Buy %</td>						
-							</tr>					
-						</table>
-					</div>
-				</div>
-			</div>';
-			*/
 }
 
 /**
@@ -457,9 +378,9 @@ function buildSnipesTables($realm)
 									<table class="table table-striped table-hover realmTable">
 										<tr  style="background-color:white; color: #6b6b6b;">
 											<th class="realmTableHeader">Name</th>
-											<th class="realmTableHeader">Min Buy</th>
-											<th class="realmTableHeader">Global Market Value</th>
-											<th class="realmTableHeader">% Global Market Value</th>
+											<th class="realmTableHeader">'.getRealmNameFromSlug($realm) .' Price</th>
+											<th class="realmTableHeader">Market Value</th>
+											<th class="realmTableHeader">% Market Value</th>
 										</tr>
 										<tbody id="myTable1" class="realmTableBody">';
 									

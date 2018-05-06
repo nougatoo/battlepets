@@ -40,7 +40,7 @@
 	</div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid" style="min-height:90%">
 	<div class="row" id="row1" style="display:none">
 		<div class="col-sm-12" id="row1col1">	
 		</div>
@@ -59,7 +59,7 @@
 		</div>	
 		<div id="dataSection" class="col-sm-6" id="row3col2">
 			<h1 style="padding-bottom: 15px;">
-					<span class="label label-default">Sell On</span>
+					<span class="label label-default">Sell</span>
 			</h1>
 			<div id="realmTabs" >
 			</div>
@@ -81,7 +81,114 @@
 		</div>
 		
 		<div class="col-sm-3" id="row3col3" style="padding-left: 0px;">
-			
+			<div id="charactersSpy" data-spy="affix" data-offset-top="50">
+				<h1 style="padding-bottom: 15px;">
+					<span class="label label-default">Find</span>
+				</h1>
+				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
+					<div class="panel-heading" style="border: none; background-color: white;">
+						<h3 class="panel-title">
+							<a class="realmCollapse" data-toggle="collapse" href="#charSelect" style="color:black; color: #00000094; font-weight: bold;">Characters &amp; Realms</a>
+						</h3>
+					</div>
+					<div id="charSelect" class="panel-collapse collapse in">
+						<form class="form-inline" style="padding-left:15px;padding-right:15px">
+							<div class="form-group charFormGroup" style="width:100%;">
+								<input style="width:49%;" type="text" class="form-control charInput" id="character1b"  placeholder="Character 1" onchange="activateDealsButton()">
+								<select style="width:49%;" class="form-control realmInput" id="realm1b">
+									<option></option>
+									<?php
+										require_once('../scripts/util.php');
+										
+										$conn = dbConnect();
+										
+										
+										$sql = "SELECT slug, name FROM realms";
+										$result = $conn->query($sql);
+										
+										if($result) {
+											while($row = $result->fetch()) {
+												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
+											}	
+										}
+									?>
+								</select>
+							</div>
+							<div class="form-group charFormGroup" style="width:100%;">
+								<input style="width:49%;" type="text" class="form-control charInput" id="character2b"  placeholder="Character 2">
+								<select style="width:49%;" class="form-control realmInput" id="realm2b">
+									<option></option>
+									<?php
+										require_once('../scripts/util.php');
+										
+										$conn = dbConnect();
+										
+										
+										$sql = "SELECT slug, name FROM realms";
+										$result = $conn->query($sql);
+										
+										if($result) {
+											while($row = $result->fetch()) {
+												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
+											}	
+										}
+									?>
+								</select>
+							</div>
+							<div class="form-group charFormGroup" style="width:100%;">
+								<input style="width:49%;" type="text" class="form-control charInput" id="character3b"  placeholder="Character 3">
+								<select style="width:49%;" class="form-control realmInput" id="realm3b">
+									<option></option>
+									<?php
+										require_once('../scripts/util.php');
+										
+										$conn = dbConnect();
+										
+										
+										$sql = "SELECT slug, name FROM realms";
+										$result = $conn->query($sql);
+										
+										if($result) {
+											while($row = $result->fetch()) {
+												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
+											}	
+										}
+									?>
+								</select>
+							</div>
+							<div class="form-group charFormGroup" style="width:100%;">
+								<input style="width:49%;" type="text" class="form-control charInput" id="character4b"  placeholder="Character 4">
+								<select style="width:49%;" class="form-control realmInput" id="realm4b">
+									<option></option>
+									<?php
+										require_once('../scripts/util.php');
+										
+										$conn = dbConnect();
+										
+										
+										$sql = "SELECT slug, name FROM realms";
+										$result = $conn->query($sql);
+										
+										if($result) {
+											while($row = $result->fetch()) {
+												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
+											}	
+										}
+									?>
+								</select>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search"></span></h4></button>
+				<br/>
+				<div id="loadingBarb" style="display:none;">
+					<div class="progress">
+						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row" id="row4">
@@ -195,11 +302,32 @@
 						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
 					</div>
 				</div>
-		</div>
+			</div>
 		<div class="col-sm-4" id="row4col3" >
 		</div>
 	</div>
 </div>
-
+</div>
+<footer class="footer" style="min-height:5%">
+	<center>	
+			  <h4><span class="label label-default">Brandon Brien - brandon2.brien@gmail.com - Frequently Asked Questions</span></h4>
+	</center>
+</footer>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

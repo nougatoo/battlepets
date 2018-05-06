@@ -303,7 +303,7 @@ function buildingRealmRes($realm)
 function createRealmTabs($realms)
 {
 	echo '<h1 style="padding-bottom: 15px;">
-				<span class="label label-default">Buy On</span>
+				<span class="label label-default">Buy</span>
 			</h1>';
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
@@ -322,7 +322,7 @@ function createRealmTabs($realms)
 	echo '</ul>';	
 	
 
-	echo '<div class="form-group has-feedback"><input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;"><i class="form-control-feedback glyphicon glyphicon-filter"></i></div>';
+	echo '<div class="form-group has-feedback"><input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;"><i class="form-control-feedback glyphicon glyphicon-filter"></i></div>';
 	
 	echo '<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 				<div class="panel-heading" style="border: none; background-color: white;">

@@ -314,6 +314,10 @@ tr.totalRow {
     /* border-top: 4px solid #a9e7ff; */
 }
 
+.label-default {
+    background-color: #505050 !important;
+}
+
 
 
 

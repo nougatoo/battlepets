@@ -59,7 +59,8 @@ function findDeals() {
 	//var maxBuyPerc = $('#selectMaxBuy').val();
 	var maxBuyPerc = 0.55;
 	
-	if($('#character1').val().replace(/\s/g, '') != "Test") {
+	// WORKING HERE - NEED TO CHANGE THE CHARACTER NAMES BASED ON FIRST SEARCH OR NOT
+	if(firstSearch == true && $('#character1').val().replace(/\s/g, '') != "Test") {
 		var char1 = $('#character1').val().replace(/\s/g, '');
 		var char2 = $('#character2').val().replace(/\s/g, '');
 		var char3 = $('#character3').val().replace(/\s/g, '');
@@ -70,9 +71,19 @@ function findDeals() {
 		realm3 = $('#realm3').val();
 		realm4 = $('#realm4').val();
 	}
+	else if(firstSearch == false && $('#character1b').val().replace(/\s/g, '') != "Test" ) {
+		var char1 = $('#character1b').val().replace(/\s/g, '');
+		var char2 = $('#character2b').val().replace(/\s/g, '');
+		var char3 = $('#character3b').val().replace(/\s/g, '');
+		var char4 = $('#character4b').val().replace(/\s/g, '');
+		
+		realm1 = $('#realm1b').val();
+		realm2 = $('#realm2b').val();
+		realm3 = $('#realm3b').val();
+		realm4 = $('#realm4b').val();
+	}
 	else {
 		// For faster testing...
-	
 		char1 = 'Irone';
 		char2 = 'valamyr';
 		char3 = 'Lladox';
@@ -146,6 +157,7 @@ function findDeals() {
 	});
 	
 	$('#loadingBar').show();
+	$('#loadingBarb').show();
 	
 	data["purpose"] = "tableData";
 	$.ajax({
@@ -155,12 +167,16 @@ function findDeals() {
 		success:function(response){
 			$('#row4').hide();
 			$('#loadingBar').hide();
+			$('#loadingBarb').hide();
 			
 			$('#row3').show();
 			// Transfer over the character selection
 			// Need to get character values
 			if(firstSearch == true) {
-				$('#row3col3')[0].innerHTML = $('#row4col2')[0].innerHTML;
+				//var original = $('#row3col3') ;
+				//var original = $('#charactersSpy').clone(true, true);
+				//$('#somethingasdf').html(original);
+
 				$('#row4col2')[0].innerHTML = "";
 				firstSearch = false;
 			}
@@ -176,9 +192,14 @@ function findDeals() {
 				});
 			});
 			
-		  // Glyphcon is loading wrong way..manually hide to trigger event that corrects it
-		$('#optionsCollapse').collapse("hide");
+			// Glyphcon is loading wrong way..manually hide to trigger event that corrects it
+			$('#optionsCollapse').collapse("hide");
+			$('[data-spy=affix]').each(function () { 
+				$(this).data('bs.affix').checkPosition(); 
+			});
 		}
+		
+		
 	});
 	
 }

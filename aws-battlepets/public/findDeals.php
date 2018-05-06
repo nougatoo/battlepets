@@ -141,6 +141,16 @@ else {
 				$subTableHTML .=  '<td>'.'<b>'.convertToWoWCurrency($totalValue).'</b>'.'</td>';
 				$subTableHTML .=  '<td>'.'</td>';
 				$subTableHTML .=  '</tr>';
+				
+				// TODO - add real last updated
+				$subTableHTML .= '<tr>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td style="color: #ababab;font-size: 11px; text-align: right;">
+													Last Updated: 12:54pm
+												</td>
+											</tr>';
 				//$subTableHTML .= '<tr style="background-color:white;"><td style="color:#ddd0;">asdf</td><td/><td/><td><td/></tr>'; // Blank Row
 				$subTableHTML .= "</tbody></table></div></div>"; 	
 				$tableHTML .=  $subTableHTML;
@@ -440,7 +450,7 @@ function buildSnipesTables($realm)
 	$tableHTML = 	'<div class="panel panel-default realmPanel">
 								<div class="panel-heading realmPanelHeading">
 									<h4 class="panel-title">
-									  <a class="realmCollapse realmCollapse" data-toggle="collapse" href="#'.$realm.'_snipes"><b>Snipes</b></a>
+									  <a class="realmCollapse realmCollapse" data-toggle="collapse" href="#'.$realm.'_snipes"><b>All Realm Deals</b></a>
 									</h4>
 								</div>
 								<div id="'.$realm.'_snipes" class="panel-collapse collapse in realmPanelCollapse">
@@ -502,7 +512,16 @@ function buildSnipesTables($realm)
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "</tr>";
-	
+
+	// TODO - get a real last updated
+	$subTableHTML .= '<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td style="color: #ababab;font-size: 11px; text-align: right;">
+										Last Updated: 12:54pm
+									</td>
+								</tr>';
 	$tableHTML .=  $subTableHTML."</tbody></table></div></div><br/>"; 
 			
 	if(!$emptyTable)

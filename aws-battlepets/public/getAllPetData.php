@@ -9,10 +9,10 @@ $sortOrder = $_POST['sortOrder'];
 
 $conn = dbConnect();
 
-$tableHTML = 	'<table class="table table-striped table-hover">
-							<tr>
-								<th onclick="sortTable(0)">Name</th>
-								<th onclick="sortTable(1)">Global Market Value</th>
+$tableHTML = 	'<table class="table table-striped table-hover realmTable">
+							<tr style="background-color:white;">
+								<th onclick="sortTable(0)" class="realmTableHeader">Name</th>
+								<th onclick="sortTable(1)" class="realmTableHeader">Global Market Value</th>
 							</tr>
 							<tbody id="myTable1">';
 

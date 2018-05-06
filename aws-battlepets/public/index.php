@@ -60,7 +60,7 @@
 				</div>
 				<div id="realmSpySatic">
 					<div class="form-group has-feedback">
-						<input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets" style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
+						<input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets.." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
 						<i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i>
 					</div>
 					<div class="panel panel-default" style="border: 1px solid #e0e0e0; margin-bottom: 0px;">
@@ -176,7 +176,7 @@
 			</div>
 		</div>	
 		<div id="dataSection" class="col-sm-6" id="row3col2">
-			<h1 style="padding-bottom: 15px;">
+			<h1 style="padding-bottom: 15px;" id="sellHeader">
 					<span class="label label-default colHeader">Sell</span>
 			</h1>
 			<div id="realmTabs" >
@@ -428,7 +428,7 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><span><b>Brandon Brien - Contact - FAQ<b></span></h5>
+			  <h5><span><b>Report a Bug  &middot; Contact &middot; FAQ<b></span></h5>
 	</center>
 </footer>
 </body>

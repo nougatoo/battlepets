@@ -42,6 +42,7 @@ function findDeals() {
 	$('#realmTabs')[0].innerHTML = "";
 	$('#realmSpyDynammic')[0].innerHTML = "";
 	
+	$('#sellHeader').hide();
 	$('#dataFilter').hide();
 	$('#realmTabs').hide();
 	$('#realmSpy').hide();
@@ -170,19 +171,17 @@ function findDeals() {
 			$('#loadingBarb').hide();
 			
 			$('#row3').show();
-			// Transfer over the character selection
+			
+			// TODO Transfer over the character selection
 			// Need to get character values
 			if(firstSearch == true) {
-				//var original = $('#row3col3') ;
-				//var original = $('#charactersSpy').clone(true, true);
-				//$('#somethingasdf').html(original);
-
 				$('#row4col2')[0].innerHTML = "";
 				firstSearch = false;
 			}
 			$('#tableArea')[0].innerHTML += response;
 			$('#dataFilter').show();
-			$('#realmSpy').show();
+			$('#realmSpy').show()
+			$('#sellHeader').show()
 			activateDealsButton();
 			
 			$("#dataFilter").on("keyup", function() {

@@ -22,7 +22,7 @@
 	<link rel="stylesheet" href="myCustomStyle.css">
 </head>
 
-<body style="overflow-y: scroll;">
+<body style="overflow-y: scroll; overflow-x: hidden; background-color: #e6e6e68a;">
 
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
@@ -40,20 +40,26 @@
 </nav>
 
 
-<div class="container-fluid">
+<div class="container-fluid" style="min-height:90%">
 	<div class="row" id="row1">
 		<div class="row">
 			<div class="col-sm-4">
 			</div>
 			<div class="col-sm-4">
 				<div id="loadingBar">
-					<center><h4>Loading</h4></center>
 					<div class="progress">
 						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
 					</div>
 				</div>
-				<input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;">
-				<div id="allPetsTable">					
+				<input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
+				<div class="panel panel-default realmPanel" style="margin-top:15px;">
+					<div class="panel-heading realmPanelHeading">
+						<h4 class="panel-title">	  
+						  <a class="realmCollapse" data-toggle="collapse" href="#allPetsTable"><b>All Pets</b></a>
+						</h4>
+					</div>
+					<div id="allPetsTable" class="panel-collapse collapse in realmPanelCollapse">		
+					</div>
 				</div>
 			</div> <!-- End of middle column -->
 			<div class="col-sm-4">
@@ -61,6 +67,10 @@
 		</div>
 	</div> <!-- End of Row -->
 </div> <!-- End of Top Container -->
-
+<footer class="footer" style="min-height:5%">
+	<center>	
+			  <h5><span><b>Report a Bug  &middot; Contact &middot; FAQ<b></span></h5>
+	</center>
+</footer>
 </body>
 </html>

@@ -1,6 +1,16 @@
 TODO:
- - Add a last updated field to the realms table
-	- update this field when a realm is checked
-	
-	
-	- SANITIZE DB INPUTS
+ - Update the realm pulling function to run every 5 mintues and look for realms that have changed 
+	- only delete the auctions from hourly that are part of that realm?
+ - Update the options panel
+	- Do we need to be able to filter out colors?
+	- Have the sliders be the blue theme color
+ - Find a new realm page where it shows you the realm with the highest value for your pets
+ - Add front-end fluff that checks if the user has at least entered something
+ - Allow users to not enter characters
+ - Write the FAQ 
+ - When the front-end 1.0 is done, write the help icon guide
+ - Add a link from the pet name to wowhead - or add modal to show more info
+
+Known Bugs:
+ - Breaks the entire app when entering no characters?
+ - Duplicates showing for connected realms

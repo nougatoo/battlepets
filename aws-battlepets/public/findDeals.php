@@ -125,7 +125,7 @@ else {
 								$subTableHTML .= "<td>" . $row['name'].'<span class="badge realmTableBadge">'.$cagedCounts[$row['species_id']].'</span>'."</td>";
 							else
 								$subTableHTML .= "<td>" . $row['name']."</td>";
-							$subTableHTML .=  "<td>" . convertToWoWCurrency($goodSellersPrice[$row['species_id']]). "%</td>";
+							$subTableHTML .=  "<td>" . convertToWoWCurrency($goodSellersPrice[$row['species_id']]). "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['minbuy']) . "</td>";
 							$subTableHTML .=  "<td>" . convertToWoWCurrency($row['market_value_hist_median']) . "</td>";
 							$subTableHTML .=  "<td>" . $row['percent_of_market']. "%</td>";
@@ -387,8 +387,10 @@ function buildSnipesTables($realm)
 
 	$subTableHTML = "";
 	
-	foreach($snipeDeals as $row) {
+	foreach($snipeDeals as $key => $row) {
 
+		// TODO - check for duplicates. If this row's species id are the same as the last...skip iteration
+		
 		$value = $row['market_value_hist_median'];
 		
 		if($value >=  $configs["threshLeggo"] && !$showLeggo)

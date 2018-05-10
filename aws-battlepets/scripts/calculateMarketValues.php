@@ -196,34 +196,29 @@ function calculateRegionMedian()
 	foreach ($distinctPets as $key => $aSpecies) {
 
 		$marketValues = [];
+		$marketValueHist = -1;
+	
 		
+		$sql = "SELECT market_value_pets.species_id, market_value_pets.market_value, pets.name, market_value_pets_hist_median.market_value_hist_median, market_value_pets_hist.market_value_hist
+			FROM market_value_pets 
+			INNER JOIN pets ON pets.species_id = market_value_pets.species_id 
+			INNER JOIN market_value_pets_hist_median ON market_value_pets_hist_median.species_id = market_value_pets.species_id 
+			INNER JOIN market_value_pets_hist on market_value_pets_hist.species_id = pets.species_id
+			WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' AND
+				((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 50 DAY))
+				AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) 
+				AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
 		
-		$sql = "SELECT market_value_pets.species_id, market_value_pets.market_value, pets.name, market_value_pets_hist_median.market_value_hist_median 
-		FROM market_value_pets 
-		INNER JOIN pets ON pets.species_id = market_value_pets.species_id 
-		INNER JOIN market_value_pets_hist_median ON market_value_pets_hist_median.species_id = market_value_pets.species_id 
-		WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' 
-			AND ((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 30 DAY))
-			AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) 
-			AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
-		
-		/*
-		$sql = "SELECT market_value_pets.species_id, market_value_pets.market_value, pets.name
-		FROM market_value_pets 
-		INNER JOIN pets ON pets.species_id = market_value_pets.species_id 
-		WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' 
-			AND ((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 100 DAY))
-			AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY)))";
-		*/
-		//$result = $conn->query($sql);
 		$result = $conn->prepare($sql);
 		$result->execute();
 		
 		if($result) {	
 			while($row = $result->fetch()) {
 					array_push($marketValues, $row['market_value']);
+					$marketValueHist = $row['market_value_hist'];
 			}
 		}
+		
 		
 		// Now we have all buyout for a species
 		
@@ -232,19 +227,18 @@ function calculateRegionMedian()
 		$medianIndex = floor(sizeof($marketValues)/2);
 		$medianValue = $marketValues[$medianIndex];
 		
-		
 		// TODO - ANYTHING OVER 25K...USER MEDIAN
 		// user average for anything else
-			
-		// Clear out old 14-day avg
-		//$removeHistMedianSql = "DELETE FROM market_value_pets_hist_median;" ;
-		//$result = $conn->prepare($removeHistMedianSql);
-		//$result->execute();	
-		//$conn->query($removeHistMedianSql);
+		if($medianValue < 250000000) {
+			$medianValue = ($medianValue + $marketValueHist) / 2 ;
+		}
+		else if ($medianValue < 100000000) {
+			$medianValue = $marketValueHist;
+		}
 		
 		$mvMedianInsertSql = "INSERT INTO market_value_pets_hist_median (`species_id`,  `market_value_hist_median`) VALUES ('".$aSpecies['species_id']."' , '".$medianValue."') ON DUPLICATE KEY UPDATE market_value_hist_median = ".$medianValue.";";
 			
-		//echo ($mvMedianInsertSql."<br/>");
+		echo ($mvMedianInsertSql."<br/>");
 		$result = $conn->prepare($mvMedianInsertSql);
 		$result->execute();		
 		

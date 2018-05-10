@@ -34,6 +34,7 @@
 		<ul class="nav navbar-nav" >
 			<li class="active"><a href="#"  style="font-size: 16px;">Home</a></li>
 			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;">All Pets</a></li>
+			<li><a href="#" style="font-size: 16px;color: #a9e7ff;">Find a New Realm</a></li>
 		</ul>
 		<!--
 		<ul class="nav navbar-nav navbar-right">

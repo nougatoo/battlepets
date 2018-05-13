@@ -16,6 +16,12 @@ $cagedPetsProc = [];
 $cagedPetsIds = [];
 $finalRealmData = [];
 
+if(sizeof($cagedPetsRaw) == 0)
+{
+	echo "No pets found";
+	return;
+}
+
 for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
 {
 	array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);

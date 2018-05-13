@@ -264,6 +264,32 @@ tr.totalRow {
     width: inherit;
 	*/
 }
+.navbar-nab>li.active {
+	style="font-size: 18px;"
+	
+}
+.nav-stacked>li>a {
+	padding-left: 8px;
+	border-radius: 2px;
+	font-size: 18px;
+}
+.nav-stacked > li.active > a{
+	border-left: 5px solid #54cfff80;
+	background: white;
+	color: #00000094 !important;
+	
+}
+.nav-stacked > li.active > a > span{
+	color:#6b6b6b !important;	
+}
+
+.nav-stacked > li.active {
+	border: 1px solid #e0e0e0;
+}
+
+.nav-stacked > li{
+	border: none;
+}
 
 .navbar .navbar-nav > li > a:hover {
     color: white !important;
@@ -286,6 +312,17 @@ tr.totalRow {
 }
 
 #findDealsButton {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
+#findRealmButton {
 	background-color: white;
     border: 1px solid #e0e0e0;
     padding-top: 0px;

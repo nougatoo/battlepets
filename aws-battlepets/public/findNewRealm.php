@@ -110,7 +110,7 @@
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findNewRealm()"><h4 style="color: #6b6b6b;font-weight: bold;">Find New Realm <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
+				<button id="findRealmButton" type="button" class="btn btn-default btn-block" onclick="findNewRealm()"><h4 style="color: #6b6b6b;font-weight: bold;">Find New Realm <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBarb" style="display:none;">
 					<div class="progress">
@@ -134,7 +134,7 @@
 					<div id="charSelect" class="panel-collapse collapse in">
 						<form id="charSelectForm" class="form-inline" style="padding-left:15px;padding-right:15px">
 							<div id="realmSelectDiv1" class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character1"  placeholder="Character 1" onchange="activateDealsButton()">
+								<input style="width:49%;" type="text" class="form-control charInput" id="character1"  placeholder="Character 1">
 								<select style="width:49%;" class="form-control realmInput" id="realm1">
 									<option></option>
 									<?php
@@ -157,7 +157,7 @@
 						</form>
 					</div>
 				</div>
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findNewRealm()"><h4 style="color: #6b6b6b;font-weight: bold;">Find New Realm <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
+				<button id="findRealmButton" type="button" class="btn btn-default btn-block" onclick="findNewRealm()"><h4 style="color: #6b6b6b;font-weight: bold;">Find New Realm <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBar" style="display:none;">
 					<div class="progress">

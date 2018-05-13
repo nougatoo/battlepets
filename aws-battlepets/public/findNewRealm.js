@@ -10,9 +10,9 @@ $(document).ready(function(){
 
 });
 
-function activateDealsButton() {	
+function activateFindRealmButton() {	
 	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
-	 $('#findDealsButton').removeClass('disabled');
+	 $('#findRealmButton').removeClass('disabled');
 }
 
 function findNewRealm() {
@@ -23,16 +23,14 @@ function findNewRealm() {
 		return;
 	}	
 	
-	if($("#findDealsButton").hasClass("disabled"))
+	if($("#findRealmButton").hasClass("disabled"))
 		return;
 	
 	// Clear out the garbage section
 	$('#realmValueTable')[0].innerHTML = "";
-	
 	$('#dataFilter').hide();
 	$('#realmSpy').hide();
-	
-	 $('#findDealsButton').addClass('disabled');
+	 $('#findRealmButton').addClass('disabled');
 	
 	var stage = "";
 	
@@ -84,7 +82,7 @@ function findNewRealm() {
 			$('#realmValueTable')[0].innerHTML += response;
 			$('#dataFilter').show();
 			$('#realmSpy').show();
-			activateDealsButton();
+			activateFindRealmButton();
 			
 			$("#dataFilter").on("keyup", function() {
 				var value = $(this).val().toLowerCase();

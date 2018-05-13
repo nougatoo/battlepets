@@ -32,12 +32,10 @@ function findDeals() {
 	
 	// Clear out the garbage section
 	$('#tableArea')[0].innerHTML = "";
-	$('#realmTabs')[0].innerHTML = "";
 	$('#realmSpyDynammic')[0].innerHTML = "";
 	
 	$('#sellHeader').hide();
 	$('#dataFilter').hide();
-	$('#realmTabs').hide();
 	$('#realmSpy').hide();
 	
 	 $('#findDealsButton').addClass('disabled');
@@ -152,8 +150,7 @@ function findDeals() {
 			$('[data-spy=affix]').each(function () { 
 				$(this).data('bs.affix').checkPosition(); 
 			});
-			
-			
+				
 			numRealms = characters.length;
 			recreateCharSelection();
 			

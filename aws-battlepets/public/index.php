@@ -36,11 +36,6 @@
 			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">All Pets</a></li>
 			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>
-		<!--
-		<ul class="nav navbar-nav navbar-right">
-			<li><a href="#" style="font-size: 18px;">About me</a></li>
-		</ul>
-		-->
 	</div>
 </nav>
 
@@ -76,43 +71,6 @@
 						</div>
 						<div id="optionsCollapse" class="panel-collapse collapse">
 							<div id="optionsDiv" class="panel-body">
-								<!--
-								<h4>Deal Qualities</h4>
-								<table class="table">
-									<tr>
-										<td class="toggleTd" style="width: 20%">
-											<label class="switch">
-												<input id="commonSlider" type="checkbox" checked >
-												<span class="slider round"></span>
-											</label>
-										</td>
-										<td class="toggleTd" style="width: 20%">								
-											<label class="switch">
-												<input id="greenSlider" type="checkbox" checked >
-												<span class="slider round"></span>
-											</label>						
-										</td>
-										<td class="toggleTd" style="width: 20%">
-											<label class="switch">
-												<input id="blueSlider" type="checkbox" checked >
-												<span class="slider round"></span>
-											</label>								
-										</td >
-										<td class="toggleTd" style="width: 20%">
-											<label class="switch">
-												<input  id="epicSlider" type="checkbox" checked>
-												<span class="slider round sliderEpic"></span>
-											</label>								
-										</td>
-										<td class="toggleTd" style="width: 20%">	
-											<label class="switch">
-												<input  id="leggoSlider" type="checkbox" checked>
-												<span class="slider round sliderEpic"></span>
-											</label>							
-										</td>
-									</tr>
-								</table>
-								-->
 								<table class="table">
 									<tr>
 										<td class="toggleTd" style="width: 20%">
@@ -182,22 +140,6 @@
 			</div>
 		</div>	
 		<div id="dataSection" class="col-sm-6" id="row3col2">
-			<!--
-			<h1 style="padding-bottom: 15px;" id="sellHeader">
-					<span class="label label-default colHeader">Sell</span>
-			</h1>
-			-->
-			<div id="realmTabs" >
-			</div>
-			<!--<br/>
-			<br/>-->
-			<!--
-			<div id="loadingBar" style="display:none;">
-				<div class="progress">
-					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
-				</div>
-			</div>
-			-->
 			<div id="tableArea" class="tab-content">
 				<center>
 					<h1></h1>
@@ -205,14 +147,8 @@
 				</center>
 			</div>
 		</div>
-		
 		<div class="col-sm-3" id="row3col3" style="padding-left: 0px;">
 			<div id="charactersSpy" data-spy="affix" data-offset-top="50">
-				<!--
-				<h1 style="padding-bottom: 15px;">
-					<span class="label label-default colHeader">Find</span>
-				</h1>
-				-->
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
 						<h3 class="panel-title">
@@ -230,7 +166,6 @@
 						</div>
 					</div>
 				</div>
-
 				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBarb" style="display:none;">
@@ -246,11 +181,6 @@
 		</div>
 		<div class="col-sm-4" id="row4col2" >
 			<div id="charactersSpy" data-spy="affix" data-offset-top="50">
-				<!--
-				<h1 style="padding-bottom: 15px;">
-					<span class="label label-default colHeader">Find</span>
-				</h1>
-				-->
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
 						<h3 class="panel-title">

@@ -110,8 +110,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 51px;
+  height: 25px;
 }
 
 .switch input {display:none;}
@@ -131,10 +131,11 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 17px;
+  width: 17px;
   left: 4px;
   bottom: 4px;
+  right: 4px;
   background-color: white;
   -webkit-transition: .2s;
   transition: .2s;
@@ -159,10 +160,10 @@
 */
 
 #snipesSlider:checked + span {
-  background-color: #c2e2b6;
+  background-color: #a9e7ff;
 }
 #collectedSlider:checked + span {
-  background-color: #c2e2b6;
+  background-color: #a9e7ff;
 }
 #commonSlider:checked + span {
   background-color: #d9d9d9;
@@ -264,35 +265,9 @@ tr.totalRow {
 	*/
 }
 
-.navbar-nab>li.active {
-	style="font-size: 18px;"
-	
+.navbar .navbar-nav > li > a:hover {
+    color: white !important;
 }
-.nav-stacked>li>a {
-	padding-left: 8px;
-	border-radius: 2px;
-	font-size: 18px;
-}
-.nav-stacked > li.active > a{
-	border-left: 5px solid #54cfff80;
-	background: white;
-	color: #00000094 !important;
-	
-}
-
-
-.nav-stacked > li.active > a > span{
-	color:#6b6b6b !important;	
-}
-
-.nav-stacked > li.active {
-	border: 1px solid #e0e0e0;
-}
-
-.nav-stacked > li{
-	border: none;
-}
-
 .charInput {
 	border: none;
     background-color: #8a8a8a26;

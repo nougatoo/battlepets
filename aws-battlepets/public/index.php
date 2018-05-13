@@ -29,12 +29,12 @@
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 25px;color: #a9e7ff;letter-spacing: 1px;">Battle Pets &#9876;</a>
+			<a class="navbar-brand" href="#" style="font-size: 30px;color: #a9e7ff;letter-spacing: 1px;">Battle Pets &#9876;</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li class="active"><a href="#"  style="font-size: 16px;">Home</a></li>
-			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;">All Pets</a></li>
-			<li><a href="#" style="font-size: 16px;color: #a9e7ff;">Find a New Realm</a></li>
+			<li class="active"><a href="#"  style="font-size: 16px;font-weight: bold;letter-spacing: 0.5px;">Home</a></li>
+			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">All Pets</a></li>
+			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>
 		<!--
 		<ul class="nav navbar-nav navbar-right">
@@ -67,6 +67,7 @@
 						<input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets.." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
 						<i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i>
 					</div>
+					
 					<div class="panel panel-default" style="border: 1px solid #e0e0e0; margin-bottom: 0px;">
 						<div class="panel-heading" style="border: none; background-color: white;">
 							<h3 class="panel-title">
@@ -75,7 +76,8 @@
 						</div>
 						<div id="optionsCollapse" class="panel-collapse collapse">
 							<div id="optionsDiv" class="panel-body">
-								<h4 style="padding-left:8px;">Deal Qualities</h4>
+								<!--
+								<h4>Deal Qualities</h4>
 								<table class="table">
 									<tr>
 										<td class="toggleTd" style="width: 20%">
@@ -110,7 +112,7 @@
 										</td>
 									</tr>
 								</table>
-								<h4 style="padding-left:8px;">Other</h4>
+								-->
 								<table class="table">
 									<tr>
 										<td class="toggleTd" style="width: 20%">
@@ -126,8 +128,8 @@
 											</label>
 										</td>				
 										<td class="toggleTd" style="width: 20%">
-											<div class="form-group">
-												<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;">';
+											<div class="form-group" style="margin-bottom:0px;">
+												<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;background-color: #eeeeee;border: none;box-shadow: none;">
 													<?php
 														for($i = 10; $i<100; $i+=5) {
 															if($i == 55) // Default is 55
@@ -218,96 +220,18 @@
 						</h3>
 					</div>
 					<div id="charSelect" class="panel-collapse collapse in">
-						<form class="form-inline" style="padding-left:15px;padding-right:15px">
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character1b"  placeholder="Character 1" onchange="activateDealsButton()">
-								<select style="width:49%;" class="form-control realmInput" id="realm1b">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character2b"  placeholder="Character 2">
-								<select style="width:49%;" class="form-control realmInput" id="realm2b">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character3b"  placeholder="Character 3">
-								<select style="width:49%;" class="form-control realmInput" id="realm3b">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character4b"  placeholder="Character 4">
-								<select style="width:49%;" class="form-control realmInput" id="realm4b">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
+						<form id="charSelectFormb" class="form-inline" style="padding-left:15px;padding-right:15px">
 						</form>
+						<div id="addExtraRealmb" style="text-align: right;    padding-right: 25px;padding-bottom:12px;">
+							<button type="button" class="addExtraRealmButtonb" style="border:none;font-weight: bold;color: #6b6b6b;background-color: white;padding-right:0px;" onclick="addRealmClickb()">
+								<span class="glyphicon glyphicon-plus" style="padding-right: 5px;"></span>
+								Add Realm
+							</button>
+						</div>
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: grey;"></span></h4></button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBarb" style="display:none;">
 					<div class="progress">
@@ -334,8 +258,8 @@
 						</h3>
 					</div>
 					<div id="charSelect" class="panel-collapse collapse in">
-						<form class="form-inline" style="padding-left:15px;padding-right:15px">
-							<div class="form-group charFormGroup" style="width:100%;">
+						<form id="charSelectForm" class="form-inline" style="padding-left:15px;padding-right:15px">
+							<div id="realmSelectDiv1" class="form-group charFormGroup" style="width:100%;">
 								<input style="width:49%;" type="text" class="form-control charInput" id="character1"  placeholder="Character 1" onchange="activateDealsButton()">
 								<select style="width:49%;" class="form-control realmInput" id="realm1">
 									<option></option>
@@ -356,74 +280,17 @@
 									?>
 								</select>
 							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character2"  placeholder="Character 2">
-								<select style="width:49%;" class="form-control realmInput" id="realm2">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character3"  placeholder="Character 3">
-								<select style="width:49%;" class="form-control realmInput" id="realm3">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
-							<div class="form-group charFormGroup" style="width:100%;">
-								<input style="width:49%;" type="text" class="form-control charInput" id="character4"  placeholder="Character 4">
-								<select style="width:49%;" class="form-control realmInput" id="realm4">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect();
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
-								</select>
-							</div>
 						</form>
+						<div id="addExtraRealm" style="text-align: right;    padding-right: 25px;padding-bottom:12px;">
+							<button type="button" class="addExtraRealmButton" style="border:none;font-weight: bold;color: #6b6b6b;background-color: white;padding-right:0px;" onclick="addRealmClick()">
+								<span class="glyphicon glyphicon-plus" style="padding-right: 5px;"></span>
+								Add Realm
+							</button>
+						</div>
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: grey;"></span></h4></button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBar" style="display:none;">
 					<div class="progress">

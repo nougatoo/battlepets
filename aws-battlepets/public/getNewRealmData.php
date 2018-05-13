@@ -5,17 +5,147 @@ require_once('../scripts/util.php');
 $configs = include('../application/configs/configs.php');
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
-$purpose = $_POST['purpose'];
 
-$showCommon = $_POST['showCommon'] == "true";
-$showGreen = $_POST['showGreen'] == "true";
-$showBlue = $_POST['showBlue'] == "true";
-$showEpic = $_POST['showEpic'] == "true";
-$showLeggo = $_POST['showLeggo'] == "true";
-$showSnipes = $_POST['showSnipes'] == "true";
-$incCollected = $_POST['incCollected'] == "true";
-$maxBuyPerc = $_POST['maxBuyPerc'];
+$url = 'https://us.api.battle.net/wow/character/' . $realms[0] . '/' . $characters[0] . '?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud';
 
+// TODO - Make this dynamic for the first character
+$petsAPIResponse = file_get_contents($url);
+$results = json_decode($petsAPIResponse, true);	
+$cagedPetsRaw = $results['pets']['collected'];
+$cagedPetsProc = [];
+$cagedPetsIds = [];
+$finalRealmData = [];
+
+for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
+{
+	array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
+}
+
+$cagedCounts = array_count_values($cagedPetsProc);
+
+$petRestriction = "";
+
+foreach($cagedCounts as $key => $petCount) {
+	$petRestriction .= "'". $key . "',";
+	array_push($cagedPetsIds, $key);
+}
+
+// Remove the last comma and add brackets
+$petRestriction = "(" . substr($petRestriction, 0, -1) . ")";
+
+$conn = dbConnect();
+$sql = "SELECT sum(min_buyout) as realmSum, realm 
+										FROM (
+											SELECT species_id, min(buyout) AS min_buyout, realm
+											FROM auctions_hourly_pet 
+											WHERE species_id IN " . $petRestriction . "GROUP BY species_id, realm) b
+										GROUP BY REALM
+										ORDER BY realmSum DESC";
+											
+
+$result = $conn->prepare($sql);
+$result->execute();	
+
+if($result) {	
+	while($row = $result->fetch()) {
+		
+		$realmPetId = [];
+		$speciesDiff = null;
+		$speciesDiffRestriction = "";
+		$speciesDiffSum = 0;
+		
+		// Build an array of distinct species that exists on this realm's AH
+		$realmSQL = "SELECT DISTINCT species_id FROM auctions_hourly_pet WHERE realm = '" . $row["realm"] . "'";
+		$resultRealm = $conn->prepare($realmSQL);
+		$resultRealm->execute();	
+		
+		if($resultRealm) {	
+			while($row2 = $resultRealm->fetch()) {
+				array_push($realmPetId, $row2['species_id']);
+			}
+		}
+		
+		// Find the pets that are caged, but don't exist on the realm
+		$speciesDiff = array_diff($cagedPetsIds, $realmPetId);
+		
+		// Get the total market value for any pets that are in speciesDiff and add it to realmSum
+		foreach($speciesDiff as $key => $species) {
+			$speciesDiffRestriction .= "'" . $species . "',";
+		}
+		
+		$speciesDiffRestriction = "(" . substr($speciesDiffRestriction, 0, -1) . ")";
+		$speciesDiffSQL = "SELECT SUM(market_value_hist_median) as sum_median FROM market_value_pets_hist_median WHERE species_id IN " . $speciesDiffRestriction;
+		$speciesDiffResult = $conn->prepare($speciesDiffSQL);
+		$speciesDiffResult->execute();
+		
+		if($speciesDiffResult) {	
+			while($row3 = $speciesDiffResult->fetch()) {
+				$speciesDiffSum += $row3['sum_median'];
+			}
+		}
+		
+		$finalRealmData[$row["realm"]] = ($row["realmSum"] + $speciesDiffSum);
+		//echo ( convertToWoWCurrency($row["realmSum"] + $speciesDiffSum) . " " . $row["realm"] . "<br/>");
+	}
+}
+
+// Finds the max of connected realms
+$completedRealms = [];
+
+foreach($finalRealmData as $key => $realmValue) {
+	
+	if(!in_array($key, $completedRealms)) {
+		$connectedRealms = [];
+		$maxValue = 0;
+		array_push($connectedRealms, $key);
+		
+		$sql = "SELECT slug_parent, slug_child FROM realms_connected WHERE slug_parent = '" . $key . "'";											
+		$result = $conn->prepare($sql);
+		$result->execute();	
+
+		if($result) {	
+			while($row = $result->fetch()) {
+				array_push($connectedRealms, $row['slug_child']);
+			}
+		}	
+
+		// Find the max value
+		for($i = 0; $i < sizeof($connectedRealms); $i++) {		
+			if($finalRealmData[$connectedRealms[$i]] > $maxValue)
+				$maxValue = $finalRealmData[$connectedRealms[$i]];			
+		}
+		
+		// Set all realms to the new max value
+		for($i = 0; $i < sizeof($connectedRealms); $i++) {
+			$finalRealmData[$connectedRealms[$i]] = $maxValue;
+			array_push($completedRealms, $connectedRealms[$i]);
+		}		
+	}
+}
+
+
+arsort($finalRealmData);
+
+$tableHTML =	'<table class="table table-striped table-hover realmTable">
+						<tr style="background-color:white; color: #6b6b6b;">
+							<th class="realmTableHeader">Realm</th>
+							<th class="realmTableHeader">Value</th>
+						</tr>
+						<tbody id="myTable1">';
+						
+foreach($finalRealmData as $key => $realmValue) {
+	
+		$tableHTML .= '<tr>';
+		$tableHTML .= '<td>' . getRealmNameFromSlug($key) .'</td>';
+		$tableHTML .= '<td>' . convertToWoWCurrency($realmValue) . '</td>';
+		$tableHTML .= '</tr>';
+}
+
+$tableHTML .= '</tbody></table>';
+echo $tableHTML;
+
+//echo ($cagedCounts);
+/*
 if(!is_numeric($maxBuyPerc)) {
 	echo ("Max buy Percent is not a number");
 	return;
@@ -28,13 +158,13 @@ if($purpose == "realmTabs") {
 }
 else {
 
-	// TODO - Make this dynamic for the first character
 	$petsAPIResponse = file_get_contents('https://us.api.battle.net/wow/character/cenarion-circle/irone?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected'];
 	$cagedPetsProc = [];
 	
-	for($i = 0; $i<sizeof($cagedPetsRaw); $i++) {
+	for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
+	{
 		array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
 	}
 	
@@ -107,7 +237,8 @@ else {
 							elseif($value >= $configs["threshGreen"] && $value < $configs["threshBlue"] && !$showGreen)
 								continue;
 							elseif($value < $configs["threshGreen"] && !$showCommon)
-								continue;								
+								continue;
+								
 							
 							if($value > $configs["threshLeggo"])
 								$subTableHTML .= '<tr class="leggodeal">';
@@ -173,10 +304,10 @@ else {
 	}
 }
 
-
+*/
 /**
 	Finds good selling species_id from a given realm.
-*/
+
 function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
 	global $configs;
@@ -241,10 +372,10 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 	else
 		return $sellers;	
 }
-
+*/
 /**
 	Finds the good deals (buys) for a realm
-*/
+
 function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 {
 	global $configs;
@@ -293,10 +424,10 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 	else
 		return $goodDealsRaw;
 }
-
+*/
 /**
 	TODO
-*/
+
 function buildingRealmRes($realm) 
 {
 	$conn = dbConnect();
@@ -315,18 +446,13 @@ function buildingRealmRes($realm)
 	$realmRes .= ")";
 	return $realmRes;
 }
-
+*/
 
 /**
 	TODO - rename
-*/
+
 function createRealmTabs($realms)
 {
-	/*
-	echo '<h1 style="padding-bottom: 15px;">
-				<span class="label label-default colHeader">Buy</span>
-			</h1>';
-		*/
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
 	foreach($realms as $key=> $aRealm) {
@@ -343,10 +469,10 @@ function createRealmTabs($realms)
 	
 	echo '</ul>';	
 }
-
+*/
 /**
 	TODO
-*/
+
 function buildSnipesTables($realm)
 {
 	global $showCommon, $showGreen, $showBlue, $showEpic, $showLeggo, $configs;
@@ -450,7 +576,7 @@ function buildSnipesTables($realm)
 		return $tableHTML;
 }
 
-
+*/
 
 
 

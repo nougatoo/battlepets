@@ -198,7 +198,6 @@ function calculateRegionMedian()
 		$marketValues = [];
 		$marketValueHist = -1;
 	
-		
 		$sql = "SELECT market_value_pets.species_id, market_value_pets.market_value, pets.name, market_value_pets_hist_median.market_value_hist_median, market_value_pets_hist.market_value_hist
 			FROM market_value_pets 
 			INNER JOIN pets ON pets.species_id = market_value_pets.species_id 
@@ -238,7 +237,6 @@ function calculateRegionMedian()
 		
 		$mvMedianInsertSql = "INSERT INTO market_value_pets_hist_median (`species_id`,  `market_value_hist_median`) VALUES ('".$aSpecies['species_id']."' , '".$medianValue."') ON DUPLICATE KEY UPDATE market_value_hist_median = ".$medianValue.";";
 			
-		echo ($mvMedianInsertSql."<br/>");
 		$result = $conn->prepare($mvMedianInsertSql);
 		$result->execute();		
 		

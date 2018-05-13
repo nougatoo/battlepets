@@ -10,6 +10,7 @@ TODO:
  - Write the FAQ 
  - When the front-end 1.0 is done, write the help icon guide
  - Add a link from the pet name to wowhead - or add modal to show more info
+ - Table sorting???
 
 Known Bugs:
  - Breaks the entire app when entering no characters?

@@ -10,7 +10,7 @@ $sortOrder = $_POST['sortOrder'];
 $conn = dbConnect();
 
 $tableHTML = 	'<table class="table table-striped table-hover realmTable">
-							<tr style="background-color:white;">
+							<tr style="background-color:white; color: #6b6b6b;">
 								<th onclick="sortTable(0)" class="realmTableHeader">Name</th>
 								<th onclick="sortTable(1)" class="realmTableHeader">Global Market Value</th>
 							</tr>

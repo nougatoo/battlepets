@@ -32,9 +32,9 @@
 			<a class="navbar-brand" href="#" style="font-size: 30px;color: #a9e7ff;letter-spacing: 1px;">Battle Pets &#9876;</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li ><a href="http://battletpets-testing.us-east-2.elasticbeanstalk.com/"  style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">Home</a></li>
-			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">All Pets</a></li>
-			<li class="active"><a href="#" style="font-size: 16px;color: white;font-weight: bold;letter-spacing: 0.5px;">Find a New Realm</a></li>
+			<li ><a href="http://battletpets-testing.us-east-2.elasticbeanstalk.com/"  style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Home</a></li>
+			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">All Pets</a></li>
+			<li class="active"><a href="#" style="font-size: 16px;color: white;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>
 	</div>
 </nav>
@@ -101,10 +101,10 @@
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
 						<h3 class="panel-title">
-							<a class="realmCollapse" data-toggle="collapse" href="#charSelect" style="color:black; color: #00000094; font-weight: bold;">Character From Your Account</a>
+							<a class="realmCollapse" data-toggle="collapse" href="#charSelectb" style="color:black; color: #00000094; font-weight: bold;">Character From Your Account</a>
 						</h3>
 					</div>
-					<div id="charSelect" class="panel-collapse collapse in">
+					<div id="charSelectb" class="panel-collapse collapse in">
 						<form id="charSelectFormb" class="form-inline" style="padding-left:15px;padding-right:15px">
 						</form>
 					</div>

@@ -11,11 +11,10 @@ $(document).ready(function(){
 
 });
 
-
-
 function activateDealsButton() {	
 	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
 	 $('#findDealsButton').removeClass('disabled');
+	 $('#findDealsButtonb').removeClass('disabled');
 }
 
 
@@ -27,7 +26,7 @@ function findDeals() {
 		return;
 	}	
 	
-	if($("#findDealsButton").hasClass("disabled"))
+	if($("#findDealsButton").hasClass("disabled") || $("#findDealsButtonb").hasClass("disabled"))
 		return;
 	
 	// Clear out the garbage section
@@ -39,6 +38,7 @@ function findDeals() {
 	$('#realmSpy').hide();
 	
 	 $('#findDealsButton').addClass('disabled');
+	 $('#findDealsButtonb').addClass('disabled');
 	
 	var showCommon = $('#commonSlider').is(':checked');
 	var showGreen = $('#greenSlider').is(':checked');
@@ -78,11 +78,13 @@ function findDeals() {
 		characters.push('Valamyr');
 		characters.push('Lladox');
 		characters.push('Åurd');
+		characters.push('Qamp');
 		
 		realms.push('cenarion-circle');
 		realms.push('wyrmrest-accord');
 		realms.push('proudmoore');
 		realms.push('emerald-dream');
+		realms.push('moon-guard');
 	}	
 	
 	
@@ -147,6 +149,7 @@ function findDeals() {
 			
 			// Glyphcon is loading wrong way..manually hide to trigger event that corrects it
 			$('#optionsCollapse').collapse("hide");
+			$('#legendCollapse').collapse("show");
 			$('[data-spy=affix]').each(function () { 
 				$(this).data('bs.affix').checkPosition(); 
 			});

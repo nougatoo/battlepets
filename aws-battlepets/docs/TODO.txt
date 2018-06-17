@@ -1,10 +1,6 @@
 TODO:
  - Update the realm pulling function to run every 5 mintues and look for realms that have changed 
 	- only delete the auctions from hourly that are part of that realm?
- - Update the options panel
-	- Do we need to be able to filter out colors?
-	- Have the sliders be the blue theme color
- - Add front-end fluff that checks if the user has at least entered something
  - Allow users to not enter characters
  - Write the FAQ 
  - When the front-end 1.0 is done, write the help icon guide
@@ -14,3 +10,4 @@ TODO:
 
 Known Bugs:
  - Duplicates showing for connected realms
+ - Double clicking on the first find deal button causes 2 queries

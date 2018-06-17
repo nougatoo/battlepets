@@ -32,7 +32,7 @@ foreach ($distinctPets as $key => $aSpecies) {
 		INNER JOIN market_value_pets_hist_median ON market_value_pets_hist_median.species_id = market_value_pets.species_id 
         INNER JOIN market_value_pets_hist on market_value_pets_hist.species_id = pets.species_id
 		WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' AND
-			((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 50 DAY))
+			((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 25 DAY))
 			AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) 
 			AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
 	
@@ -51,10 +51,15 @@ foreach ($distinctPets as $key => $aSpecies) {
 	
 	// Sort least to greatest
 	sort($marketValues);
+	$marketValuesLength = sizeof($marketValues);
+	
+	// Only take the index values between 10% and 65% 
+	$marketValues = array_slice($marketValues,  floor($marketValuesLength*0.10), floor($marketValuesLength*0.65));
+	
 	$medianIndex = floor(sizeof($marketValues)/2);
 	$medianValue = $marketValues[$medianIndex];
 	
-	// TODO - ANYTHING OVER 25K...USER MEDIAN
+	// ANYTHING OVER 25K...USER MEDIAN
 	// user average for anything else
 	if($medianValue < 250000000) {
 		$medianValue = ($medianValue + $marketValueHist) / 2 ;

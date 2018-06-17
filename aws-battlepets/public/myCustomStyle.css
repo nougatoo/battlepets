@@ -246,6 +246,9 @@ tr.totalRow {
 	background-color:#5f5f5f !important;
 	font-size: 10px !important;
 }
+.realmTableBadgeLegend {
+	background-color:#5f5f5f !important;
+}
 
 .buyRealmList {
 	font-weight: bold;
@@ -322,6 +325,17 @@ tr.totalRow {
     /* border-top: 4px solid #a9e7ff; */
 }
 
+#findDealsButtonb {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
 #findRealmButton {
 	background-color: white;
     border: 1px solid #e0e0e0;
@@ -346,5 +360,8 @@ tr.totalRow {
 	margin-bottom: 10px !important;
 }
 
+.legendColorLabel{
+	color: #6b6b6b;
+}
 
 

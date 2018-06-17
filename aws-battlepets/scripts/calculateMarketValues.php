@@ -204,7 +204,7 @@ function calculateRegionMedian()
 			INNER JOIN market_value_pets_hist_median ON market_value_pets_hist_median.species_id = market_value_pets.species_id 
 			INNER JOIN market_value_pets_hist on market_value_pets_hist.species_id = pets.species_id
 			WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' AND
-				((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 50 DAY))
+				((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 30 DAY))
 				AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) 
 				AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
 		
@@ -225,6 +225,9 @@ function calculateRegionMedian()
 		sort($marketValues);
 		$medianIndex = floor(sizeof($marketValues)/2);
 		$medianValue = $marketValues[$medianIndex];
+		
+		// Only take the index values between 10% and 65% 
+		$marketValues = array_slice($marketValues,  floor($marketValuesLength*0.10), floor($marketValuesLength*0.65));
 		
 		// TODO - ANYTHING OVER 25K...USER MEDIAN
 		// user average for anything else

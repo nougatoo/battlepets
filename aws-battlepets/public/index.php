@@ -29,12 +29,17 @@
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 30px;color: #a9e7ff;letter-spacing: 1px;">Battle Pets &#9876;</a>
+			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross-Realm Pets &#9876;</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li class="active"><a href="#"  style="font-size: 16px;font-weight: bold;letter-spacing: 0.5px;">Home</a></li>
-			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">All Pets</a></li>
-			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;font-weight: bold;letter-spacing: 0.5px;">Find a New Realm</a></li>
+			<li class="active"><a href="#"  style="font-size: 16px;letter-spacing: 0.5px;">Home</a></li>
+			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">All Pets</a></li>
+			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Find a New Realm</a></li>
+		</ul>	
+		<ul class="nav navbar-nav navbar-right">
+		  <li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span>Contact</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span>Report a Bug</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span>FAQ</a></li>
 		</ul>
 	</div>
 </nav>
@@ -62,7 +67,44 @@
 						<input class="form-control" id="dataFilter" type="text" placeholder="Filter Pets.." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
 						<i class="form-control-feedback glyphicon glyphicon-filter" style="color: grey;"></i>
 					</div>
-					
+					<div class="panel panel-default" style="border: 1px solid #e0e0e0; margin-bottom: 0px;">
+						<div class="panel-heading" style="border: none; background-color: white;">
+							<h3 class="panel-title">
+								<a class="realmCollapse" data-toggle="collapse" href="#legendCollapse"  style="color:black; color: #00000094; font-weight: bold;">Legend</a>
+							</h3>
+						</div>
+						<div id="legendCollapse" class="panel-collapse collapse">
+							<div id="legendDiv" class="panel-body">
+								<table class="table">
+									<tr>
+										<td class="toggleTd" style="width: 25%">
+											<h4><span class="label label-default legendColorLabel" style="background-color:#f7e0bc ;">>50,000g</span></h4>
+										</td>
+										<td class="toggleTd" style="width: 25%">
+											<h4><span class="label label-default legendColorLabel" style="background-color:#ddcffb;">>15,000g</span></h4>
+										</td>
+										<td class="toggleTd" style="width: 25%">
+											<h4><span class="label label-default legendColorLabel" style="background-color:#bdd5fb;">>6,000g</span></h4>
+										</td>
+										<td class="toggleTd" style="width: 25%">
+											<h4><span class="label label-default legendColorLabel" style="background-color:#daf3d0;">>3,000g</span></h4>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 25%">
+											<h4><span class="badge realmTableBadgeLegend"># Owned</span></h4>
+										</td>
+										<td style="width: 25%">
+										</td>
+										<td style="width: 25%">	
+										</td>
+										<td style="width: 25%">										
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
 					<div class="panel panel-default" style="border: 1px solid #e0e0e0; margin-bottom: 0px;">
 						<div class="panel-heading" style="border: none; background-color: white;">
 							<h3 class="panel-title">
@@ -73,18 +115,6 @@
 							<div id="optionsDiv" class="panel-body">
 								<table class="table">
 									<tr>
-										<td class="toggleTd" style="width: 20%">
-											<label class="switch">
-												<input id="snipesSlider" type="checkbox" checked >
-												<span class="slider round basicSlider"></span>
-											</label>
-										</td>			
-										<td class="toggleTd" style="width: 20%">
-											<label class="switch">
-												<input id="collectedSlider" type="checkbox" checked >
-												<span class="slider round basicSlider"></span>
-											</label>
-										</td>				
 										<td class="toggleTd" style="width: 20%">
 											<div class="form-group" style="margin-bottom:0px;">
 												<select class="form-control" id="selectMaxBuy" style="font-size: 11px;padding-right: 2px;background-color: #eeeeee;border: none;box-shadow: none;">
@@ -98,16 +128,32 @@
 													?>
 											</select>
 											</div>
-										</td>				
+										</td>	
+										<td class="toggleTd" style="width: 20%">
+											<!--
+											<label class="switch">
+												<input id="snipesSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+											-->
+										</td>			
+										<td class="toggleTd" style="width: 20%">
+											<!--
+											<label class="switch">
+												<input id="collectedSlider" type="checkbox" checked >
+												<span class="slider round basicSlider"></span>
+											</label>
+											-->
+										</td>							
 										<td class="toggleTd" style="width: 20%">
 										</td>				
 										<td class="toggleTd" style="width: 20%">
 										</td>
 									</tr>
 									<tr>
-										<td>Show Snipes </td>			
-										<td>Show Amount Caged</td>						
-										<td>Max Buy %</td>						
+										<td>Max Buy %</td>	
+										<td><!--Show Snipes --></td>			
+										<td><!-- Show Amount Caged --></td>											
 									</tr>					
 								</table>
 							</div>
@@ -152,10 +198,10 @@
 				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
 					<div class="panel-heading" style="border: none; background-color: white;">
 						<h3 class="panel-title">
-							<a class="realmCollapse" data-toggle="collapse" href="#charSelect" style="color:black; color: #00000094; font-weight: bold;">Characters &amp; Realms</a>
+							<a class="realmCollapse" data-toggle="collapse" href="#charSelectb" style="color:black; color: #00000094; font-weight: bold;">Characters &amp; Realms</a>
 						</h3>
 					</div>
-					<div id="charSelect" class="panel-collapse collapse in">
+					<div id="charSelectb" class="panel-collapse collapse in">
 						<form id="charSelectFormb" class="form-inline" style="padding-left:15px;padding-right:15px">
 						</form>
 						<div id="addExtraRealmb" style="text-align: right;    padding-right: 25px;padding-bottom:12px;">
@@ -166,7 +212,7 @@
 						</div>
 					</div>
 				</div>
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
+				<button id="findDealsButtonb" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Pets <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBarb" style="display:none;">
 					<div class="progress">
@@ -220,7 +266,7 @@
 					</div>
 				</div>
 
-				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Deals <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
+				<button id="findDealsButton" type="button" class="btn btn-default btn-block" onclick="findDeals()"><h4 style="color: #6b6b6b;font-weight: bold;">Find Pets <span class="glyphicon glyphicon-search" style="color: #6b6b6b;"></span></h4></button>
 				<br/>
 				<div id="loadingBar" style="display:none;">
 					<div class="progress">
@@ -235,9 +281,78 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><span><b>Report a Bug  &middot; Contact &middot; FAQ<b></span></h5>
+			  <h5><span><b>Report a Bug  &middot; Contact &middot; <span data-toggle="modal" data-target="#faqModal">FAQ</span><b></span></h5>
 	</center>
 </footer>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+
+	  <!-- Modal content-->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		  <h4 class="modal-title">Modal Header</h4>
+		</div>
+		<div class="modal-body">
+		  <p>Here is how to contact me</p>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	  </div> 
+	</div>
+</div>
+
+<!-- Report a Bug Modal -->
+<div class="modal fade" id="rptBugModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+
+	  <!-- Modal content-->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		  <h4 class="modal-title">Modal Header</h4>
+		</div>
+		<div class="modal-body">
+		  <p>Here is how to report a bug</p>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	  </div> 
+	</div>
+</div>
+
+<!-- FAQ Modal -->
+<div class="modal fade" id="faqModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+
+	  <!-- Modal content-->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		  <h4 class="modal-title">Frequently Asked Questions</h4>
+		</div>
+		<div class="modal-body">
+		  <h4>Who should use this application?</h4>
+		  <span>This application is for...</span>
+		  
+		  <h4>Why don't the market values match TSM?</h4>
+		  <span>The market values don't match TMS because...</span>
+		  
+		  <h4>Is this application mobile friendly?</h4>
+		  <span>It's designed to be usable on mobile, but optimized for desktop</span>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	  </div>
+	  
+	</div>
+</div>
+
 </body>
 </html>
 

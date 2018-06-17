@@ -1,6 +1,5 @@
 <?php
 
-
 /**
 	TODO
 */
@@ -14,30 +13,11 @@ function standard_deviation($sample){
 
 
 function dbConnect() {
+	$configs = include('../application/configs/dbConfigs.php');
 	
-	/*
-    // Define connection as a static variable, to avoid connecting more than once 
-    static $connection;
-
-    // Try and connect to the database, if a connection has not been established yet
-    if(!isset($connection)) {
-         // Load configuration as an array. Use the actual location of your configuration file
-		$config = parse_ini_file('C:/Apache24/conf/config.ini'); 
-        $connection =  new mysqli('localhost',$config['username'],$config['password'],$config['dbname']);
-    }
-
-    // If connection was not successful, handle the error
-    if($connection === false) {
-        // Handle error - notify administrator, log to a file, show an error screen, etc.
-        return mysqli_connect_error(); 
-    }
-    return $connection;
-	*/
-	
-	static $conn;
-	
-	$dbserver = 'mysql:dbname=' . "battlepets". ';host=' . "battlepets-example.cqei6votoxra.us-east-2.rds.amazonaws.com";
-	$conn = new PDO($dbserver, "nougatoo", "Brandonbrien12!");
+	static $conn; 
+	$dbserver = 'mysql:dbname=' . $configs["dbName"]. ';host=' . $configs["dbHost"];
+	$conn = new PDO($dbserver, $configs["dbUser"], $configs["dbPwd"]);
 	$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 	return $conn;

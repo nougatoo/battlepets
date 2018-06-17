@@ -149,7 +149,7 @@ function findDeals() {
 			
 			// Glyphcon is loading wrong way..manually hide to trigger event that corrects it
 			$('#optionsCollapse').collapse("hide");
-			$('#legendCollapse').collapse("show");
+			$('#legendCollapse').collapse("hide");
 			$('[data-spy=affix]').each(function () { 
 				$(this).data('bs.affix').checkPosition(); 
 			});

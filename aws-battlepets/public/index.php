@@ -37,9 +37,9 @@
 			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>	
 		<ul class="nav navbar-nav navbar-right">
-		  <li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span>Contact</a></li>
-		  <li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span>Report a Bug</a></li>
-		  <li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span>FAQ</a></li>
+			<li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span>Contact</a></li>
+			<li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span>Report a Bug</a></li>
+			<li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span>FAQ</a></li>
 		</ul>
 	</div>
 </nav>
@@ -92,7 +92,7 @@
 									</tr>
 									<tr>
 										<td style="width: 25%">
-											<h4><span class="badge realmTableBadgeLegend"># Owned</span></h4>
+											<h4><span class="badge realmTableBadgeLegend">Owned</span></h4>
 										</td>
 										<td style="width: 25%">
 										</td>
@@ -281,7 +281,7 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><span><b>Report a Bug  &middot; Contact &middot; <span data-toggle="modal" data-target="#faqModal">FAQ</span><b></span></h5>
+			  <h5><span><b></span><b></span></h5>
 	</center>
 </footer>
 
@@ -293,10 +293,10 @@
 	  <div class="modal-content">
 		<div class="modal-header">
 		  <button type="button" class="close" data-dismiss="modal">&times;</button>
-		  <h4 class="modal-title">Modal Header</h4>
+		  <h4 class="modal-title">Contact</h4>
 		</div>
 		<div class="modal-body">
-		  <p>Here is how to contact me</p>
+		  <p>Please contact me at crossrealmpets@gmail.com</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -313,10 +313,10 @@
 	  <div class="modal-content">
 		<div class="modal-header">
 		  <button type="button" class="close" data-dismiss="modal">&times;</button>
-		  <h4 class="modal-title">Modal Header</h4>
+		  <h4 class="modal-title">Report a bug</h4>
 		</div>
 		<div class="modal-body">
-		  <p>Here is how to report a bug</p>
+		  <p>You can report bugs to crossrealmpets.bugs@gmail.com. Please include as much detail as possible, and screenshot when applicable.</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -336,20 +336,31 @@
 		  <h4 class="modal-title">Frequently Asked Questions</h4>
 		</div>
 		<div class="modal-body">
-		  <h4>Who should use this application?</h4>
-		  <span>This application is for...</span>
+		  <h4><b>Who should use this application?</b></h4>
+		  <span style="font-weight:300;">This application is for...</span>
 		  
-		  <h4>Why don't the market values match TSM?</h4>
-		  <span>The market values don't match TMS because...</span>
+		  <h4><b>Why don't the market values match TSM?</b></h4>
+		  <span style="font-weight:300;">The market values don't match TMS because...</span>
 		  
-		  <h4>Is this application mobile friendly?</h4>
-		  <span>It's designed to be usable on mobile, but optimized for desktop</span>
+		  <h4><b>What are the default values?</b></h4>
+		  <span style="font-weight:300;">The default mininum sell value is 75%. I'm planning on making this an option for users.</span>
+		  
+		  <h4><b>Is this application mobile friendly?</b></h4>
+		  <span style="font-weight:300;">It's designed to be usable on mobile, but optimized for desktop</span>
+		  
+		  <h4><b>Why does "Last Updated" never change?</b></h4>
+		  <span style="font-weight:300;">This is still under development. Currently the data is refreshed every hour</span>
+		  
+		  <h4><b>What future changes do you have planned?</b></h4>
+		  <span style="font-weight:300;">Here is what is on my TODO list: ...</span>
+		  
+		  <h4><b>Known Budgs</b></h4>
+		  <span style="font-weight:300;">Known Bugs: ...</span>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		</div>
-	  </div>
-	  
+	  </div>	  
 	</div>
 </div>
 

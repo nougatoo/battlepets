@@ -25,7 +25,7 @@ customLog("INFO","Finished calling getAndParseAuctionData...");
 function getAndParseAuctionData()
 {
 	// Connect to database
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	
 	$startTimeTotal = microtime(true);
 	
@@ -179,7 +179,7 @@ function getAndParseAuctionData()
 function getDataUrls()
 {
 	// Connect to database
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 
 	$realmsToPull = []; // List of all realms 
 	$realmsCompleted = []; // Used to know which connected realms we've done
@@ -249,7 +249,7 @@ function getDataUrls()
 function insertAuctionData($auctions, $slugMaps)
 {
 	// Connect to database
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	
 	$startTimeAuctions = microtime(true);
 	

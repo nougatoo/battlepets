@@ -78,16 +78,16 @@
 								<table class="table">
 									<tr>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#f7e0bc ;">>50,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#f7e0bc ;border: 1px solid #d2d2d2;">>50,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#ddcffb;">>15,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#ddcffb;border: 1px solid #d2d2d2;">>15,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#bdd5fb;">>6,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#bdd5fb;border: 1px solid #d2d2d2;">>6,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#daf3d0;">>3,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#daf3d0;border: 1px solid #d2d2d2;">>3,000g</span></h4>
 										</td>
 									</tr>
 									<tr>
@@ -242,7 +242,7 @@
 									<?php
 										require_once('../scripts/util.php');
 										
-										$conn = dbConnect();
+										$conn = dbConnect("US");
 										
 										
 										$sql = "SELECT slug, name FROM realms";

@@ -39,7 +39,7 @@ foreach($cagedCounts as $key => $petCount) {
 // Remove the last comma and add brackets
 $petRestriction = "(" . substr($petRestriction, 0, -1) . ")";
 
-$conn = dbConnect();
+$conn = dbConnect("US");
 $sql = "SELECT sum(min_buyout) as realmSum, realm 
 										FROM (
 											SELECT species_id, min(buyout) AS min_buyout, realm
@@ -317,7 +317,7 @@ else {
 function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
 	global $configs;
-	$conn = dbConnect();	
+	$conn = dbConnect("US");	
 	$realmRes = buildingRealmRes($realm);	
 	$sql = "
 			SELECT 
@@ -386,7 +386,7 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 {
 	global $configs;
 	
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	$realmRes = buildingRealmRes($realm);
 
 	// Gets the pets that are a good deal on selected realm (Less than minMarketPercent global market avg)
@@ -436,7 +436,7 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 
 function buildingRealmRes($realm) 
 {
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	$realmRes = "(realm =  '".$realm."'";
 	
 	$result = $conn->prepare("SELECT slug_child FROM realms_connected WHERE slug_parent = ?");

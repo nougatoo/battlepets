@@ -15,7 +15,7 @@ calculateDailyMarketValues();
 function calculateDailyMarketValues()
 {
 	// Connect to database
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	$startMvTime = microtime(true);
 	$allRealms = [];
 	$realmsCompleted = [];
@@ -180,7 +180,7 @@ function calculateDailyMarketValues()
 function calculateRegionMedian()
 {
 		
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	$distinctPets = [];
 
 	$result = $conn->prepare("SELECT distinct market_value_pets.species_id, pets.name FROM market_value_pets INNER JOIN pets ON pets.species_id = market_value_pets.species_id");

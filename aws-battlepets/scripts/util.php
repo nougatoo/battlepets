@@ -1,5 +1,6 @@
 <?php
 
+
 /**
 	TODO
 */
@@ -11,13 +12,15 @@ function standard_deviation($sample){
 	}
 }
 
-
-function dbConnect() {
-	$configs = include('../application/configs/dbConfigs.php');
+/**
+	TODO
+*/
+function dbConnect($region) {
 	
+	$configs = include("/var/app/current/application/configs/dbConfigs.php");
 	static $conn; 
-	$dbserver = 'mysql:dbname=' . $configs["dbName"]. ';host=' . $configs["dbHost"];
-	$conn = new PDO($dbserver, $configs["dbUser"], $configs["dbPwd"]);
+	$dbserver = 'mysql:dbname=' . $configs["dbName".$region]. ';host=' . $configs["dbHost"];
+	$conn = new PDO($dbserver, $configs["dbUser"], $configs["dbPwd"], array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 	$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 	return $conn;
@@ -54,7 +57,7 @@ function convertToWoWCurrency($value) {
 
 function getRealmNameFromSlug($slug)
 {
-	$conn = dbConnect();
+	$conn = dbConnect("US");
 	
 	$result = $conn->prepare("SELECT name FROM realms WHERE slug = ?");
 	$result->bindParam(1, $slug);

@@ -145,7 +145,7 @@
 									<?php
 										require_once('../scripts/util.php');
 										
-										$conn = dbConnect();
+										$conn = dbConnect("US");
 										
 										
 										$sql = "SELECT slug, name FROM realms";

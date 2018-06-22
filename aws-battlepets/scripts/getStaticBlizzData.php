@@ -6,26 +6,26 @@ header ('Content-type: text/html; charset=utf-8');
 set_time_limit(0);
 
 //customLog("getStaticBlizzData","Getting pet data...");
-//getPetData();
+getPetData("US", "en_US");
+getPetData("EU", "en_GB");
 //customLog("getStaticBlizzData","Done getting pet data...");
 
 //customLog("getStaticBlizzData","Geting realm data...");
-//getRealmData();
+// Gets both EU and US realm data
+getRealmData();
 //customLog("getStaticBlizzData","Done getting realm data...");
 
-getRealmDataNew();
 
 /** 
  *		Gets JSON pet data from blizzards master pet API.
  *		This does not need to be run often as the pet list
  *		should only change around patches.
  */
-function getPetData()
+function getPetData($region, $locale)
 {
 	// Connect to database
-	$conn = dbConnect("US);
-
-	$content = file_get_contents("https://us.api.battle.net/wow/pet/?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud");
+	$conn = dbConnect($region);
+	$content = file_get_contents("https://".$region.".api.battle.net/wow/pet/?locale=".$locale."&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud");
 	$result  = json_decode($content, true);
 	$pets = $result['pets'];
 
@@ -55,7 +55,7 @@ function getPetData()
  *		Gets JSON realm data from blizzards realm list API.
  *		This does not need to be run often as the realm list
  *		should only change around patches.
- */
+
 function getRealmData()
 {
 	// Connect to database
@@ -103,8 +103,8 @@ function getRealmData()
 		}
 	}
 }
-
-function getRealmDataNew()
+ */
+function getRealmData()
 {
 	// Getting US realm data
 	$accessURL = "https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=r52egwgeefzmy4jmdwr2u7cb9pdmseud&client_secret=GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8";

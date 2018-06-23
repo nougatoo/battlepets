@@ -21,7 +21,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="/js/findNewRealm.js"></script>
 	<script src="/js/publicCommon.js"></script>	
-	<link rel="stylesheet" href="/css/myCustomStyle.css">
+	<link rel="stylesheet" href="/css/battlePetsCommon.css">
 </head>
 
 

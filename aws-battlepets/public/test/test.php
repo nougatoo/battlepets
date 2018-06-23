@@ -1,7 +1,7 @@
 <?php
 
 
-require_once('../scripts/util.php');
+require_once('../../scripts/util.php');
 
 
 set_time_limit(0);

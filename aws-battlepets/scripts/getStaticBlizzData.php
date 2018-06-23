@@ -5,21 +5,19 @@ header ('Content-type: text/html; charset=utf-8');
 
 set_time_limit(0);
 
-//customLog("getStaticBlizzData","Getting pet data...");
 getPetData("US", "en_US");
 getPetData("EU", "en_GB");
-//customLog("getStaticBlizzData","Done getting pet data...");
 
-//customLog("getStaticBlizzData","Geting realm data...");
 // Gets both EU and US realm data
 getRealmData();
-//customLog("getStaticBlizzData","Done getting realm data...");
-
 
 /** 
- *		Gets JSON pet data from blizzards master pet API.
- *		This does not need to be run often as the pet list
- *		should only change around patches.
+ 	Gets JSON pet data from blizzards master pet API.
+ 	This does not need to be run often as the pet list
+ 	should only change around patches.
+	
+	@param String $region - Usually either US or EU
+	@param String $locale - Locale value corresponding to the region
  */
 function getPetData($region, $locale)
 {
@@ -104,6 +102,13 @@ function getRealmData()
 	}
 }
  */
+
+/**
+	Gets JSON EU and US realm data from blizzards realm list API.
+	This does not need to be run often as the realm list
+	should only change around patches.
+	
+*/
 function getRealmData()
 {
 	// Getting US realm data
@@ -136,17 +141,26 @@ function getRealmData()
 }
 
 /**
-	TODO
+	Gets all the realm names, slugs and ids from the blizzard API for a particular region
+	and puts it into the regions database
+	
+	@param String $accessURL - URL to get an access token from blizzard for my API key and secret
+	@param String $realmURL - URL to get realm data before adding the access token
+	@param String $region - Usually either US or EU
+	@param String $locale - Corresponding locale to pair with the region
+	
 */
-function getRegionRealmData($accessURL, $realmURL, $locale, $region) 
+function getRegionRealmData($accessURL, $realmURL, $region, $locale) 
 {
 	// Connect to database
 	$conn = dbConnect($region);
 	
+	// Gets the new access token from blizzard. This should not take long, so don't store expiration
 	$accessContent = file_get_contents($accessURL);
 	$accessResult  = json_decode($accessContent, true);
 	$accessToken = $accessResult['access_token'];
 
+	// Get actual realm data now
 	$content = file_get_contents($realmURL.$accessToken);
 	$result  = json_decode($content, true);
 	$realms = $result['realms'];
@@ -171,9 +185,15 @@ function getRegionRealmData($accessURL, $realmURL, $locale, $region)
 }
 
 /**
-	TODO
+	Gets all the connected realm data from the blizzard API for a particular region
+	and puts it into the regions database
+	
+	@param String $accessURL - URL to get an access token from blizzard for my API key and secret
+	@param String $allConnRealmURL - URL to get connected realm data before adding the access token
+	@param String $region - Usually either US or EU
+	@param String $locale - Corresponding locale to pair with the region
 */
-function getRegionConnectedRealmData($accessURL, $allConnRealmURL, $locale, $region)
+function getRegionConnectedRealmData($accessURL, $allConnRealmURL, $region, $locale )
 {
 	// Connect to database
 	$conn = dbConnect($region);

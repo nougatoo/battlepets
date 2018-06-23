@@ -6,9 +6,12 @@ header ('Content-type: text/html; charset=utf-8');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
+// US
 customLog("INFO", "Calling getAndParseAuctionData US...");
-getAndParseAuctionData("US", "en_US");
+//getAndParseAuctionData("US", "en_US");
 customLog("INFO","Finished calling getAndParseAuctionData US...");
+
+// EU
 customLog("INFO", "Calling getAndParseAuctionData EU...");
 getAndParseAuctionData("EU", "en_GB");
 customLog("INFO","Finished calling getAndParseAuctionData EU...");
@@ -129,12 +132,19 @@ function getAndParseAuctionData($region, $locale)
 		
 		// If it came back with data
 		if($auctions && $ahRealms) {
+			
+			// Because the realm name given in the EU Ah pull can be wonky, just throw them under first name in the realm list
+			$euSlugList = [];
+			
 			// Creating slug map so we don't have to query db
 			foreach($ahRealms as  $key => $current) {	
 				$realmSlugList= [];
 				$realmNameList = [];
 				
-				foreach($current as $aRealm) {		
+				foreach($current as $key2 => $aRealm) {		
+					if($key2 == 0)
+						array_push($euSlugList, $aRealm['slug']);
+					
 					array_push($realmSlugList, $aRealm['slug']);
 					array_push($realmNameList, $aRealm['name']);			
 				}
@@ -142,9 +152,8 @@ function getAndParseAuctionData($region, $locale)
 				array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
 			}
 			
-			insertAuctionData($auctions, $slugMaps, $region, $realmSlugList[0]);	
+			insertAuctionData($auctions, $slugMaps, $region, $euSlugList);	
 		} else {
-			//customLog("auctionData","No auction data found from Url ".$i.".");
 			customLog("ERROR", "No auction data found from Url ".$i.".");
 		}
 	}
@@ -206,8 +215,12 @@ function getDataUrls($region, $locale)
 	
 	for($i = 0; $i<$numRealmsToPull; $i+=1) {
 
+		customLog("INFO", $realmsToPull[$i]);
 		// Inital call to get URL for Realm
 		if(!in_array($realmsToPull[$i], $realmsCompleted)) {
+			
+			customLog( "INFO", 'https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
+			
 			$urlResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
@@ -224,7 +237,6 @@ function getDataUrls($region, $locale)
 			$connectedRealmsResult = $conn->query($connectedRealmsSQL);
 
 			if ($connectedRealmsResult) {
-				// output data of each row
 				while($row = $connectedRealmsResult->fetch()) {
 					array_push($realmsCompleted, $row["slug_child"]);
 				}
@@ -253,10 +265,10 @@ function getDataUrls($region, $locale)
 	@param Array $auctions - Array of all the auctions that are going to be inserted for a realm
 	@param Array $slugMaps - An array of slug maps that associates a slug with a realm name so we don't have to query the db
 	@param String $region - Usually either US or EU
-	@param String $aSlug - First slug in the auction json data retrived. Since EU uses realm names that can't be parsed or matched in db. 
+	@param String $euSlugList - First slug in the auction json data retrived. Since EU uses realm names that can't be parsed or matched in db. 
 	
 */
-function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
+function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
 {
 	// Connect to database
 	$conn = dbConnect($region);
@@ -289,7 +301,7 @@ function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
 				// TODO: All connected realm data is going to be housed under 1 realm in EU for now
 				if($region == "EU")
 				{
-					$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $aSlug . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
+					$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $euSlugList[$key] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
 				}
 				else
 				{

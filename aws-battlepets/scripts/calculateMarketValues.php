@@ -12,16 +12,17 @@ calculateDailyMarketValues("EU");
 /**
 	Calculates the market value for each seen pet on all realms.
 	Connected realms are considered 1 realm.
+	
+	@param String $region - Usually either US or EU
  */
 function calculateDailyMarketValues($region)
 {
 	// Connect to database
 	$conn = dbConnect($region);
-	$startMvTime = microtime(true);
+	$startMvTime = microtime(true); 
 	$allRealms = [];
 	$realmsCompleted = [];
 	$sql = "SELECT slug FROM realms";
-	//$sql = "SELECT slug FROM realms WHERE slug = 'eredar' or slug = 'gorefiend' or slug = 'spinebreaker' or slug = 'wildhammer'";
 	$result = $conn->query($sql);
 
 	if ($result) {
@@ -57,7 +58,6 @@ function calculateDailyMarketValues($region)
 			$connectedRealmClause = implode("' OR realm = '",$connectedRealms);
 
 			$sql = "SELECT DISTINCT species_id FROM auctions_daily_pet WHERE (realm = '".$connectedRealmClause."') AND buyout > 0;";
-			//$sql = "SELECT DISTINCT species_id FROM auctions_daily_pet WHERE (realm = '".$connectedRealmClause."') AND buyout > 0 and species_id = '242'";
 			$result = $conn->query($sql);
 			
 			if($result) {
@@ -75,7 +75,6 @@ function calculateDailyMarketValues($region)
 				// For some reason it is faster to run multiple queries instead of 1 query with multiple where's for the realms
 				foreach($connectedRealms as $aConnRealm) {		
 					$sql = "SELECT buyout FROM auctions_daily_pet WHERE realm = '".$aConnRealm."' AND species_id = '" . $currentPet . "' AND buyout > 0;";
-					//$sql = "SELECT buyout FROM auctions_daily_pet WHERE realm = 'aegwynn' OR realm = 'bonechewer' OR realm = 'daggerspine' OR realm = 'gurubashi' OR realm = 'hakkar' AND species_id = '" . $currentPet . "' ORDER BY buyout";
 					$result = $conn->query($sql);
 					
 					if($result) {
@@ -140,8 +139,6 @@ function calculateDailyMarketValues($region)
 			
 				if ($conn->query($mvInsertSql) === TRUE) {
 					//customLog "New record created successfully";
-				} else {
-					//customLog ("ERROR", $mvInsertSql);
 				}
 				
 				$conn->query('COMMIT;');
@@ -170,13 +167,16 @@ function calculateDailyMarketValues($region)
 	// This seems to be a better way to match TSMs value...keep this and avg in for now
 	calculateRegionMedian($region);
 	
+	// Log Time
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
 	customLog ("INFO", "Market Value Calculation time: " . $timeDiffMv);
 }
 
 /**
-	TODO
+	Calculates a region market value based on the median, instead of a mean for certain values of pets.
+	
+	@param String $region - Usually either US or EU	
 */
 function calculateRegionMedian($region)
 {
@@ -229,8 +229,9 @@ function calculateRegionMedian($region)
 		// Only take the index values between 10% and 65% 
 		$marketValues = array_slice($marketValues,  floor($marketValuesLength*0.10), floor($marketValuesLength*0.65));
 		
-		// TODO - ANYTHING OVER 25K...USER MEDIAN
-		// user average for anything else
+		// Anything over 25k in value, use an average of median and mean 
+		// Anything under 10k use the already existing mean (market value hist)
+		// Anythign else, just use median
 		if($medianValue < 250000000) {
 			$medianValue = ($medianValue + $marketValueHist) / 2 ;
 		}
@@ -241,11 +242,9 @@ function calculateRegionMedian($region)
 		$mvMedianInsertSql = "INSERT INTO market_value_pets_hist_median (`species_id`,  `market_value_hist_median`) VALUES ('".$aSpecies['species_id']."' , '".$medianValue."') ON DUPLICATE KEY UPDATE market_value_hist_median = ".$medianValue.";";
 			
 		$result = $conn->prepare($mvMedianInsertSql);
-		$result->execute();		
-		
+		$result->execute();			
 	}
 
-	
 }
 
 ?>

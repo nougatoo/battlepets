@@ -2,7 +2,9 @@
 
 
 /**
-	TODO
+	Calculates the standard deviation of an array
+	
+	@param Array $sample - Array of numbers
 */
 function standard_deviation($sample){
 	if(is_array($sample)){
@@ -13,7 +15,11 @@ function standard_deviation($sample){
 }
 
 /**
-	TODO
+	Connects to the regions database
+	
+	@param String $region - Usually either US or EU
+	
+	@return PDO Database connection
 */
 function dbConnect($region) {
 	
@@ -27,6 +33,12 @@ function dbConnect($region) {
 		
 }
 
+/**
+	Echo with the type and the datetime
+	
+	@param String $type - Either INFO or ERROR
+	@param String $text - Text that needs to be logged
+*/
 function customLog($type, $text) {
 	
 	echo ("[".date('Y-m-d H:i:s')."][".$type."] -- ".$text."\n");
@@ -34,7 +46,11 @@ function customLog($type, $text) {
 }
 
 /**
-	TODO: Returns a string of wow gold
+	Returns a string of wow gold with hightlighted g,s, and c leetters
+	
+	@param int $value - Integer amount of copper
+	
+	@return String 
 */
 function convertToWoWCurrency($value) {
 	
@@ -52,7 +68,12 @@ function convertToWoWCurrency($value) {
 }
 
 /**
-	TODO
+	Queries the database and find name of realm from a slug
+	
+	@param String $slug - Realm slug
+	@param String $region - Usually either US or EU
+	
+	@return String - Realm corresponding the slug passed in
 */
 
 function getRealmNameFromSlug($slug, $region)

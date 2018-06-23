@@ -1,13 +1,15 @@
 
-var firstSearch = true;
-var numRealms = 1;
-var realms = [];
-var characters = [];
-var realmSelectHTML;
-var currentRegion = "";
+var firstSearch = true; // Is this the first search?
+var numRealms = 1; // number of realms in the search. Minimum 1
+var maxRealmNum = 15; // Maximum number of realms the user can search at once
+var realms = []; // Array of realms the user selected
+var characters = []; // The characterst that the user selected
+var realmSelectHTML; // The <option>'s for the realm select menus
+var currentRegion = ""; // Current region the user has selected
 
 $(document).ready(function(){
 	
+	// Use local storage to store the users region
 	if(localStorage.getItem("currentRegion") === null)
 	{
 		localStorage.setItem("currentRegion", "US"); // Default to US
@@ -18,27 +20,37 @@ $(document).ready(function(){
 		currentRegion = localStorage.getItem("currentRegion");
 	}
 	
+	// Sets the realmSelectHTML for future use
 	getRegionRealmList();
-	$('#realm1').append(realmSelectHTML);
+	$('#realm1').append(realmSelectHTML); 
 	$('#currentRegion').html("Region: " + currentRegion);
 
 });
 
+/**
+	Removes the disabled class for the two find deals buttons
+	
+*/
 function activateDealsButton() {	
-	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
 	 $('#findDealsButton').removeClass('disabled');
 	 $('#findDealsButtonb').removeClass('disabled');
 }
 
 
+/**
+	Finds Deals the realms and characters that the user has selcted.
+	Makes calls to findDeals.php and uses the html that's sent back from the ajax calls.
+	
+*/
 function findDeals() {
 		
-	if(!isNumCharactersValid(firstSearch))
-	{
+	// User must enter at least one character and realm combination
+	if(!isNumCharactersValid(firstSearch)) {
 		alert("Please enter at least one character and realm");
 		return;
 	}	
 	
+	// Prevents the user from spamming calls that would stress the db
 	if($("#findDealsButton").hasClass("disabled") || $("#findDealsButtonb").hasClass("disabled"))
 		return;
 	
@@ -46,37 +58,34 @@ function findDeals() {
 	$('#tableArea')[0].innerHTML = "";
 	$('#realmSpyDynammic')[0].innerHTML = "";
 	
+	// Hide elements while we load the new ones
 	$('#sellHeader').hide();
 	$('#dataFilter').hide();
 	$('#realmSpy').hide();
 	
+	// Disable the deals button while we load the current search
 	 $('#findDealsButton').addClass('disabled');
 	 $('#findDealsButtonb').addClass('disabled');
 	
-	var showCommon = $('#commonSlider').is(':checked');
-	var showGreen = $('#greenSlider').is(':checked');
-	var showBlue = $('#blueSlider').is(':checked');
-	var showEpic = $('#epicSlider').is(':checked');
-	var showLeggo = $('#leggoSlider').is(':checked');
-	
-	var showSnipes = $('#snipesSlider').is(':checked');
-	var incCollected = $('#collectedSlider').is(':checked');
+	var showCommon = $('#commonSlider').is(':checked'); // @depreciated
+	var showGreen = $('#greenSlider').is(':checked'); // @depreciated
+	var showBlue = $('#blueSlider').is(':checked'); // @depreciated
+	var showEpic = $('#epicSlider').is(':checked'); // @depreciated
+	var showLeggo = $('#leggoSlider').is(':checked');	 // @depreciated
+	var showSnipes = $('#snipesSlider').is(':checked'); // @depreciated
+	var incCollected = $('#collectedSlider').is(':checked'); // @depreciated
 	var maxBuyPerc = $('#selectMaxBuy').val();
 	var minSellPrice = $('#minSellPrice').val();
-	
-	//var maxBuyPerc = 0.55;
-	var stage = "";
-
-	realms = [];
-	characters = [];
+	var stage = ""; // Used to determine if the user is based the initial stage of the application ("b" if they are past their first search)
+	var realms = [];
+	var characters = [];
 
 	if(firstSearch == false)
 		stage = "b";
 		
+	// Escape user input and build the characters and realms arrays
 	if($('#character1' + stage).val().replace(/\s/g, '') != "Test") {
-		
-		for(var i = 1; i <= numRealms; i++)
-		{
+		for(var i = 1; i <= numRealms; i++) {
 			var aCharacter = $('#character' + i + stage).val().replace(/\s/g, '');
 			var aRealm = $('#realm' + i + stage).val();
 			
@@ -102,7 +111,7 @@ function findDeals() {
 		realms.push('moon-guard');
 	}	
 	
-	
+	// Data to to be passed to findDeals.php ajax call
 	var data = {
 		"characters": characters,
 		"realms": realms,
@@ -119,9 +128,7 @@ function findDeals() {
 		"region": currentRegion
 	};
 	
-	data["purpose"] = "realmTabs";
-	
-	
+	data["purpose"] = "realmTabs";	
 	$.ajax({
 		url: 'findDeals.php',
 		type: 'POST',
@@ -131,6 +138,7 @@ function findDeals() {
 		}
 	});
 	
+	// Show loading bar
 	$('#loadingBar').show();
 	$('#loadingBarb').show();
 	
@@ -140,6 +148,8 @@ function findDeals() {
 		type: 'POST',
 		data: data,
 		success:function(response){
+			
+			// Hide loading information and initial stage row (row4)
 			$('#row4').hide();
 			$('#loadingBar').hide();
 			$('#loadingBarb').hide();			
@@ -147,16 +157,17 @@ function findDeals() {
 			
 			if(firstSearch == true) {
 				$('#row4col2')[0].innerHTML = "";
-				
 				firstSearch = false;
 			}
 			
-			$('#tableArea')[0].innerHTML += response;
+			// Search is done - start showing elements to user
+			$('#tableArea')[0].innerHTML += response; // The meat of the page. All the deals for all realms
 			$('#dataFilter').show();
 			$('#realmSpy').show()
 			$('#sellHeader').show()
 			activateDealsButton();
 			
+			// Add a keyup function on the filter input. Filters as the user enters data
 			$("#dataFilter").on("keyup", function() {
 				var value = $(this).val().toLowerCase();
 				$("#myTable1 tr").filter(function() {
@@ -175,8 +186,7 @@ function findDeals() {
 			recreateCharSelection();
 			
 			// Repopulate the characters and realms 
-			for(var i = 1; i <= numRealms; i++)
-			{
+			for(var i = 1; i <= numRealms; i++) {
 				$('#character' + i + 'b').val(characters[i-1]);
 				$('#realm' + i + 'b').val(realms[i-1]);
 			}
@@ -189,11 +199,15 @@ function findDeals() {
 
 
 /**
-	TODO
+	Gets called when the user clicks the "+ Add Realm" button.
+	Adds a new realms using the appropriate realm options for the the users region (realmSelectHTML) up to a max of 15.
+	This function is called in the initial view where the user hasn't made their first search yet.
+	TODO: Refactor this and the addRealmClickb function into 1;
+	
 */
-function addRealmClick(event)
+function addRealmClick()
 {
-	if(numRealms < 15) {
+	if(numRealms < maxRealmNum) {
 		numRealms++;
 		
 		var appendElement = appendElement = "#charSelectForm";
@@ -211,11 +225,15 @@ function addRealmClick(event)
 }
 
 /**
-	TODO
+	Gets called when the user clicks the "+ Add Realm" button.
+	Adds a new realms using the appropriate realm options for the the users region (realmSelectHTML) up to a max of 15.
+	This function is called AFTER the initial view where the user has already made their first search.
+	TODO: Refactor this and the addRealmClick function into 1;
+	
 */
-function addRealmClickb(event)
+function addRealmClickb()
 {
-	if(numRealms < 15) {
+	if(numRealms < maxRealmNum) {
 		numRealms++;
 		
 		var appendElement = appendElement = "#charSelectFormb";
@@ -232,10 +250,11 @@ function addRealmClickb(event)
 	}
 }
 
-
-
 /**
-	TODO
+	Used to create the realm/character selection form after the user has already entered data and search.
+	Used to recreate after a search.
+	
+	@param {int} currentRealmNum - The current realm number being created
 */
 function addRealmAuto(currentRealmNum)
 {
@@ -247,12 +266,12 @@ function addRealmAuto(currentRealmNum)
 	realmSelectHTML +
 	'</select>' +
 	'</div>');
-
 }
 
-
 /**
-	TODO
+	Checks that the user is entering at least one character and realm combination.
+	
+	@param {boolean} firstSearch - Is this the users first search?
 */
 function isNumCharactersValid(firstSearch)
 {
@@ -261,13 +280,11 @@ function isNumCharactersValid(firstSearch)
 	if(firstSearch)
 		versionChar = "";
 		
-	for(var i = 1; i <= numRealms; i++)
-	{
+	for(var i = 1; i <= numRealms; i++) {
 		var aCharacter = $('#character' + i + versionChar).val().replace(/\s/g, '');
 		var aRealm = $('#realm' + i + versionChar).val();
 		
-		if(aCharacter && aRealm)
-		{
+		if(aCharacter && aRealm) {
 			// They entered at least one combination of names + characters
 			return true;
 		}
@@ -277,56 +294,19 @@ function isNumCharactersValid(firstSearch)
 }
 
 /** 
-	TODO
+	Recreates the realm/character selection so that the user doesn't have to enter again after searching.
+	Also used to clean up empty entries that the user may have created.
+	
 */
-
 function recreateCharSelection()
 {
 	// Remove all realms - recreate from scratch
 	$('#charSelectFormb').html("");
 	
-	for(var i = 1; i <= numRealms; i++)
-	{
+	for(var i = 1; i <= numRealms; i++) {
 		addRealmAuto(i);
 	}
 	
-}
-
-
-/**
-	TODO
-*/
-function switchRegion(obj)
-{
-	var newRegion = obj.innerHTML;
-	
-	if (newRegion != currentRegion)
-	{
-		currentRegion = newRegion;
-		localStorage.setItem("currentRegion", currentRegion);
-		location.reload();
-	}
-
-}
-
-/**
-	TODO
-*/
-function getRegionRealmList()
-{
-		var data = {
-			"region": currentRegion
-		};
-		
-		$.ajax({
-			url: 'getRegionRealmList.php',
-			type: 'POST',
-			data: data,
-			async: false,
-			success:function(response){			
-				realmSelectHTML = response;
-			}
-	});
 }
 
 

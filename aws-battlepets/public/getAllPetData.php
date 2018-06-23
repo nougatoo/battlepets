@@ -16,7 +16,8 @@ $tableHTML = 	'<table class="table table-striped table-hover realmTable">
 								<th onclick="sortTable(1)" class="realmTableHeader">Global Market Value</th>
 							</tr>
 							<tbody id="myTable1">';
-
+							
+// Get all pet values from the median table
 $sql = 'SELECT 
 				pets.species_id, pets.name, market_value_pets_hist_median.market_value_hist_median
 			FROM 

@@ -8,7 +8,7 @@ ini_set('memory_limit', '1024M');
 
 // US
 customLog("INFO", "Calling getAndParseAuctionData US...");
-//getAndParseAuctionData("US", "en_US");
+getAndParseAuctionData("US", "en_US");
 customLog("INFO","Finished calling getAndParseAuctionData US...");
 
 // EU

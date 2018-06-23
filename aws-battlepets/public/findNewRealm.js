@@ -8,13 +8,12 @@ var currentRegion = "";
 
 $(document).ready(function(){
 	
-	if(localStorage.getItem("currentRegion") === null)
-	{
+	// Use local storage to store the users region
+	if(localStorage.getItem("currentRegion") === null) {
 		localStorage.setItem("currentRegion", "US"); // Default to US
 		currentRegion = "US";
 	}
-	else
-	{
+	else {
 		currentRegion = localStorage.getItem("currentRegion");
 	}
 	
@@ -24,19 +23,28 @@ $(document).ready(function(){
 
 });
 
+/**
+	Removes the disabled class on the find realm button 
+*/
 function activateFindRealmButton() {	
-	// Check if the users has selected two characters and realms for each of them. If they have...activate the deals button
-	 $('#findRealmButton').removeClass('disabled');
+	$('#findRealmButton').removeClass('disabled');
 }
 
+
+/**
+	Finds the total value, per realm, of the pets owned by the 
+	account for the character that the user entered.
+	
+*/
 function findNewRealm() {
 		
-	if(!isNumCharactersValid(firstSearch))
-	{
+	// Make sure they entered one character and realm combination
+	if(!isNumCharactersValid(firstSearch)) {
 		alert("Please enter one character and realm");
 		return;
 	}	
 	
+	// If the button is disabled, the user has an active request already inflight
 	if($("#findRealmButton").hasClass("disabled"))
 		return;
 	
@@ -44,37 +52,37 @@ function findNewRealm() {
 	$('#realmValueTable')[0].innerHTML = "";
 	$('#dataFilter').hide();
 	$('#realmSpy').hide();
-	 $('#findRealmButton').addClass('disabled');
+	$('#findRealmButton').addClass('disabled');
 	
 	var stage = "";
-	
 	realms = [];
 	characters = [];
 
 	if(firstSearch == false)
 		stage = "b";
-		
+	
+	// Build the character and realm array from what the user entered
 	if($('#character1' + stage).val().replace(/\s/g, '')) {
 		
-		for(var i = 1; i <= numRealms; i++)
-		{
+		for(var i = 1; i <= numRealms; i++) {
 			var aCharacter = $('#character' + i + stage).val().replace(/\s/g, '');
 			var aRealm = $('#realm' + i + stage).val();
 			
-			if(aCharacter && aRealm)
-			{
+			if(aCharacter && aRealm) {
 				characters.push(aCharacter);
 				realms.push(aRealm);
 			}
 		}
 	}
 	
+	// Data array for the getNewRealmData.php ajax call
 	var data = {
 		"characters": characters,
 		"realms": realms,
 		"region": currentRegion
 	};
 
+	// Show loading information
 	$('#loadingBar').show();
 	$('#loadingBarb').show();
 	
@@ -126,11 +134,13 @@ function findNewRealm() {
 			}
 		}	
 	});
-	
 }
 
 /**
-	TODO
+	Used to create the realm/character selection form after the user has already entered data and search.
+	Used to recreate after a search.
+	
+	@param {int} currentRealmNum - The current realm number being created
 */
 function addRealmAuto(currentRealmNum)
 {
@@ -145,9 +155,10 @@ function addRealmAuto(currentRealmNum)
 
 }
 
-
 /**
-	TODO
+	Checks that the user is entering at least one character and realm combination.
+	
+	@param {boolean} firstSearch - Is this the users first search?
 */
 function isNumCharactersValid(firstSearch)
 {
@@ -156,13 +167,11 @@ function isNumCharactersValid(firstSearch)
 	if(firstSearch)
 		versionChar = "";
 		
-	for(var i = 1; i <= numRealms; i++)
-	{
+	for(var i = 1; i <= numRealms; i++) {
 		var aCharacter = $('#character' + i + versionChar).val().replace(/\s/g, '');
 		var aRealm = $('#realm' + i + versionChar).val();
 		
-		if(aCharacter && aRealm)
-		{
+		if(aCharacter && aRealm) {
 			// They entered at least one combination of names + characters
 			return true;
 		}
@@ -171,61 +180,22 @@ function isNumCharactersValid(firstSearch)
 	return false;
 }
 
-
-
 /** 
-	TODO
+	Recreates the realm/character selection so that the user doesn't have to enter again after searching.
+	Also used to clean up empty entries that the user may have created.
+	
 */
-
 function recreateCharSelection()
 {
 	// Remove all realms - recreate from scratch
 	$('#charSelectFormb').html("");
 	
-	for(var i = 1; i <= numRealms; i++)
-	{
+	for(var i = 1; i <= numRealms; i++) {
 		addRealmAuto(i);
 	}
 	
 }
 
-
-
-/**
-	TODO
-*/
-function switchRegion(obj)
-{
-	var newRegion = obj.innerHTML;
-	
-	if (newRegion != currentRegion)
-	{
-		currentRegion = newRegion;
-		localStorage.setItem("currentRegion", currentRegion);
-		location.reload();
-	}
-
-}
-
-/**
-	TODO
-*/
-function getRegionRealmList()
-{
-		var data = {
-			"region": currentRegion
-		};
-		
-		$.ajax({
-			url: 'getRegionRealmList.php',
-			type: 'POST',
-			data: data,
-			async: false,
-			success:function(response){			
-				realmSelectHTML = response;
-			}
-	});
-}
 
 
 

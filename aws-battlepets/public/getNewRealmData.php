@@ -14,8 +14,6 @@ else if ($region == "EU")
 	$locale = "en_GB";
 
 $url = 'https://'.$region.'.api.battle.net/wow/character/' . $realms[0] . '/' . $characters[0] . '?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud';
-
-// TODO - Make this dynamic for the first character
 $petsAPIResponse = file_get_contents($url);
 $results = json_decode($petsAPIResponse, true);	
 $cagedPetsRaw = $results['pets']['collected'];
@@ -29,6 +27,7 @@ if(sizeof($cagedPetsRaw) == 0)
 	return;
 }
 
+// Create a "processed" array of just the species id. The raw has a bunch of data we're not interested in
 for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
 {
 	array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
@@ -37,6 +36,7 @@ for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
 $cagedCounts = array_count_values($cagedPetsProc);
 $petRestriction = "";
 
+// Builds an array of species id that the user owns and builds a partial SQL restriction to be used in a query
 foreach($cagedCounts as $key => $petCount) {
 	$petRestriction .= "'". $key . "',";
 	array_push($cagedPetsIds, $key);
@@ -52,9 +52,7 @@ $sql = "SELECT sum(min_buyout) as realmSum, realm
 											FROM auctions_hourly_pet 
 											WHERE species_id IN " . $petRestriction . "GROUP BY species_id, realm) b
 										GROUP BY REALM
-										ORDER BY realmSum DESC";
-											
-
+										ORDER BY realmSum DESC";								
 $result = $conn->prepare($sql);
 $result->execute();	
 
@@ -135,7 +133,7 @@ foreach($finalRealmData as $key => $realmValue) {
 	}
 }
 
-
+// Reverse sort - greatest to least
 arsort($finalRealmData);
 
 $tableHTML =	'<table class="table table-striped table-hover realmTable">

@@ -6,16 +6,17 @@ set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
 customLog ("INFO", "Calculating Daily Market Values...");
-calculateDailyMarketValues();
+//calculateDailyMarketValues("US");
+calculateDailyMarketValues("EU");
 
 /**
 	Calculates the market value for each seen pet on all realms.
 	Connected realms are considered 1 realm.
  */
-function calculateDailyMarketValues()
+function calculateDailyMarketValues($region)
 {
 	// Connect to database
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	$startMvTime = microtime(true);
 	$allRealms = [];
 	$realmsCompleted = [];
@@ -167,7 +168,7 @@ function calculateDailyMarketValues()
 	$conn->query($addHist);
 	
 	// This seems to be a better way to match TSMs value...keep this and avg in for now
-	calculateRegionMedian();
+	calculateRegionMedian($region);
 	
 	$endMvTime = microtime(true);
 	$timeDiffMv = $endMvTime - $startMvTime;
@@ -177,10 +178,10 @@ function calculateDailyMarketValues()
 /**
 	TODO
 */
-function calculateRegionMedian()
+function calculateRegionMedian($region)
 {
 		
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	$distinctPets = [];
 
 	$result = $conn->prepare("SELECT distinct market_value_pets.species_id, pets.name FROM market_value_pets INNER JOIN pets ON pets.species_id = market_value_pets.species_id");

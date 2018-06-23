@@ -6,6 +6,8 @@ $configs = include('../application/configs/configs.php');
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
 $purpose = $_POST['purpose'];
+$region = $_POST['region'];
+$locale;
 
 $showCommon = $_POST['showCommon'] == "true";
 $showGreen = $_POST['showGreen'] == "true";
@@ -21,15 +23,20 @@ if(!is_numeric($maxBuyPerc)) {
 	return;
 }
 
+
+if($region == "US")
+	$locale  = "en_US";
+else if ($region == "EU")
+	$locale = "en_GB";
+
 //$characters = json_decode($characters, true);
 
 if($purpose == "realmTabs") {
 	createRealmTabs($realms);
 }
 else {
-
-	// TODO - Make this dynamic for the first character
-	$petsAPIResponse = file_get_contents('https://us.api.battle.net/wow/character/cenarion-circle/irone?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
+	
+	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected'];
 	$cagedPetsProc = [];
@@ -62,15 +69,15 @@ else {
 			$tableHTML =	'<div class="panel panel-default realmPanel">
 										<div class="panel-heading realmPanelHeading">
 											<h4 class="panel-title">	  
-											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'"><b>'.getRealmNameFromSlug($realms[$j]) .'</b></a>
+											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'"><b>'.getRealmNameFromSlug($realms[$j], $region) .'</b></a>
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in realmPanelCollapse">
 											<table class="table table-hover realmTable">
 												<tr style="background-color:white; color: #6b6b6b;">
 													<th onclick="sortTable(this)" class="realmTableHeader">Name</th>
-													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$j]).' Price</th>
-													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$i]).' Price</th>
+													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$j], $region).' Price</th>
+													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$i], $region).' Price</th>
 													<th class="realmTableHeader">Market Value</th>
 													<th class="realmTableHeader">% Market Value</th>
 												</tr>
@@ -179,8 +186,8 @@ else {
 */
 function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
-	global $configs;
-	$conn = dbConnect("US");	
+	global $configs, $region;
+	$conn = dbConnect($region);	
 	$realmRes = buildingRealmRes($realm);	
 	$sql = "
 			SELECT 
@@ -247,9 +254,9 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 */
 function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 {
-	global $configs;
+	global $configs, $region;
 	
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	$realmRes = buildingRealmRes($realm);
 
 	// Gets the pets that are a good deal on selected realm (Less than minMarketPercent global market avg)
@@ -299,7 +306,8 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 */
 function buildingRealmRes($realm) 
 {
-	$conn = dbConnect("US");
+	global $region, $locale; 
+	$conn = dbConnect($region);
 	$realmRes = "(realm =  '".$realm."'";
 	
 	$result = $conn->prepare("SELECT slug_child FROM realms_connected WHERE slug_parent = ?");
@@ -322,16 +330,14 @@ function buildingRealmRes($realm)
 */
 function createRealmTabs($realms)
 {
-	/*
-	echo '<h1 style="padding-bottom: 15px;">
-				<span class="label label-default colHeader">Buy</span>
-			</h1>';
-		*/
+
+	global $region;
+	
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
 	foreach($realms as $key=> $aRealm) {
 		$realmTabHTML = '';
-		$realmName = getRealmNameFromSlug($aRealm);
+		$realmName = getRealmNameFromSlug($aRealm,$region);
 		
 		if($key == 0)
 			$realmTabHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
@@ -349,13 +355,13 @@ function createRealmTabs($realms)
 */
 function buildSnipesTables($realm)
 {
-	global $showCommon, $showGreen, $showBlue, $showEpic, $showLeggo, $configs;
+	global $showCommon, $showGreen, $showBlue, $showEpic, $showLeggo, $configs, $region, $locale;
 	$totalBuy = 0;
 	$totalValue = 0;
 	$emptyTable = false;
 	$snipeDeals = findDealsForRealm($realm, FALSE, $configs['maxGblSnipePercent']);
 	
-	$petsAPIResponse = file_get_contents('https://us.api.battle.net/wow/character/cenarion-circle/irone?fields=pets&locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
+	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected'];
 	$cagedPetsProc = [];
@@ -377,7 +383,7 @@ function buildSnipesTables($realm)
 									<table class="table table-striped table-hover realmTable">
 										<tr  style="background-color:white; color: #6b6b6b;">
 											<th class="realmTableHeader">Name</th>
-											<th class="realmTableHeader">'.getRealmNameFromSlug($realm) .' Price</th>
+											<th class="realmTableHeader">'.getRealmNameFromSlug($realm,$region) .' Price</th>
 											<th class="realmTableHeader">Market Value</th>
 											<th class="realmTableHeader">% Market Value</th>
 										</tr>

@@ -55,9 +55,9 @@ function convertToWoWCurrency($value) {
 	TODO
 */
 
-function getRealmNameFromSlug($slug)
+function getRealmNameFromSlug($slug, $region)
 {
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	
 	$result = $conn->prepare("SELECT name FROM realms WHERE slug = ?");
 	$result->bindParam(1, $slug);

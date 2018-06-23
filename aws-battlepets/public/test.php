@@ -7,7 +7,7 @@ require_once('../scripts/util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-$conn = dbConnect("US");
+$conn = dbConnect("EU");
 $distinctPets = [];
 
 $result = $conn->prepare("SELECT distinct market_value_pets.species_id, pets.name FROM market_value_pets INNER JOIN pets ON pets.species_id = market_value_pets.species_id");

@@ -1,13 +1,25 @@
 
-
-
 var sortOrder = "desc";
+var currentRegion = "";
 
 $(document).ready(function(){
+	
+	if(localStorage.getItem("currentRegion") === null)
+	{
+		localStorage.setItem("currentRegion", "US"); // Default to US
+		currentRegion = "US";
+	}
+	else
+	{
+		currentRegion = localStorage.getItem("currentRegion");
+	}
+	
+	$('#currentRegion').html("Region: " + currentRegion);
 
   	var data = {
 		"sortBy": "market_value_hist_median",
-		"sortOrder": sortOrder
+		"sortOrder": sortOrder,
+		"region": currentRegion
 	};
 	
   	$.ajax({
@@ -70,7 +82,9 @@ function sortTable(n) {
 	});
 }
 
-
+/**
+	TODO
+*/
 function flipSortOrder() {
 	
 	if (sortOrder == "desc")
@@ -78,4 +92,20 @@ function flipSortOrder() {
 	else
 		sortOrder = "desc";
 	
+}
+
+/**
+	TODO
+*/
+function switchRegion(obj)
+{
+	var newRegion = obj.innerHTML;
+	
+	if (newRegion != currentRegion)
+	{
+		currentRegion = newRegion;
+		localStorage.setItem("currentRegion", currentRegion);
+		location.reload();
+	}
+
 }

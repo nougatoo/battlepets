@@ -1,13 +1,17 @@
 <?php
 
 require_once('util.php');
+header ('Content-type: text/html; charset=utf-8');
 
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-customLog("INFO", "Calling getAndParseAuctionData...");
-getAndParseAuctionData();
-customLog("INFO","Finished calling getAndParseAuctionData...");
+customLog("INFO", "Calling getAndParseAuctionData US...");
+getAndParseAuctionData("US", "en_US");
+customLog("INFO","Finished calling getAndParseAuctionData US...");
+customLog("INFO", "Calling getAndParseAuctionData EU...");
+getAndParseAuctionData("EU", "en_GB");
+customLog("INFO","Finished calling getAndParseAuctionData EU...");
 
 /** 
  *		Gets the pet auction data from blizzard. 
@@ -22,15 +26,15 @@ customLog("INFO","Finished calling getAndParseAuctionData...");
  * 	
  *		TODO: add error handling
  */
-function getAndParseAuctionData()
+function getAndParseAuctionData($region, $locale)
 {
 	// Connect to database
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	
 	$startTimeTotal = microtime(true);
 	
 	// Make the inital call to get the data URLs
-	$dataUrls = getDataUrls();
+	$dataUrls = getDataUrls($region, $locale);
 	
 	// Getting Auction Data and inserting 
 	$ch1 = curl_init();
@@ -136,7 +140,7 @@ function getAndParseAuctionData()
 				array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
 			}
 			
-			insertAuctionData($auctions, $slugMaps);	
+			insertAuctionData($auctions, $slugMaps, $region, $realmSlugList[0]);	
 		} else {
 			//customLog("auctionData","No auction data found from Url ".$i.".");
 			customLog("ERROR", "No auction data found from Url ".$i.".");
@@ -176,10 +180,10 @@ function getAndParseAuctionData()
 	
 	Returns and array of strings
 */
-function getDataUrls()
+function getDataUrls($region, $locale)
 {
 	// Connect to database
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 
 	$realmsToPull = []; // List of all realms 
 	$realmsCompleted = []; // Used to know which connected realms we've done
@@ -201,7 +205,7 @@ function getDataUrls()
 
 		// Inital call to get URL for Realm
 		if(!in_array($realmsToPull[$i], $realmsCompleted)) {
-			$urlResponse = file_get_contents('https://us.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale=en_US&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
+			$urlResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
 			$lastModified = $result['files'][0]['lastModified'];		
@@ -246,10 +250,10 @@ function getDataUrls()
 	while our getAndParseAuctionData is running.
 	
 */
-function insertAuctionData($auctions, $slugMaps)
+function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
 {
 	// Connect to database
-	$conn = dbConnect("US");
+	$conn = dbConnect($region);
 	
 	$startTimeAuctions = microtime(true);
 	
@@ -277,7 +281,17 @@ function insertAuctionData($auctions, $slugMaps)
 			{
 				$speciesId = $currentAuction['petSpeciesId'];
 				
-				$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
+				// Avoid indexing a slug map with a crappy russion name from the AH data...
+				// TODO: all connected realm data is going to be housed under 1 realm now
+				if($region == "EU")
+				{
+					$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $aSlug . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
+				}
+				else
+				{
+					$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $slugMaps[$key][$realmName] . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
+				}
+
 
 				if ($conn->query($sql) === TRUE) {
 					//customLog "New record created successfully";

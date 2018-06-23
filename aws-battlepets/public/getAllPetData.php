@@ -6,8 +6,9 @@ $configs = include('../application/configs/configs.php');
 
 $sortBy = $_POST['sortBy'];
 $sortOrder = $_POST['sortOrder'];
+$region = $_POST['region'];
 
-$conn = dbConnect("US");
+$conn = dbConnect($region);
 
 $tableHTML = 	'<table class="table table-striped table-hover realmTable">
 							<tr style="background-color:white; color: #6b6b6b;">

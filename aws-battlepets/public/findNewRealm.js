@@ -4,9 +4,23 @@ var numRealms = 1;
 var realms = [];
 var characters = [];
 var realmSelectHTML;
+var currentRegion = "";
 
 $(document).ready(function(){
-	realmSelectHTML = $('#realm1').html();
+	
+	if(localStorage.getItem("currentRegion") === null)
+	{
+		localStorage.setItem("currentRegion", "US"); // Default to US
+		currentRegion = "US";
+	}
+	else
+	{
+		currentRegion = localStorage.getItem("currentRegion");
+	}
+	
+	getRegionRealmList();
+	$('#realm1').append(realmSelectHTML);
+	$('#currentRegion').html("Region: " + currentRegion);
 
 });
 
@@ -58,6 +72,7 @@ function findNewRealm() {
 	var data = {
 		"characters": characters,
 		"realms": realms,
+		"region": currentRegion
 	};
 
 	$('#loadingBar').show();
@@ -68,22 +83,25 @@ function findNewRealm() {
 		type: 'POST',
 		data: data,
 		success:function(response){
+			
+			// Hide old and loading elements
 			$('#row4').hide();
 			$('#loadingBar').hide();
 			$('#loadingBarb').hide();			
 			$('#row3').show();
 			
 			if(firstSearch == true) {
-				$('#row4col2')[0].innerHTML = "";
-				
+				$('#row4col2')[0].innerHTML = "";		
 				firstSearch = false;
 			}
 			
+			// Add the response value and then show the appropriate elements
 			$('#realmValueTable')[0].innerHTML += response;
 			$('#dataFilter').show();
 			$('#realmSpy').show();
 			activateFindRealmButton();
 			
+			// Add a keyup function for the filter
 			$("#dataFilter").on("keyup", function() {
 				var value = $(this).val().toLowerCase();
 				$("#myTable1 tr").filter(function() {
@@ -171,6 +189,43 @@ function recreateCharSelection()
 	
 }
 
+
+
+/**
+	TODO
+*/
+function switchRegion(obj)
+{
+	var newRegion = obj.innerHTML;
+	
+	if (newRegion != currentRegion)
+	{
+		currentRegion = newRegion;
+		localStorage.setItem("currentRegion", currentRegion);
+		location.reload();
+	}
+
+}
+
+/**
+	TODO
+*/
+function getRegionRealmList()
+{
+		var data = {
+			"region": currentRegion
+		};
+		
+		$.ajax({
+			url: 'getRegionRealmList.php',
+			type: 'POST',
+			data: data,
+			async: false,
+			success:function(response){			
+				realmSelectHTML = response;
+			}
+	});
+}
 
 
 

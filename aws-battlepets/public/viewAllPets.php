@@ -35,6 +35,16 @@
 			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<span class="glyphicon glyphicon-globe" style="padding-right:5px"></span>
+				<span id="currentRegion">Region:</span>
+				<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" style="text-align: center;border-bottom: 1px solid #a09e9e;" onclick="switchRegion(this)">US</a></li>
+					<li><a href="#" style="text-align: center;" onclick="switchRegion(this)">EU</a></li>
+				</ul>
+			</li>		
 			<li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span>Contact</a></li>
 			<li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span>Report a Bug</a></li>
 			<li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span>FAQ</a></li>

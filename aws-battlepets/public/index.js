@@ -4,10 +4,23 @@ var numRealms = 1;
 var realms = [];
 var characters = [];
 var realmSelectHTML;
+var currentRegion = "";
 
 $(document).ready(function(){
 	
-	realmSelectHTML = $('#realm1').html();
+	if(localStorage.getItem("currentRegion") === null)
+	{
+		localStorage.setItem("currentRegion", "US"); // Default to US
+		currentRegion = "US";
+	}
+	else
+	{
+		currentRegion = localStorage.getItem("currentRegion");
+	}
+	
+	getRegionRealmList();
+	$('#realm1').append(realmSelectHTML);
+	$('#currentRegion').html("Region: " + currentRegion);
 
 });
 
@@ -99,7 +112,8 @@ function findDeals() {
 		showLeggo: true,
 		showSnipes: true,
 		incCollected: true,
-		maxBuyPerc: maxBuyPerc
+		maxBuyPerc: maxBuyPerc,
+		"region": currentRegion
 	};
 	
 	data["purpose"] = "realmTabs";
@@ -259,8 +273,6 @@ function isNumCharactersValid(firstSearch)
 	return false;
 }
 
-
-
 /** 
 	TODO
 */
@@ -278,6 +290,41 @@ function recreateCharSelection()
 }
 
 
+/**
+	TODO
+*/
+function switchRegion(obj)
+{
+	var newRegion = obj.innerHTML;
+	
+	if (newRegion != currentRegion)
+	{
+		currentRegion = newRegion;
+		localStorage.setItem("currentRegion", currentRegion);
+		location.reload();
+	}
+
+}
+
+/**
+	TODO
+*/
+function getRegionRealmList()
+{
+		var data = {
+			"region": currentRegion
+		};
+		
+		$.ajax({
+			url: 'getRegionRealmList.php',
+			type: 'POST',
+			data: data,
+			async: false,
+			success:function(response){			
+				realmSelectHTML = response;
+			}
+	});
+}
 
 
 

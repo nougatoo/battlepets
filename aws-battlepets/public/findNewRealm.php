@@ -37,6 +37,16 @@
 			<li class="active"><a href="#" style="font-size: 16px;color: white;letter-spacing: 0.5px;">Find a New Realm</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<span class="glyphicon glyphicon-globe" style="padding-right:5px"></span>
+				<span id="currentRegion">Region:</span>
+				<span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" style="text-align: center;border-bottom: 1px solid #a09e9e;" onclick="switchRegion(this)">US</a></li>
+					<li><a href="#" style="text-align: center;" onclick="switchRegion(this)">EU</a></li>
+				</ul>
+			</li>		
 			<li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span>Contact</a></li>
 			<li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span>Report a Bug</a></li>
 			<li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span>FAQ</a></li>
@@ -141,22 +151,6 @@
 							<div id="realmSelectDiv1" class="form-group charFormGroup" style="width:100%;">
 								<input style="width:49%;" type="text" class="form-control charInput" id="character1"  placeholder="Character 1">
 								<select style="width:49%;" class="form-control realmInput" id="realm1">
-									<option></option>
-									<?php
-										require_once('../scripts/util.php');
-										
-										$conn = dbConnect("US");
-										
-										
-										$sql = "SELECT slug, name FROM realms";
-										$result = $conn->query($sql);
-										
-										if($result) {
-											while($row = $result->fetch()) {
-												echo ('<option value="'.$row['slug'].'">'.$row['name'].'</option>');
-											}	
-										}
-									?>
 								</select>
 							</div>
 						</form>

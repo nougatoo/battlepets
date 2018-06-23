@@ -17,9 +17,10 @@ $showLeggo = $_POST['showLeggo'] == "true";
 $showSnipes = $_POST['showSnipes'] == "true";
 $incCollected = $_POST['incCollected'] == "true";
 $maxBuyPerc = $_POST['maxBuyPerc'];
+$minSellPrice = $_POST['minSellPrice'];
 
-if(!is_numeric($maxBuyPerc)) {
-	echo ("Max buy Percent is not a number");
+if(!is_numeric($maxBuyPerc) || !is_numeric($minSellPrice) ) {
+	echo ("One of the options is not numeric!");
 	return;
 }
 
@@ -186,7 +187,7 @@ else {
 */
 function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
-	global $configs, $region;
+	global $configs, $region, $minSellPrice;
 	$conn = dbConnect($region);	
 	$realmRes = buildingRealmRes($realm);	
 	$sql = "
@@ -210,7 +211,7 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 			INNER JOIN realms
 				ON sell_realm.realm = realms.slug
 			WHERE 
-				min_buyout > (market_value_hist_median * ".$configs["minGblSellPercent"].");";
+				min_buyout > (market_value_hist_median * ".$minSellPrice.");";
 		
 	$sellers = []; // species_id
 	$sellersAndPrice = []; // Array to hold the sells are buy price

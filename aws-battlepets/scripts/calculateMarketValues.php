@@ -219,7 +219,6 @@ function calculateRegionMedian($region)
 			}
 		}
 		
-		
 		// Now we have all buyout for a species
 		
 		// Sort least to greatest

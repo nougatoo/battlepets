@@ -62,6 +62,8 @@ function findDeals() {
 	var showSnipes = $('#snipesSlider').is(':checked');
 	var incCollected = $('#collectedSlider').is(':checked');
 	var maxBuyPerc = $('#selectMaxBuy').val();
+	var minSellPrice = $('#minSellPrice').val();
+	
 	//var maxBuyPerc = 0.55;
 	var stage = "";
 
@@ -113,6 +115,7 @@ function findDeals() {
 		showSnipes: true,
 		incCollected: true,
 		maxBuyPerc: maxBuyPerc,
+		minSellPrice: minSellPrice,
 		"region": currentRegion
 	};
 	

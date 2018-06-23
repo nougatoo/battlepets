@@ -88,16 +88,16 @@
 								<table class="table">
 									<tr>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#f7e0bc ;border: 1px solid #d2d2d2;">>50,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#f7e0bc ;border: 1px solid #d2d2d28f;">>50,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#ddcffb;border: 1px solid #d2d2d2;">>15,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#ddcffb;border: 1px solid #d2d2d28f;">>15,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#bdd5fb;border: 1px solid #d2d2d2;">>6,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#bdd5fb;border: 1px solid #d2d2d28f;">>6,000g</span></h4>
 										</td>
 										<td class="toggleTd" style="width: 25%">
-											<h4><span class="label label-default legendColorLabel" style="background-color:#daf3d0;border: 1px solid #d2d2d2;">>3,000g</span></h4>
+											<h4><span class="label label-default legendColorLabel" style="background-color:#daf3d0;border: 1px solid #d2d2d28f;">>3,000g</span></h4>
 										</td>
 									</tr>
 									<tr>
@@ -140,6 +140,18 @@
 											</div>
 										</td>	
 										<td class="toggleTd" style="width: 20%">
+											<div class="form-group" style="margin-bottom:0px;">
+												<select class="form-control" id="minSellPrice" style="font-size: 11px;padding-right: 2px;background-color: #eeeeee;border: none;box-shadow: none;">
+													<?php
+														for($i = 10; $i<100; $i+=5) {
+															if($i == 75) // Default is 55
+																echo ('<option value="'.($i/100).'" selected="true">'.$i.'%</option>');
+															else
+																echo ('<option value="'.($i/100).'">'.$i.'%</option>');
+														}
+													?>
+											</select>
+											</div>
 											<!--
 											<label class="switch">
 												<input id="snipesSlider" type="checkbox" checked >
@@ -162,7 +174,7 @@
 									</tr>
 									<tr>
 										<td>Max Buy %</td>	
-										<td><!--Show Snipes --></td>			
+										<td>Min Sell %</td>			
 										<td><!-- Show Amount Caged --></td>											
 									</tr>					
 								</table>

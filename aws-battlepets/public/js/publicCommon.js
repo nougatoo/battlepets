@@ -32,7 +32,7 @@ function getRegionRealmList()
 		};
 		
 		$.ajax({
-			url: 'getRegionRealmList.php',
+			url: 'scripts/getRegionRealmList.php',
 			type: 'POST',
 			data: data,
 			async: false,

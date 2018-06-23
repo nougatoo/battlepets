@@ -23,7 +23,7 @@ $(document).ready(function() {
 	};
 	
   	$.ajax({
-		url: 'getAllPetData.php',
+		url: 'scripts/getAllPetData.php',
 		type: 'POST',
 		data: data,
 		success:function(response) {	
@@ -71,7 +71,7 @@ function sortTable(n) {
 	}
 
 	$.ajax({
-		url: 'getAllPetData.php',
+		url: 'scripts/getAllPetData.php',
 		type: 'POST',
 		data: data,
 		success:function(response){	

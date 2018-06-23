@@ -130,7 +130,7 @@ function findDeals() {
 	
 	data["purpose"] = "realmTabs";	
 	$.ajax({
-		url: 'findDeals.php',
+		url: 'scripts/findDeals.php',
 		type: 'POST',
 		data: data,
 		success:function(response){			
@@ -144,7 +144,7 @@ function findDeals() {
 	
 	data["purpose"] = "tableData";
 	$.ajax({
-		url: 'findDeals.php',
+		url: 'scripts/findDeals.php',
 		type: 'POST',
 		data: data,
 		success:function(response){

@@ -14,13 +14,13 @@
 	<title>Battle Pet Deals</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="jquery-3.3.1.js"></script>
+	<script src="/js/jquery-3.3.1.js"></script>  <!-- must be above the boostrap js -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="viewAllPets.js"></script>
-	<script src="publicCommon.js"></script>
-	<link rel="stylesheet" href="myCustomStyle.css">
+	<script src="/js/viewAllPets.js"></script>
+	<script src="/js/publicCommon.js"></script>
+	<link rel="stylesheet" href="/css/myCustomStyle.css">
 </head>
 
 <body style="overflow-y: scroll; overflow-x: hidden; background-color: #e6e6e68a;">

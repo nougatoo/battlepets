@@ -87,7 +87,7 @@ function findNewRealm() {
 	$('#loadingBarb').show();
 	
 	$.ajax({
-		url: 'getNewRealmData.php',
+		url: 'scripts/getNewRealmData.php',
 		type: 'POST',
 		data: data,
 		success:function(response){

@@ -1,8 +1,8 @@
 <?php
 
-require_once('../scripts/util.php');
+require_once('../../scripts/util.php');
 
-$configs = include('../application/configs/configs.php');
+$configs = include('../../application/configs/configs.php');
 
 $sortBy = $_POST['sortBy'];
 $sortOrder = $_POST['sortOrder'];

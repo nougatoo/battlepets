@@ -1,5 +1,5 @@
 <?php
-	require_once('../scripts/util.php');
+	require_once('../../scripts/util.php');
 	
 	$region = $_POST['region'];
 	$conn = dbConnect($region);

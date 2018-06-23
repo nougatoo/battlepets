@@ -1,8 +1,8 @@
 <?php
 
-require_once('../scripts/util.php');
+require_once('../../scripts/util.php');
 
-$configs = include('../application/configs/configs.php');
+$configs = include('../../application/configs/configs.php');
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
 $purpose = $_POST['purpose']; // Used to avoid having another .php files...may refactor later

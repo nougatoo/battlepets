@@ -14,17 +14,18 @@ getAndParseAuctionData("EU", "en_GB");
 customLog("INFO","Finished calling getAndParseAuctionData EU...");
 
 /** 
- *		Gets the pet auction data from blizzard. 
- *		Puts auction data into hourly and daily table.
- *		First, it makes initial calls to build an array of URLs (that contain the actual data).
- *		If realms are connected it won't get data for both of them.
- *		Once the array of URLs is built, get the actual data (3 realms at a time using multi curl)
- *		and insert into auctions_hourly_pet. Once all the hourly data has been inserted, insert it 
- * 	all into the auctions_daily_pet.
- *		
- *		This function should be called once per hour (blizzard usually updates their data once per hour)
- * 	
- *		TODO: add error handling
+	Gets the pet auction data from blizzard. 
+	Puts auction data into hourly and daily table.
+	First, it makes initial calls to build an array of URLs (that contain the actual data).
+	If realms are connected it won't get data for both of them.
+	Once the array of URLs is built, get the actual data (3 realms at a time using multi curl)
+	and insert into auctions_hourly_pet. Once all the hourly data has been inserted, insert it 
+	all into the auctions_daily_pet.
+	
+	This function should be called once per hour (blizzard usually updates their data once per hour)
+ 
+	@param String $region -  Usually either US or EU
+	@param String $locale -  Locale should be paired with the region
  */
 function getAndParseAuctionData($region, $locale)
 {
@@ -36,7 +37,6 @@ function getAndParseAuctionData($region, $locale)
 	// Make the inital call to get the data URLs
 	$dataUrls = getDataUrls($region, $locale);
 	
-	// Getting Auction Data and inserting 
 	$ch1 = curl_init();
 	$ch2 = curl_init();
 	$ch3 = curl_init();
@@ -54,8 +54,7 @@ function getAndParseAuctionData($region, $locale)
 	curl_setopt($ch3, CURLOPT_HEADER, 0);
 	curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch3, CURLOPT_TIMEOUT, 120);
-	curl_setopt($ch3, CURLOPT_CONNECTTIMEOUT, 120);
-	
+	curl_setopt($ch3, CURLOPT_CONNECTTIMEOUT, 120);	
 
 	$curls= array($ch1,$ch2,$ch3);
 	$numCurls = sizeof($curls);
@@ -93,6 +92,7 @@ function getAndParseAuctionData($region, $locale)
 			customLog("ERROR","Index ".($i+2)." Url3 Not Found");
 		}
 
+		// For logging
 		$startCurlTime = microtime(true);
 		
 		try {
@@ -122,10 +122,12 @@ function getAndParseAuctionData($region, $locale)
 			customLog("ERROR", "Failed to get data");
 		}
 		
+		// Log time
 		$endCurlTime = microtime(true);
 		$timeCurlDiff = $endCurlTime - $startCurlTime;
 		customLog ("INFO", "Time to complete curls: " . $timeCurlDiff);
 		
+		// If it came back with data
 		if($auctions && $ahRealms) {
 			// Creating slug map so we don't have to query db
 			foreach($ahRealms as  $key => $current) {	
@@ -169,6 +171,7 @@ function getAndParseAuctionData($region, $locale)
 	$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg;" ;
 	$conn->query($removeHourlySql);
 
+	// Log Time
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
 	customLog("INFO","Final time". ": " . $timeDiffTotal . " - ");
@@ -176,9 +179,11 @@ function getAndParseAuctionData($region, $locale)
 
 /**
 	Makes the initial call to the blizzard API and builds an array of the URLs 
-	that we want to get the data for.
+	that we want to get the data for. The built list will not contain duplicates of connected realms.
+	They will have the same auction house data, which makes it a waste of time to get both.
 	
-	Returns and array of strings
+	@param String $region - Usually either US or EU
+	@param String $locale - Should be the paired locale for the region
 */
 function getDataUrls($region, $locale)
 {
@@ -195,8 +200,6 @@ function getDataUrls($region, $locale)
 		while($row = $result->fetch()) {
 			array_push($realmsToPull, $row["slug"]);
 		}
-	} else {
-		//customLog("auctionData", "No realms for realmsToPul");
 	}
 
 	$numRealmsToPull = sizeof($realmsToPull);
@@ -213,7 +216,6 @@ function getDataUrls($region, $locale)
 			if($url) {
 				array_push($dataUrls, $url);
 			} else {
-				//customLog("auctionData", "Could not get URL for: ".$realmsToPull[$i]);
 				customLog ("ERROR", "Could not get URL for: ".$realmsToPull[$i]);
 			}
 					
@@ -236,9 +238,8 @@ function getDataUrls($region, $locale)
 		}		
 	}
 	// End of getting URLs for each realm
-	//customLog("auctionData","Size OF dataUrls: ".sizeof($dataUrls));
+	
 	customLog ("INFO", "Size OF dataUrls: ".sizeof($dataUrls));
-	//customLog("auctionData","Size OF realmsCompleted: ".sizeof($realmsCompleted));
 	customLog ("INFO", "Size OF realmsCompleted: ".sizeof($realmsCompleted));
 	
 	return $dataUrls;
@@ -249,22 +250,25 @@ function getDataUrls($region, $locale)
 	Using a staging table so that we don't disrupt the use of the application
 	while our getAndParseAuctionData is running.
 	
+	@param Array $auctions - Array of all the auctions that are going to be inserted for a realm
+	@param Array $slugMaps - An array of slug maps that associates a slug with a realm name so we don't have to query the db
+	@param String $region - Usually either US or EU
+	@param String $aSlug - First slug in the auction json data retrived. Since EU uses realm names that can't be parsed or matched in db. 
+	
 */
 function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
 {
 	// Connect to database
 	$conn = dbConnect($region);
-	
+
+	// Log Time
 	$startTimeAuctions = microtime(true);
-	
-	//$conn->query('START TRANSACTION');	
+
 	// Insert auctions for a realm in one transaction per realm
 	foreach($auctions as  $key => $currentRealmAh) {		
 	
-		//$conn->query('START TRANSACTION;');
 		$conn->beginTransaction();
-		// This could be optimized by adding more than one "values" but for now the speed is less
-		// than one second fpr 3 realms.
+		// This could be optimized by adding more than one "values" but for now the speed is less than one second fpr 3 realms.
 		foreach ($currentRealmAh as $key2 => $currentAuction) {
 		  
 			$id = $currentAuction['auc'];
@@ -282,7 +286,7 @@ function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
 				$speciesId = $currentAuction['petSpeciesId'];
 				
 				// Avoid indexing a slug map with a crappy russion name from the AH data...
-				// TODO: all connected realm data is going to be housed under 1 realm now
+				// TODO: All connected realm data is going to be housed under 1 realm in EU for now
 				if($region == "EU")
 				{
 					$sql = "INSERT INTO auctions_hourly_pet_stg (`id`, `species_id`, `realm`, `buyout`, `bid`, `owner`, `time_left`,`quantity`) VALUES ('" . $id . "', '" . $speciesId . "', '" . $aSlug . "', '" . $buyout . "', '" . $bid . "', '" . $owner . "', '" . $timeLeft . "', '" . $quantity . "')";
@@ -295,22 +299,17 @@ function insertAuctionData($auctions, $slugMaps, $region, $aSlug)
 
 				if ($conn->query($sql) === TRUE) {
 					//customLog "New record created successfully";
-				} else {
-					//error_log("Error: " . $sql, 0 );
 				}
 			}
 		}
 		$conn->commit();
-		//$conn->query('COMMIT;');
-		//$conn->query('SET autocommit=1;');
 	}
-	//$conn->query('COMMIT;');
 
+	// Log Time
 	$endTimeAuctions = microtime(true);
 	$timeDiffAuctions = $endTimeAuctions - $startTimeAuctions;
-	//customLog("auctionData","Time to complete auctions insert: " . $timeDiffAuctions);
+	
 	customLog ("INFO", "Time to complete auctions insert: " . $timeDiffAuctions);
-	//customLog("auctionData","----------------------------------------------");
 	customLog ("INFO", "----------------------------------------------");
 }
 ?>

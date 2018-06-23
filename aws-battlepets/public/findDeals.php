@@ -18,6 +18,7 @@ $maxBuyPerc = $_POST['maxBuyPerc'];
 $minSellPrice = $_POST['minSellPrice'];
 $locale;
 
+// In case someone tried to change in javascript
 if(!is_numeric($maxBuyPerc) || !is_numeric($minSellPrice) ) {
 	echo ("One of the options is not numeric!");
 	return;
@@ -69,7 +70,7 @@ else {
 			if($realms[$i] === $realms[$j])
 				continue;
 	  
-			$tableHTML =	'<div class="panel panel-default realmPanel">
+			$tableHTML =		'<div class="panel panel-default realmPanel">
 										<div class="panel-heading realmPanelHeading">
 											<h4 class="panel-title">	  
 											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'"><b>'.getRealmNameFromSlug($realms[$j], $region) .'</b></a>

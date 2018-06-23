@@ -1,6 +1,7 @@
 <?php
 
 require_once('../scripts/util.php');
+$configs = include('/var/app/current/application/configs/configs.php');
 header ('Content-type: text/html; charset=utf-8');
 
 set_time_limit(0);
@@ -21,9 +22,10 @@ getRealmData();
  */
 function getPetData($region, $locale)
 {
+	global $configs;
 	// Connect to database
 	$conn = dbConnect($region);
-	$content = file_get_contents("https://".$region.".api.battle.net/wow/pet/?locale=".$locale."&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud");
+	$content = file_get_contents("https://".$region.".api.battle.net/wow/pet/?locale=".$locale."&apikey=".$configs["apiKey"]);
 	$result  = json_decode($content, true);
 	$pets = $result['pets'];
 
@@ -56,29 +58,31 @@ function getPetData($region, $locale)
 */
 function getRealmData()
 {
+	global $configs;
+	
 	// Getting US realm data
-	$accessURL = "https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=r52egwgeefzmy4jmdwr2u7cb9pdmseud&client_secret=GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8";
+	$accessURL = "https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=".$configs["apiKey"]."&client_secret=".$configs["apiSecret"];
 	$realmURL = "https://us.api.battle.net/data/wow/realm/?namespace=dynamic-us&locale=en_US&access_token=";
 	$locale = "en_US";
 	$region = "US";
 	getRegionRealmData($accessURL, $realmURL, $locale, $region);
 	
 	// Geting EU realm data
-	$accessURL = "https://eu.battle.net/oauth/token?grant_type=client_credentials&client_id=r52egwgeefzmy4jmdwr2u7cb9pdmseud&client_secret=GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8";
+	$accessURL = "https://eu.battle.net/oauth/token?grant_type=client_credentials&client_id=".$configs["apiKey"]."&client_secret=".$configs["apiSecret"];
 	$realmURL = "https://eu.api.battle.net/data/wow/realm/?namespace=dynamic-eu&locale=en_GB&access_token=";
 	$locale = "en_GB";
 	$region = "EU";
 	getRegionRealmData($accessURL, $realmURL, $locale, $region);
 	
 	// Connected US realm data
-	$accessURL = "https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=r52egwgeefzmy4jmdwr2u7cb9pdmseud&client_secret=GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8";
+	$accessURL = "https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=".$configs["apiKey"]."&client_secret=".$configs["apiSecret"];
 	$allConnRealmURL = "https://us.api.battle.net/data/wow/connected-realm/?namespace=dynamic-us&locale=en_US&access_token=";
 	$locale = "en_US";
 	$region = "US";
 	getRegionConnectedRealmData($accessURL, $allConnRealmURL, $locale, $region);
 	
 	// Connected EU realm data
-	$accessURL = "https://eu.battle.net/oauth/token?grant_type=client_credentials&client_id=r52egwgeefzmy4jmdwr2u7cb9pdmseud&client_secret=GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8";
+	$accessURL = "https://eu.battle.net/oauth/token?grant_type=client_credentials&client_id=".$configs["apiKey"]."&client_secret=".$configs["apiSecret"];
 	$allConnRealmURL = "https://eu.api.battle.net/data/wow/connected-realm/?namespace=dynamic-eu&locale=en_GB&access_token=";
 	$locale = "en_GB";
 	$region = "EU";
@@ -93,7 +97,6 @@ function getRealmData()
 	@param String $realmURL - URL to get realm data before adding the access token
 	@param String $region - Usually either US or EU
 	@param String $locale - Corresponding locale to pair with the region
-	
 */
 function getRegionRealmData($accessURL, $realmURL, $region, $locale) 
 {

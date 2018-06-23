@@ -107,3 +107,11 @@ CREATE TABLE `market_value_pets_hist_median` (
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`nougatoo`@`%` SQL SECURITY DEFINER VIEW `market_value_pets_historical` AS select `market_value_pets`.`species_id` AS `species_id`,avg(`market_value_pets`.`market_value`) AS `market_value_hist` from `market_value_pets` group by `market_value_pets`.`species_id`;
 
+
+
+CREATE TABLE `bug_reports` (
+  `date` datetime DEFAULT NULL,
+  `text` varchar(1000) DEFAULT NULL,
+  `auto_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`auto_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

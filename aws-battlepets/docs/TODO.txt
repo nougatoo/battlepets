@@ -7,8 +7,6 @@ TODO:
  - Add a link from the pet name to wowhead - or add modal to show more info
  - Table sorting???
  - Help icon for the first page of "Find a new realm"
- - Put api key in dbconfig
- - put api secret in dbconfg
 
 Known Bugs:
  - Duplicates showing for connected realms

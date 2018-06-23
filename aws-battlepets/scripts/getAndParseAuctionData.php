@@ -1,6 +1,8 @@
 <?php
 
 require_once('util.php');
+$configs = include('/var/app/current/application/configs/configs.php');
+echo $configs;
 header ('Content-type: text/html; charset=utf-8');
 
 set_time_limit(0);
@@ -196,6 +198,7 @@ function getAndParseAuctionData($region, $locale)
 */
 function getDataUrls($region, $locale)
 {
+	global $configs;
 	// Connect to database
 	$conn = dbConnect($region);
 
@@ -219,9 +222,9 @@ function getDataUrls($region, $locale)
 		// Inital call to get URL for Realm
 		if(!in_array($realmsToPull[$i], $realmsCompleted)) {
 			
-			customLog( "INFO", 'https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
+			customLog( "INFO", 'https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey='.$configs["apiKey"]);
 			
-			$urlResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');	
+			$urlResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey='.$configs["apiKey"]);	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
 			$lastModified = $result['files'][0]['lastModified'];		

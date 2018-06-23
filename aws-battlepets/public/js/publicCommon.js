@@ -27,17 +27,45 @@ function switchRegion(obj)
 */
 function getRegionRealmList()
 {
-		var data = {
-			"region": currentRegion
-		};
-		
-		$.ajax({
-			url: 'scripts/getRegionRealmList.php',
-			type: 'POST',
-			data: data,
-			async: false,
-			success:function(response){			
-				realmSelectHTML = response;
-			}
+	var data = {
+		"region": currentRegion
+	};
+	
+	$.ajax({
+		url: 'scripts/getRegionRealmList.php',
+		type: 'POST',
+		data: data,
+		async: false,
+		success:function(response){			
+			realmSelectHTML = response;
+		}
 	});
 }
+
+
+/**
+	Logs a bug report submitted by the user from the front-end nav bar
+	
+	@param {string} text - Bug report input by user
+*/
+function submitBugReport(text)
+{
+	var data = {
+		"text": text,
+		"region": currentRegion
+	};
+	
+	$.ajax({
+		url: 'scripts/submitBugReport.php',
+		type: 'POST',
+		data: data,
+		async: false,
+		success:function(response){			
+			$('#bugReportText').val('');
+			$('#rptBugModal').modal('hide');
+		}
+	});
+}
+
+
+

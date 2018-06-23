@@ -303,7 +303,7 @@
 		  <h4 class="modal-title">Contact</h4>
 		</div>
 		<div class="modal-body">
-		  <p>Please contact me at crossrealmpets@gmail.com</p>
+		  <p>Please contact me at crossrealmpets@gmail.com or directly through reddit to /u/nougatoo</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -323,7 +323,14 @@
 		  <h4 class="modal-title">Report a bug</h4>
 		</div>
 		<div class="modal-body">
-		  <p>You can report bugs to crossrealmpets.bugs@gmail.com. Please include as much detail as possible, and screenshot when applicable.</p>
+			<form>
+				<div class="form-group">
+					<label for="bugReportText">Explain your bug:</label>
+					<textarea class="form-control" rows="5" id="bugReportText" style="font-weight:300;resize: none;" maxlength="1000"></textarea>
+				</div>
+				<button type="button" class="btn btn-default" onclick="submitBugReport($('#bugReportText').val())">Submit</button>
+			</form>		
+		  <p>Alternatively, ou can report bugs to crossrealmpets.bugs@gmail.com or through reddit to /u/nougatoo. Please include as much detail as possible.</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -344,25 +351,34 @@
 		</div>
 		<div class="modal-body">
 		  <h4><b>Who should use this application?</b></h4>
-		  <span style="font-weight:300;">This application is for...</span>
+		  <span style="font-weight:300;"><ul><li>This is for small/medium globins in the pet market. When you have limited gold on a server, it's best to buy pets that are already selling well on your other realms. This application will hopefully find those pets for you.</li></ul></span>
+		  
+		  <h4><b>Who is this NOT for?</h4>
+		  <span style="font-weight:300;"><ul><li>While still totally usuable by large goblins, they may get less value out of it. Once you're trading on enough realms, you don't have to worry about buying a pet that's not selling well on your other realms. You're probably trading on enough realms that within a short amount of time, one of your realms will have it around ~100% Region Market Value.</li></ul></span>
+		  
+		  <h4><b>How do I use it? / How does it work?</h4>
+		  <span style="font-weight:300;"><ul><li>Enter your current pet-selling characters and then hit Find Pets. The application will tell you which server to buy them on and which server(s) you could sell them on. In addition, it will tell you if you already own that pet and how many you own (this assumes all your pet-selling characaters are on the same account).</li><li>It works by first, finding pets on your realm that are selling for <b>below</b> your specified "Max Buy %". Then it will that that list of pets, and search all your specified realms to find pets that are selling <b>above</b> your "Min Sell %". This final list is then displayed to you.</li></ul></span>
 		  
 		  <h4><b>Why don't the market values match TSM?</b></h4>
-		  <span style="font-weight:300;">The market values don't match TMS because...</span>
+		  <span style="font-weight:300;"><ul><li>This application does not pull data from TSM. It creates and stores it's own pricing data from the blizzard API. I've attempted to match TSM's values as closely as possible. It's definitely not perfect and you'll see variation at times.</li></ul></span>
 		  
 		  <h4><b>What are the default values?</b></h4>
-		  <span style="font-weight:300;">The default mininum sell value is 75%. I'm planning on making this an option for users.</span>
-		  
-		  <h4><b>Is this application mobile friendly?</b></h4>
-		  <span style="font-weight:300;">It's designed to be usable on mobile, but optimized for desktop</span>
+		  <span style="font-weight:300;"><ul><li>The default mininum sell value is 75% region market value and the default maxium buy value is 50% region market value.</li></ul></span>
 		  
 		  <h4><b>Why does "Last Updated" never change?</b></h4>
-		  <span style="font-weight:300;">This is still under development. Currently the data is refreshed every hour</span>
+		  <span style="font-weight:300;"><ul><li>This is still under development. Currently the data is refreshed every hour</li></ul></span>
+		  
+		  <h4><b>How does the "Find a New Realm" page work?</b></h4>
+		  <span style="font-weight:300;"><ul><li>This is a non-sophisticated way to see the value of your current pet collection by realm. This page is not meant to tell you exactly which realm you should start sell on next. Instead, it's one piece of the puzzle. You need to use other information like realm population and realm type to make an informed decision.</li></ul></span>
+		  
+		  <h4><b>Is this application mobile friendly?</b></h4>
+		  <span style="font-weight:300;"><ul><li>It's designed to be usable on mobile, but optimized for desktop</li></ul></span>
 		  
 		  <h4><b>What future changes do you have planned?</b></h4>
-		  <span style="font-weight:300;">Here is what is on my TODO list: ...</span>
+		  <span style="font-weight:300;"><ul><li>Update the data pulling functions to run more often, instead of once per hour</li><li>Table Sorting</li><li>Allow users to not enter characters</li><li>Possibly add links to wowhead.com for more details of the pet</li><li>Write the text for the question mark icons</li></ul></span>
 		  
-		  <h4><b>Known Budgs</b></h4>
-		  <span style="font-weight:300;">Known Bugs: ...</span>
+		  <h4><b>Known Bugs</b></h4>
+		  <span style="font-weight:300;"><ul><li>Duplicates pets showing for connected realms</li></ul></span>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -13,7 +13,7 @@ if($region == "US")
 else if ($region == "EU")
 	$locale = "en_GB";
 
-$url = 'https://'.$region.'.api.battle.net/wow/character/' . $realms[0] . '/' . $characters[0] . '?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud';
+$url = 'https://'.$region.'.api.battle.net/wow/character/' . $realms[0] . '/' . $characters[0] . '?fields=pets&locale='.$locale.'&apikey='.$configs["apiKey"];
 $petsAPIResponse = file_get_contents($url);
 $results = json_decode($petsAPIResponse, true);	
 $cagedPetsRaw = $results['pets']['collected'];

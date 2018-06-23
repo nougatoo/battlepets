@@ -1,6 +1,8 @@
 <?php
 
 return array(
+	'apiKey' => "r52egwgeefzmy4jmdwr2u7cb9pdmseud",
+	'apiSecret' => "GY3NmjDgvrvJBzs2RwpMu8A5EJGG4SD8",
     'threshLeggo' => 500000000,
     'threshEpic' => 150000000,
     'threshBlue' => 60000000,

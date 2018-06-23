@@ -5,10 +5,8 @@ require_once('../scripts/util.php');
 $configs = include('../application/configs/configs.php');
 $characters = $_POST['characters'];
 $realms = $_POST['realms'];
-$purpose = $_POST['purpose'];
+$purpose = $_POST['purpose']; // Used to avoid having another .php files...may refactor later
 $region = $_POST['region'];
-$locale;
-
 $showCommon = $_POST['showCommon'] == "true";
 $showGreen = $_POST['showGreen'] == "true";
 $showBlue = $_POST['showBlue'] == "true";
@@ -18,37 +16,39 @@ $showSnipes = $_POST['showSnipes'] == "true";
 $incCollected = $_POST['incCollected'] == "true";
 $maxBuyPerc = $_POST['maxBuyPerc'];
 $minSellPrice = $_POST['minSellPrice'];
+$locale;
 
 if(!is_numeric($maxBuyPerc) || !is_numeric($minSellPrice) ) {
 	echo ("One of the options is not numeric!");
 	return;
 }
 
-
+// Hard-coded way to get the local
 if($region == "US")
 	$locale  = "en_US";
 else if ($region == "EU")
 	$locale = "en_GB";
 
-//$characters = json_decode($characters, true);
-
 if($purpose == "realmTabs") {
-	createRealmTabs($realms);
+	createRealmList($realms);
 }
 else {
 	
+	// Gets the current pets owned by the account of the first character entered
 	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
-	$cagedPetsRaw = $results['pets']['collected'];
+	$cagedPetsRaw = $results['pets']['collected']; // The raw comes with a bunch of extra data that we don't need
 	$cagedPetsProc = [];
 	
+	// Create a "processed" version of the array that is just the species id
 	for($i = 0; $i<sizeof($cagedPetsRaw); $i++) {
 		array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
 	}
 	
 	$cagedCounts = array_count_values($cagedPetsProc);
-	
 	$tableHTML ="";
+	
+	// Loop through all the realms that user entered and create the data tables for them
 	for($i = 0; $i<sizeof($realms); $i++)
 	{
 		
@@ -58,12 +58,14 @@ else {
 		else 
 			echo '<div id="'.$realms[$i].'_tab" class="tab-pane fade">';
 		
-		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $maxBuyPerc);
+		// The "raw" contains all the pricing data, along with name and id information
+		$goodDealsRaw = findDealsForRealm($realms[$i], FALSE, $maxBuyPerc); 
 		$goodDealsRawSpecies = findDealsForRealm($realms[$i], TRUE, $maxBuyPerc);
 							
 		// Each iteration of this loop will attempt to create a cross realms deal table
 		for($j = 0; $j<sizeof($realms); $j++)
 		{
+			// Can't compare a realm to itself
 			if($realms[$i] === $realms[$j])
 				continue;
 	  
@@ -100,6 +102,7 @@ else {
 	
 				$subTableHTML = "";
 				
+				// Creating a table row for each pet
 				foreach($goodDealsRaw as $row) {
 				
 						if(in_array($row['species_id'], $goodDealsFiltered))
@@ -144,6 +147,7 @@ else {
 						}			
 				}
 
+				// $subTableHTML will be empty if there were no deals for a realm
 				if($subTableHTML == "")
 					$emptyTable = true;
 				
@@ -165,7 +169,6 @@ else {
 													Last Updated: 12:54pm
 												</td>
 											</tr>';
-				//$subTableHTML .= '<tr style="background-color:white;"><td style="color:#ddd0;">asdf</td><td/><td/><td><td/></tr>'; // Blank Row
 				$subTableHTML .= "</tbody></table></div></div>"; 	
 				$tableHTML .=  $subTableHTML;
 				
@@ -184,6 +187,12 @@ else {
 
 /**
 	Finds good selling species_id from a given realm.
+	
+	@param String $realm - The realm slug to find good sellers for
+	@param String $character - The character on the realm used to sell pets
+	@param bool $returnPriceArray - True if you want the price in the array was well. False for just the species
+	
+	@return Array - Array of good selling species id's. Can contain price as well
 */
 function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
@@ -214,7 +223,7 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 				min_buyout > (market_value_hist_median * ".$minSellPrice.");";
 		
 	$sellers = []; // species_id
-	$sellersAndPrice = []; // Array to hold the sells are buy price
+	$sellersAndPrice = []; // Array to hold the sells and buy price
 	
 	$result = $conn->prepare($sql);
 	$result->bindParam(':realm', $realm);
@@ -251,16 +260,22 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 }
 
 /**
-	Finds the good deals (buys) for a realm
+	Finds the good deals (buys) for a realm.
+	
+	@param String $realm - The realm to find good deals for
+	@param bool $getSpecies - True if you want just the species, false if you want the raw row object from the query
+	@param int $maxBuyPerc - The max market % you would buy a pet for
+	
+	@return Array - Array of objects or strings
 */
-function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
+function findDealsForRealm($realm, $getSpecies, $maxBuyPerc)
 {
 	global $configs, $region;
 	
 	$conn = dbConnect($region);
 	$realmRes = buildingRealmRes($realm);
 
-	// Gets the pets that are a good deal on selected realm (Less than minMarketPercent global market avg)
+	// Gets the pets that are a good deal on selected realm (Less than maxBuyPerc global market avg)
 	$goodDealsRawSql = "
 		SELECT 
 			pets.species_id, 
@@ -279,7 +294,7 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 			ON pets.species_id = buy_realm.species_id
 		WHERE 
 			".$realmRes." AND 
-			buy_realm.minbuy < (market_value_hist_median * ".$minMarketPercent.") AND
+			buy_realm.minbuy < (market_value_hist_median * ".$maxBuyPerc.") AND
 			market_value_hist_median - buy_realm.minbuy > ".$configs["minGblBuyAmount"]."
 		ORDER BY percent_of_market;";
 
@@ -303,7 +318,12 @@ function findDealsForRealm($realm, $getSpecies, $minMarketPercent)
 }
 
 /**
-	TODO
+	Builds a SQL restriction for a realm to include all it's connected realms.
+	Restriction will contain just the realm if it doesn't have any connected realms
+	
+	@param String $realm - The realm to build a restriction of and find connected realms for
+	
+	@return String $realmRes - SQL restriction for passed in realm and it's connected realm
 */
 function buildingRealmRes($realm) 
 {
@@ -327,32 +347,38 @@ function buildingRealmRes($realm)
 
 
 /**
-	TODO - rename
+	Creates the left-hand side realm list. One for each of the distinct realms the user selected.
+	Outputs the realm list html.
+	
+	@param Array $realms - Array of strings for all the realms we're finding deals for 
 */
-function createRealmTabs($realms)
+function createRealmList($realms)
 {
-
 	global $region;
 	
 	echo '<ul class="nav nav-stacked" style="padding-bottom: 15px;">';
 	
 	foreach($realms as $key=> $aRealm) {
-		$realmTabHTML = '';
+		$realmListHTML = '';
 		$realmName = getRealmNameFromSlug($aRealm,$region);
 		
 		if($key == 0)
-			$realmTabHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
+			$realmListHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
 		else
-			$realmTabHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></a></li>';
+			$realmListHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></a></li>';
 	
-		echo $realmTabHTML;
+		echo $realmListHTML;
 	}	
 	
 	echo '</ul>';	
 }
 
 /**
-	TODO
+	Builds and outputs the sniper panel and table AKA "All Realm Deals" HTML.
+	
+	@param String $realm - Realm slug that this sniper table is for
+	
+	@return String $tableHTML - HTML code for the panel and table
 */
 function buildSnipesTables($realm)
 {
@@ -362,11 +388,13 @@ function buildSnipesTables($realm)
 	$emptyTable = false;
 	$snipeDeals = findDealsForRealm($realm, FALSE, $configs['maxGblSnipePercent']);
 	
+	// Gets the current pets owned by the account of the first character entered
 	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey=r52egwgeefzmy4jmdwr2u7cb9pdmseud');
 	$results = json_decode($petsAPIResponse, true);	
-	$cagedPetsRaw = $results['pets']['collected'];
+	$cagedPetsRaw = $results['pets']['collected']; // Raw contains a bunch of extra data that we don't need
 	$cagedPetsProc = [];
 	
+	// Create a "Processed" array of just the species id's
 	for($i = 0; $i<sizeof($cagedPetsRaw); $i++)
 	{
 		array_push($cagedPetsProc, $cagedPetsRaw[$i]['stats']['speciesId']);
@@ -393,10 +421,10 @@ function buildSnipesTables($realm)
 
 	$subTableHTML = "";
 	
+	// For each deal we found, create a table row
 	foreach($snipeDeals as $key => $row) {
 
 		// TODO - check for duplicates. If this row's species id are the same as the last...skip iteration
-		
 		$value = $row['market_value_hist_median'];
 		
 		if($value >=  $configs["threshLeggo"] && !$showLeggo)
@@ -428,10 +456,10 @@ function buildSnipesTables($realm)
 		$subTableHTML .=  "</tr>";	
 		
 		$totalBuy += $row['minbuy'];
-		$totalValue += $value;
-					
+		$totalValue += $value;				
 	}
 	
+	// $subTableHTML will be empty if there is no deals for this realm
 	if($subTableHTML == "")
 			$emptyTable = true;
 		

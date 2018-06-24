@@ -36,7 +36,7 @@ if($purpose == "realmTabs") {
 else {
 	
 	// Gets the current pets owned by the account of the first character entered
-	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey='.$configs["apiKey"]);
+	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/'.$realms[0].'/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey='.$configs["apiKey"]);
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected']; // The raw comes with a bunch of extra data that we don't need
 	$cagedPetsProc = [];
@@ -383,14 +383,14 @@ function createRealmList($realms)
 */
 function buildSnipesTables($realm)
 {
-	global $showCommon, $showGreen, $showBlue, $showEpic, $showLeggo, $configs, $region, $locale;
+	global $showCommon, $showGreen, $showBlue, $showEpic, $showLeggo, $configs, $region, $locale, $realms, $characters;
 	$totalBuy = 0;
 	$totalValue = 0;
 	$emptyTable = false;
 	$snipeDeals = findDealsForRealm($realm, FALSE, $configs['maxGblSnipePercent']);
 	
 	// Gets the current pets owned by the account of the first character entered
-	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/cenarion-circle/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey='.$configs["apiKey"]);
+	$petsAPIResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/character/'.$realms[0].'/'.$characters[0].'?fields=pets&locale='.$locale.'&apikey='.$configs["apiKey"]);
 	$results = json_decode($petsAPIResponse, true);	
 	$cagedPetsRaw = $results['pets']['collected']; // Raw contains a bunch of extra data that we don't need
 	$cagedPetsProc = [];

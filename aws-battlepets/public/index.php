@@ -1,8 +1,17 @@
 <html>
 	
 <head>
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+		google_ad_client: "ca-pub-9728348108995055",
+		enable_page_level_ads: true
+		});
+	</script>
+	
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116514017-1"></script>
+	<script  async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-116514017-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
@@ -10,8 +19,8 @@
 
 		gtag('config', 'UA-116514017-1');
 	</script>
-	
-	<title>Battle Pet Deals</title>
+
+	<title>Cross-Realm Pets</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/js/jquery-3.3.1.js"></script> <!-- must be above the boostrap js -->
@@ -22,6 +31,7 @@
 	<script src="/js/index.js"></script>
 	<script src="/js/publicCommon.js"></script>
 	<link rel="stylesheet" href="/css/battlePetsCommon.css">
+	<link rel="shortcut icon" type="image/png" href="graphics/favicon.ico"/>
 </head>
 
 
@@ -30,7 +40,10 @@
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross-Realm Pets &#9876;</a>
+			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross-Realm Pets</a>
+		</div>
+		<div class="navbar-header">
+			  <span class="glyphicon glyphicon-random navbar-brand" style="color: #a9e7ff; font-size: 20px;"></span>
 		</div>
 		<ul class="nav navbar-nav" >
 			<li class="active"><a href="#"  style="font-size: 16px;letter-spacing: 0.5px;">Home</a></li>
@@ -288,7 +301,7 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><span><b></span><b></span></h5>
+			  <h5><a href="privacypolicy.htm" target="_blank" style="color:#5f5f5f;"><b>Privacy Policy<b></a></h5>
 	</center>
 </footer>
 
@@ -330,7 +343,7 @@
 				</div>
 				<button type="button" class="btn btn-default" onclick="submitBugReport($('#bugReportText').val())">Submit</button>
 			</form>		
-		  <p>Alternatively, ou can report bugs to crossrealmpets.bugs@gmail.com or through reddit to /u/nougatoo. Please include as much detail as possible.</p>
+		  <p>Alternatively, you can report bugs to crossrealmpets.bugs@gmail.com or through reddit to /u/nougatoo. Please include as much detail as possible.</p>
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

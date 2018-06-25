@@ -1,5 +1,6 @@
 <?php
 
+
 require_once('util.php');
 $configs = include('/var/app/current/application/configs/configs.php');
 header ('Content-type: text/html; charset=utf-8');

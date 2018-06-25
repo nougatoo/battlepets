@@ -1,0 +1,367 @@
+.table {
+  font-size: 12px !important;
+}
+
+@media only screen and (max-width: 1441px) {
+	.affix {
+		position: static;
+	}
+}
+
+
+
+@media only screen and (max-width: 20000px) {
+	.affix {
+		top: 20px;
+		width:inherit;
+		z-index: 9999 !important;
+		padding-right: 15px !important;
+	}
+}
+
+.modal-open {
+    padding-right: 0px !important;
+}
+
+/*
+.btn-primary {
+	background-color:#333; 
+	border-color:#333;
+
+}
+
+.btn-primary:hover {
+	background-color:#1a1a1a; 
+	border-color:#1a1a1a;
+
+}
+
+.btn-primary:focus {
+	background-color:#333 !important; 
+	border-color:#333 !important;
+
+}
+
+.btn-primary:active {
+	background-color:#1a1a1a !important; 
+	border-color:#1a1a1a !important;
+
+}
+
+.btn-bar {
+	font-size: 16px !important;
+	background-color:#333; 
+	border-color:#333;
+
+}
+
+.btn-bar:hover {
+	background-color:#1a1a1a; 
+	border-color:#1a1a1a;
+
+}
+
+.btn-bar:focus {
+	background-color:#1a1a1a !important; 
+	border-color:#1a1a1a !important;
+
+}
+
+#backFooter {
+	height: 30px !important;
+}
+*/
+.leggodeal {
+  background-color: #ffebcc !important;
+}
+.leggodeal:hover,
+.leggodeal:focus {
+  background-color: #ffe0b3 !important;
+}
+
+.epicdeal {
+  background-color: #e0d6f5 !important;
+}
+.epicdeal:hover,
+.epicdeal:focus {
+  background-color: #d1c2f0 !important;
+}
+
+.bluedeal {
+  background-color: #cce0ff !important;
+}
+.bluedeal:hover,
+.bluedeal:focus {
+  background-color: #b3d1ff !important;
+}
+.panel-heading .realmCollapse:after {
+	/* symbol for "opening" panels */
+	font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+	content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+	float: right;        /* adjust as needed */
+	color: grey;         /* adjust as needed */
+}
+.panel-heading .realmCollapse.collapsed:after {
+	/* symbol for "collapsed" panels */
+	content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 25px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .2s;
+  transition: .3s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  right: 4px;
+  background-color: white;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+/*
+#commonSlider:checked + span {
+  background-color: #d9d9d9;
+}
+#greenSlider:checked + span {
+  background-color: #dff0d8;
+}
+#blueSlider:checked + span {
+  background-color: #b3d1ff;
+}
+#epicSlider:checked + span {
+  background-color: #d1c2f0;
+}
+#leggoSlider:checked + span {
+  background-color: #ffe0b3;
+}
+*/
+
+#snipesSlider:checked + span {
+  background-color: #a9e7ff;
+}
+#collectedSlider:checked + span {
+  background-color: #a9e7ff;
+}
+#commonSlider:checked + span {
+  background-color: #d9d9d9;
+}
+#greenSlider:checked + span {
+  background-color: #c2e2b6;
+}
+#blueSlider:checked + span {
+  background-color: #80b3ff;
+}
+#epicSlider:checked + span {
+  background-color: #b298e6;
+}
+#leggoSlider:checked + span {
+  background-color: #ffcc80;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.toggleTd {
+	border-top: none !important;
+}
+
+
+tr.totalRow {
+	/*background-color:#b3b3b396 !important;*/
+	font-size: 13px;
+	background-color:white !important;
+} 
+
+.realmPanel {
+	border: 1px solid #e0e0e0 !important;
+}
+
+.realmPanelHeading {
+	border: none; background-color: white !important;
+}
+
+.realmCollapse {
+	color: #00000094 !important;
+}
+
+.realmPanelCollapse {
+	padding-left:15px !important;
+	padding-right:15px !important;
+}
+
+.realmTable {
+	border-top: 2px solid #54cfff80 !important;
+}
+
+.realmTableHeader {
+	border:none !important;
+	padding-top: 15px !important;
+}
+
+.realmTableBody {
+	border-top:none !important;
+}
+
+.realmTableBadge {
+	margin-left: 5px !important;
+	background-color:#5f5f5f !important;
+	font-size: 10px !important;
+}
+.realmTableBadgeLegend {
+	background-color:#5f5f5f !important;
+}
+
+.buyRealmList {
+	font-weight: bold;
+    border-left: 5px solid #54cfff00;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+	color: #6b6b6b85;
+
+}	
+
+#realmSpy {
+	/*
+	Position: fixed;
+    width: inherit;
+	*/
+}
+.navbar-nab>li.active {
+	style="font-size: 18px;"
+	
+}
+.nav-stacked>li>a {
+	padding-left: 8px;
+	border-radius: 2px;
+	font-size: 18px;
+}
+.nav-stacked > li.active > a{
+	border-left: 5px solid #54cfff80;
+	background: white;
+	color: #00000094 !important;
+	
+}
+.nav-stacked > li.active > a > span{
+	color:#6b6b6b !important;	
+}
+
+.nav-stacked > li.active {
+	border: 1px solid #e0e0e0;
+}
+
+.nav-stacked > li{
+	border: none;
+}
+
+.navbar .navbar-nav > li > a:hover {
+    color: white !important;
+}
+.charInput {
+	border: none;
+    background-color: #8a8a8a26;
+    box-shadow: none;
+}
+
+.realmInput {
+	border: none;
+    background-color: #8a8a8a26;
+    box-shadow: none;
+}
+
+.charFormGroup {
+	padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#findDealsButton {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
+#findDealsButtonb {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
+#findRealmButton {
+	background-color: white;
+    border: 1px solid #e0e0e0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-left: 6px solid #a9e7ff;
+    border-right: 6px solid #a9e7ff;
+    /* border-bottom: 4px solid #a9e7ff; */
+    /* border-top: 4px solid #a9e7ff; */
+}
+
+.colHeader {
+    background-color: white !important;
+	border-top: 3px solid #a9e7ff;
+	border-bottom: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
+	color: #6b6b6b;
+}
+
+.panel {
+	margin-bottom: 10px !important;
+}
+
+.legendColorLabel{
+	color: #6b6b6b;
+}
+
+

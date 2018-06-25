@@ -1,0 +1,12 @@
+TODO:
+ - Update the realm pulling function to run every 5 mintues and look for realms that have changed 
+	- only delete the auctions from hourly that are part of that realm?
+ - Allow users to not enter characters
+ - Write the FAQs for "All Pets" and "Find a New Realm"
+ - When the front-end 1.0 is done, write the help icon guide
+ - Add a link from the pet name to wowhead - or add modal to show more info
+ - Table sorting???
+ - Help icon for the first page of "Find a new realm"
+
+Known Bugs:
+ - Duplicates showing for connected realms

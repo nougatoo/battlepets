@@ -1,21 +1,23 @@
 <?php
 
+
 require_once('util.php');
 $configs = include('/var/app/current/application/configs/configs.php');
+$region = get_cfg_var('REGION');
+$locale = get_cfg_var("LOCALE");
 header ('Content-type: text/html; charset=utf-8');
 
-set_time_limit(0);
+set_time_limit(2700); // Run for 45 minutes max
 ini_set('memory_limit', '1024M');
 
 // US
-customLog("INFO", "Calling getAndParseAuctionData US...");
-getAndParseAuctionData("US", "en_US");
-customLog("INFO","Finished calling getAndParseAuctionData US...");
+customLog("INFO", "Calling getAndParseAuctionData ".$region);
+getAndParseAuctionData($region, $locale);
 
 // EU
-customLog("INFO", "Calling getAndParseAuctionData EU...");
-getAndParseAuctionData("EU", "en_GB");
-customLog("INFO","Finished calling getAndParseAuctionData EU...");
+//customLog("INFO", "Calling getAndParseAuctionData EU...");
+//getAndParseAuctionData("EU", "en_GB");
+//customLog("INFO","Finished calling getAndParseAuctionData EU...");
 
 /** 
 	Gets the pet auction data from blizzard. 
@@ -105,6 +107,7 @@ function getAndParseAuctionData($region, $locale)
 			
 			// Add curls to the multi handlers
 			for($j = 0; $j<$numCurls; $j+=1) {
+				curl_multi_select($mh, 5);
 				curl_multi_add_handle($mh,$curls[$j]);
 			}
 			
@@ -165,22 +168,27 @@ function getAndParseAuctionData($region, $locale)
 	curl_multi_remove_handle($mh, $ch3);
 	curl_multi_close($mh);
 
-	// Remove all existing auctions from the hourly table
-	$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
-	$conn->query($removeHourlySql);
-	
-	// Move this from the staging table to the real hourly table
-	$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg ON DUPLICATE KEY UPDATE auctions_hourly_pet.bid = auctions_hourly_pet_stg.bid, auctions_hourly_pet.time_left=auctions_hourly_pet_stg.time_left;";
-	$conn->query($transferOutOfStgSql);
-	
-	// Add all this new data into the daily table as well
-	$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
-	$conn->query($transferToDailySql);
-	
-	// Clear out the staging table
-	$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg;" ;
-	$conn->query($removeHourlySql);
+	try {
+		// Remove all existing auctions from the hourly table
+		$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
+		$conn->query($removeHourlySql);
+		
+		
+		// Move this from the staging table to the real hourly table
+		$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg ON DUPLICATE KEY UPDATE auctions_hourly_pet.bid = auctions_hourly_pet_stg.bid, auctions_hourly_pet.time_left=auctions_hourly_pet_stg.time_left;";
+		$conn->query($transferOutOfStgSql);
+		
+		// Add all this new data into the daily table as well
+		$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
+		$conn->query($transferToDailySql);
+		
+		// Clear out the staging table
+		$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg;" ;
+		$conn->query($removeHourlySql);
 
+	} catch(Throwable $e) {
+		echo $e->getMessage();
+	}
 	// Log Time
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;

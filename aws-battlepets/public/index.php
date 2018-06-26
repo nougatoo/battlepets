@@ -40,7 +40,7 @@
 <nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross-Realm Pets</a>
+			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross Realm Pets</a>
 		</div>
 		<div class="navbar-header">
 			  <span class="glyphicon glyphicon-random navbar-brand" style="color: #a9e7ff; font-size: 20px;"></span>

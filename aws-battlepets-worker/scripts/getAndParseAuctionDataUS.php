@@ -14,9 +14,9 @@ getAndParseAuctionData("US", "en_US");
 customLog("INFO","Finished calling getAndParseAuctionData US...");
 
 // EU
-customLog("INFO", "Calling getAndParseAuctionData EU...");
-getAndParseAuctionData("EU", "en_GB");
-customLog("INFO","Finished calling getAndParseAuctionData EU...");
+//customLog("INFO", "Calling getAndParseAuctionData EU...");
+//getAndParseAuctionData("EU", "en_GB");
+//customLog("INFO","Finished calling getAndParseAuctionData EU...");
 
 /** 
 	Gets the pet auction data from blizzard. 

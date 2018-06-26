@@ -5,8 +5,10 @@ require_once('util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-customLog ("INFO", "Calculating Daily Market Values...");
-//calculateDailyMarketValues("US");
+customLog ("INFO", "Calculating Daily Market Values for US");
+calculateDailyMarketValues("US");
+
+customLog ("INFO", "Calculating Daily Market Values for EU");
 calculateDailyMarketValues("EU");
 
 /**
@@ -223,11 +225,13 @@ function calculateRegionMedian($region)
 		
 		// Sort least to greatest
 		sort($marketValues);
-		$medianIndex = floor(sizeof($marketValues)/2);
-		$medianValue = $marketValues[$medianIndex];
 		
 		// Only take the index values between 10% and 65% 
+		$marketValuesLength = sizeof($marketValues);
 		$marketValues = array_slice($marketValues,  floor($marketValuesLength*0.10), floor($marketValuesLength*0.65));
+		
+		$medianIndex = floor(sizeof($marketValues)/2);
+		$medianValue = $marketValues[$medianIndex];
 		
 		// Anything over 25k in value, use an average of median and mean 
 		// Anything under 10k use the already existing mean (market value hist)

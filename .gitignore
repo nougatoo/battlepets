@@ -222,3 +222,4 @@ pip-log.txt
 dbConfigs.php
 aws-battlepets/battlepets.zip
 aws-battlepets-worker/worker-double.zip
+*.zip

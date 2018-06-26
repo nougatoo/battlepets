@@ -3,15 +3,16 @@
 
 require_once('util.php');
 $configs = include('/var/app/current/application/configs/configs.php');
+$region = get_cfg_var('REGION');
+$locale = get_cfg_var("LOCALE");
 header ('Content-type: text/html; charset=utf-8');
 
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
 // US
-customLog("INFO", "Calling getAndParseAuctionData US...");
-getAndParseAuctionData("US", "en_US");
-customLog("INFO","Finished calling getAndParseAuctionData US...");
+customLog("INFO", "Calling getAndParseAuctionData ".$region);
+getAndParseAuctionData($region, $locale);
 
 // EU
 //customLog("INFO", "Calling getAndParseAuctionData EU...");

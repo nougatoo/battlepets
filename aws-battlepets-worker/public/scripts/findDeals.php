@@ -199,7 +199,7 @@ function findSellersForRealm($realm, $character, $returnPriceArray)
 {	
 	global $configs, $region, $minSellPrice;
 	$conn = dbConnect($region);	
-	$realmRes = buildingRealmRes($realm);	
+	$realmRes = buildRealmRes($realm);	
 	$sql = "
 			SELECT 
 				sell_realm.species_id, realm, realms.name as sell_realm_name, min_buyout, market_value_hist_median
@@ -274,7 +274,7 @@ function findDealsForRealm($realm, $getSpecies, $maxBuyPerc)
 	global $configs, $region;
 	
 	$conn = dbConnect($region);
-	$realmRes = buildingRealmRes($realm);
+	$realmRes = buildRealmRes($realm);
 
 	// Gets the pets that are a good deal on selected realm (Less than maxBuyPerc global market avg)
 	$goodDealsRawSql = "
@@ -326,7 +326,7 @@ function findDealsForRealm($realm, $getSpecies, $maxBuyPerc)
 	
 	@return String $realmRes - SQL restriction for passed in realm and it's connected realm
 */
-function buildingRealmRes($realm) 
+function buildRealmRes($realm) 
 {
 	global $region, $locale; 
 	$conn = dbConnect($region);

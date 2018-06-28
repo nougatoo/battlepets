@@ -10,21 +10,14 @@ header ('Content-type: text/html; charset=utf-8');
 set_time_limit(2700); // Run for 45 minutes max
 ini_set('memory_limit', '1024M');
 
-try {
-	if(!getRunParam($region)) {
-		customLog("INFO", "Calling getAndParseAuctionData ".$region);
-		updateRunParam(TRUE, $region);
-		getAndParseAuctionData($region, $locale);
-		updateRunParam(FALSE, $region);
-	}
-	else {
-		customLog("INFO", "isGetAndParseRunning is set to 1. Not running new getAndParse");
-	}
-}
-catch(Throwable $e) {
-	updateRunParam(FALSE, $region);
-}
+customLog("INFO", "Calling getAndParseAuctionData ".$region);
+getAndParseAuctionData($region, $locale);
 
+/*****************
+ * Begin Functions 
+ ****************/
+ 
+ 
 /** 
 	Gets the pet auction data from blizzard. 
 	Puts auction data into hourly and daily table.
@@ -385,7 +378,6 @@ function insertAuctionData($auctions, $slugMaps, $region, $euSlugList, $ahRealms
 	customLog ("INFO", "----------------------------------------------");
 }
 
-
 /**
 	Updates the realm's last_updated value 
 	
@@ -402,45 +394,6 @@ function updateRealmLastUpdated($lastModified, $slug, $region)
 	$result = $conn->prepare("UPDATE realms SET last_updated = ? WHERE slug = ?");
 	$result->bindParam(1, $lastModified);
 	$result->bindParam(2, $slug);
-	$result->execute();
-}
-
-
-/**
-	Gets the application parameter to say if this script is running 
-	
-	@return {bool} - True if running, false if not
-*/
-function getRunParam($region)
-{
-	// Connect to database
-	$conn = dbConnect($region);
-	$isRunning;
-	
-	$result = $conn->prepare("SELECT value FROM app_parameters WHERE parameter_name = 'isGetAndParseRunning'");
-	$result->execute();
-	
-	if($result) {		
-		while($row = $result->fetch()) {		
-			$isRunning = $row['value'];	
-		}
-	}	
-	
-	echo ("is running: " . $isRunning ."<br/>");
-	return ($isRunning == TRUE);
-}
-
-/**
-	Sets the application parameter to say if this script is running 
-	
-	@param {string} $isRunning - 0 for not running, 1 for running 
-*/
-function updateRunParam($isRunning, $region)
-{
-	// Connect to database
-	$conn = dbConnect($region);
-	
-	$result = $conn->prepare("UPDATE app_parameters SET value = '".$isRunning."' WHERE parameter_name = 'isGetAndParseRunning'");
 	$result->execute();
 }
 
@@ -466,6 +419,10 @@ function buildRealmRes($region, $realms)
 	$realmRes .= ")";
 	return $realmRes;
 }
+
+
+
+
 ?>
 
 

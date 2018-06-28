@@ -89,4 +89,33 @@ function getRealmNameFromSlug($slug, $region)
 	}
 
 }
+
+/**
+	Returns the last updated integer for this realm 
+	
+	@param {string} $slug - Slug name of the realm
+	@param {string} $region - Usually either US or EU
+	
+	@return {int}
+*/
+function getRealmLastUpdated($slug, $region)
+{
+	// Connect to database
+	$conn = dbConnect($region);
+	$lastUpdated;
+	
+	$result = $conn->prepare("SELECT last_updated FROM realms WHERE slug = ?");
+	$result->bindParam(1, $slug);
+	$result->execute();	
+
+
+	if($result) {		
+		while($row = $result->fetch()) {		
+			$lastUpdated = $row['last_updated'];	
+		}
+	}
+
+	return $lastUpdated;
+}
+
 ?>

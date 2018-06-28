@@ -160,14 +160,14 @@ else {
 				$subTableHTML .=  '<td>'.'</td>';
 				$subTableHTML .=  '</tr>';
 				
-				// TODO - add real last updated
+				$lastUpdatedDiffBuy = floor((time() - (getRealmLastUpdated($realms[$j], $region)/1000))/60) ;
 				$subTableHTML .= '<tr>
 												<td></td>
 												<td></td>
 												<td></td>
 												<td></td>
 												<td style="color: #ababab;font-size: 11px; text-align: right;">
-													Last Updated: 12:54pm
+													Last Updated: ' . $lastUpdatedDiffBuy . ' minutes ago
 												</td>
 											</tr>';
 				$subTableHTML .= "</tbody></table></div></div>"; 	
@@ -471,13 +471,13 @@ function buildSnipesTables($realm)
 	$subTableHTML .=  "<td>"."</td>";
 	$subTableHTML .=  "</tr>";
 
-	// TODO - get a real last updated
+	$lastUpdatedDiffSell = floor((time() - (getRealmLastUpdated($realm, $region)/1000))/60) ;
 	$subTableHTML .= '<tr>
 									<td></td>
 									<td></td>
 									<td></td>
 									<td style="color: #ababab;font-size: 11px; text-align: right;">
-										Last Updated: 12:54pm
+										Last Updated: ' . $lastUpdatedDiffSell . ' minutes ago
 									</td>
 								</tr>';
 	$tableHTML .=  $subTableHTML."</tbody></table></div></div><br/>"; 

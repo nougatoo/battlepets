@@ -10,14 +10,20 @@ header ('Content-type: text/html; charset=utf-8');
 set_time_limit(2700); // Run for 45 minutes max
 ini_set('memory_limit', '1024M');
 
-// US
-customLog("INFO", "Calling getAndParseAuctionData ".$region);
-getAndParseAuctionData($region, $locale);
-
-// EU
-//customLog("INFO", "Calling getAndParseAuctionData EU...");
-//getAndParseAuctionData("EU", "en_GB");
-//customLog("INFO","Finished calling getAndParseAuctionData EU...");
+try {
+	if(!getRunParam($region)) {
+		customLog("INFO", "Calling getAndParseAuctionData ".$region);
+		updateRunParam(TRUE, $region);
+		getAndParseAuctionData($region, $locale);
+		updateRunParam(FALSE, $region);
+	}
+	else {
+		customLog("INFO", "isGetAndParseRunning is set to 1. Not running new getAndParse");
+	}
+}
+catch(Throwable $e) {
+	updateRunParam(FALSE, $region);
+}
 
 /** 
 	Gets the pet auction data from blizzard. 
@@ -107,13 +113,13 @@ function getAndParseAuctionData($region, $locale)
 			
 			// Add curls to the multi handlers
 			for($j = 0; $j<$numCurls; $j+=1) {
-				curl_multi_select($mh, 5);
 				curl_multi_add_handle($mh,$curls[$j]);
 			}
 			
 			// Run curl calls
 			$running = null;
 			do {
+				curl_multi_select($mh, 5);
 				curl_multi_exec($mh, $running);
 			} while ($running);
 			
@@ -150,13 +156,14 @@ function getAndParseAuctionData($region, $locale)
 						array_push($euSlugList, $aRealm['slug']);
 					
 					array_push($realmSlugList, $aRealm['slug']);
-					array_push($realmNameList, $aRealm['name']);			
+					array_push($realmNameList, $aRealm['name']);
+
 				}
 				
 				array_push($slugMaps, array_combine($realmNameList, $realmSlugList));
 			}
 			
-			insertAuctionData($auctions, $slugMaps, $region, $euSlugList);	
+			insertAuctionData($auctions, $slugMaps, $region, $euSlugList, $ahRealms);	
 		} else {
 			customLog("ERROR", "No auction data found from Url ".$i.".");
 		}
@@ -168,7 +175,10 @@ function getAndParseAuctionData($region, $locale)
 	curl_multi_remove_handle($mh, $ch3);
 	curl_multi_close($mh);
 
+			/*
 	try {
+		
+
 		// Remove all existing auctions from the hourly table
 		$removeHourlySql = "DELETE FROM auctions_hourly_pet;" ;
 		$conn->query($removeHourlySql);
@@ -185,10 +195,13 @@ function getAndParseAuctionData($region, $locale)
 		// Clear out the staging table
 		$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg;" ;
 		$conn->query($removeHourlySql);
+	
 
 	} catch(Throwable $e) {
 		echo $e->getMessage();
 	}
+	
+		*/
 	// Log Time
 	$endTimeTotal = microtime(true);
 	$timeDiffTotal = $endTimeTotal - $startTimeTotal;
@@ -234,11 +247,23 @@ function getDataUrls($region, $locale)
 			$urlResponse = file_get_contents('https://'.$region.'.api.battle.net/wow/auction/data/'.$realmsToPull[$i].'?locale='.$locale.'&apikey='.$configs["apiKey"]);	
 			$result = json_decode($urlResponse, true);	
 			$url = $result['files'][0]['url'];			
-			$lastModified = $result['files'][0]['lastModified'];		
+			$lastModified = $result['files'][0]['lastModified'];
+			$myLastUpdated = getRealmLastUpdated($realmsToPull[$i], $region);
+			$doUpdate = true;
+			
+			if($myLastUpdated == $lastModified) {
+				customLog ("INFO", "API Data has not been updated for: " . $realmsToPull[$i] . ". Last API Update: " . $lastModified . " My Last Update: " . $myLastUpdated . ".");
+				$url = false;
+				$doUpdate = false;
+			}
+			else {
+				updateRealmLastUpdated($lastModified, $realmsToPull[$i], $region); // TODO - THIS IS NOT THE BEST PLACE TO DO THIS. WE'RE JUST TRYING HERE...NOTHING HAS BEEN UPDATED
+			}
 
 			if($url) {
 				array_push($dataUrls, $url);
-			} else {
+			} 
+			else if ($doUpdate){
 				customLog ("ERROR", "Could not get URL for: ".$realmsToPull[$i]);
 			}
 					
@@ -249,8 +274,10 @@ function getDataUrls($region, $locale)
 			if ($connectedRealmsResult) {
 				while($row = $connectedRealmsResult->fetch()) {
 					array_push($realmsCompleted, $row["slug_child"]);
+					updateRealmLastUpdated($lastModified, $row["slug_child"], $region); // TODO - THIS IS NOT THE BEST PLACE TO DO THIS. WE'RE JUST TRYING HERE...NOTHING HAS BEEN UPDATED
 				}
-			} else {
+			} 
+			else {
 				// Do nothing - has no connected realms
 			}
 			
@@ -278,7 +305,7 @@ function getDataUrls($region, $locale)
 	@param String $euSlugList - First slug in the auction json data retrived. Since EU uses realm names that can't be parsed or matched in db. 
 	
 */
-function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
+function insertAuctionData($auctions, $slugMaps, $region, $euSlugList, $ahRealms)
 {
 	// Connect to database
 	$conn = dbConnect($region);
@@ -290,6 +317,10 @@ function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
 	foreach($auctions as  $key => $currentRealmAh) {		
 	
 		$conn->beginTransaction();
+		
+		// TODO - this could be the place to build a restriction for ahRealms[$key]. Then I could technically do all the moving queries for eahc group of realms instead of all at once in the end.
+		$realmRes = buildRealmRes($region, $ahRealms[$key]); // Build the restriction off of the first realm in the list...they're all connected
+		
 		// This could be optimized by adding more than one "values" but for now the speed is less than one second fpr 3 realms.
 		foreach ($currentRealmAh as $key2 => $currentAuction) {
 		  
@@ -307,7 +338,7 @@ function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
 			{
 				$speciesId = $currentAuction['petSpeciesId'];
 				
-				// Avoid indexing a slug map with a crappy russion name from the AH data...
+				// Avoid indexing a slug map with a crappy russian name from the AH data...
 				// TODO: All connected realm data is going to be housed under 1 realm in EU for now
 				if($region == "EU")
 				{
@@ -322,9 +353,28 @@ function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
 				if ($conn->query($sql) === TRUE) {
 					//customLog "New record created successfully";
 				}
+				
 			}
 		}
 		$conn->commit();
+		
+		// NEW CODE
+		
+		// Remove all existing auctions from the hourly table
+		$removeHourlySql = "DELETE FROM auctions_hourly_pet ".$realmRes.";";
+		$conn->query($removeHourlySql);	
+		
+		// Move this from the staging table to the real hourly table
+		$transferOutOfStgSql = "INSERT INTO auctions_hourly_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet_stg " . $realmRes . " ON DUPLICATE KEY UPDATE auctions_hourly_pet.bid = auctions_hourly_pet_stg.bid, auctions_hourly_pet.time_left=auctions_hourly_pet_stg.time_left;";
+		$conn->query($transferOutOfStgSql);
+		
+		// Add all this new data into the daily table as well
+		$transferToDailySql = "INSERT INTO auctions_daily_pet (id, species_id, realm, buyout, bid, owner, time_left, quantity) SELECT id, species_id, realm, buyout, bid, owner, time_left, quantity FROM auctions_hourly_pet " . $realmRes . " ON DUPLICATE KEY UPDATE auctions_daily_pet.bid=auctions_hourly_pet.bid, auctions_daily_pet.time_left=auctions_hourly_pet.time_left;";
+		$conn->query($transferToDailySql);
+		
+		// Clear out the staging table
+		$removeHourlySql = "DELETE FROM auctions_hourly_pet_stg " . $realmRes . " ;" ;
+		$conn->query($removeHourlySql);
 	}
 
 	// Log Time
@@ -333,6 +383,88 @@ function insertAuctionData($auctions, $slugMaps, $region, $euSlugList)
 	
 	customLog ("INFO", "Time to complete auctions insert: " . $timeDiffAuctions);
 	customLog ("INFO", "----------------------------------------------");
+}
+
+
+/**
+	Updates the realm's last_updated value 
+	
+	@param {int} $lastModified - Value given by blizzard as the last modified time as an int
+	@param {string} $slug - Slug name of the realm
+	@param {string} $region - Usually either US or EU
+
+*/
+function updateRealmLastUpdated($lastModified, $slug, $region)
+{
+	// Connect to database
+	$conn = dbConnect($region);
+	
+	$result = $conn->prepare("UPDATE realms SET last_updated = ? WHERE slug = ?");
+	$result->bindParam(1, $lastModified);
+	$result->bindParam(2, $slug);
+	$result->execute();
+}
+
+
+/**
+	Gets the application parameter to say if this script is running 
+	
+	@return {bool} - True if running, false if not
+*/
+function getRunParam($region)
+{
+	// Connect to database
+	$conn = dbConnect($region);
+	$isRunning;
+	
+	$result = $conn->prepare("SELECT value FROM app_parameters WHERE parameter_name = 'isGetAndParseRunning'");
+	$result->execute();
+	
+	if($result) {		
+		while($row = $result->fetch()) {		
+			$isRunning = $row['value'];	
+		}
+	}	
+	
+	echo ("is running: " . $isRunning ."<br/>");
+	return ($isRunning == TRUE);
+}
+
+/**
+	Sets the application parameter to say if this script is running 
+	
+	@param {string} $isRunning - 0 for not running, 1 for running 
+*/
+function updateRunParam($isRunning, $region)
+{
+	// Connect to database
+	$conn = dbConnect($region);
+	
+	$result = $conn->prepare("UPDATE app_parameters SET value = '".$isRunning."' WHERE parameter_name = 'isGetAndParseRunning'");
+	$result->execute();
+}
+
+/**
+	Builds a SQL restriction for all the realms passed in 
+	
+	@param {string} $region - Usually either US or EU
+	@param {array} $realms - Array of string for the realms to create the restriction for
+	
+	@return String $realmRes - SQL restriction for passed in realm and it's connected realm
+*/
+function buildRealmRes($region, $realms) 
+{
+	// Connect to database
+	$conn = dbConnect($region);
+	
+	$realmRes = "WHERE  (realm =  '" . $realms[0]['slug'] . "'";
+	
+	for($i = 1; $i<sizeof($realms); $i++) {
+		$realmRes .= " OR realm = '" . $realms[$i]['slug'] . "'";
+	}
+	
+	$realmRes .= ")";
+	return $realmRes;
 }
 ?>
 

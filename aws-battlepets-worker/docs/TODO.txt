@@ -7,6 +7,10 @@ TODO:
  - Add a link from the pet name to wowhead - or add modal to show more info
  - Table sorting???
  - Help icon for the first page of "Find a new realm"
+ - Refactor the passed variables for the getUrls and insertAuction stuff
+ - Clean up CSS
 
 Known Bugs:
  - Duplicates showing for connected realms
+ - With the incremental inserts, it's deleting all of the hourly auctions.
+	- in getAndParse, i could just pass in ahRealms (defined in line 131), to the insert auction data, or I could pass in an array of SQL restrictions where each restriction is for is curl that came back

@@ -19,7 +19,7 @@
 		});
 	</script>
 	
-	<title>Cross-Realm Pets</title>
+	<title>Cross Realm Pets</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/js/jquery-3.3.1.js"></script>
@@ -31,23 +31,21 @@
 	<script src="/js/publicCommon.js"></script>	
 	<link rel="stylesheet" href="/css/battlePetsCommon.css">
 	<link rel="shortcut icon" type="image/png" href="graphics/favicon.ico"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 
 
 <body style="overflow-y: scroll;background-color:#e6e6e68a" data-spy="scroll" data-target="#realmSpy" data-offset="20">
 
-<nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
+<nav class="navbar navbar-inverse" id="top" style="background-color:#333;font-family: 'Roboto', sans-serif;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross Realm Pets</a>
-		</div>
-		<div class="navbar-header">
-			  <span class="glyphicon glyphicon-random navbar-brand" style="color: #a9e7ff; font-size: 20px;"></span>
+			<span class="navbar-brand" href="#" style="font-size: 33px;color: #a9e7ff;">Cross Realm Pets</span>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li ><a href="http://crossrealmpets.com"  style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Home</a></li>
-			<li><a href="viewAllPets.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">All Pets</a></li>
-			<li class="active"><a href="#" style="font-size: 16px;color: white;letter-spacing: 0.5px;">Find a New Realm</a></li>
+			<li ><a href="http://crossrealmpets.com"  style="font-size: 19px;color: #a9e7ff;">Home</a></li>
+			<li><a href="viewAllPets.php" style="font-size: 19px;color: #a9e7ff;">All Pets</a></li>
+			<li class="active"><a href="#" style="font-size: 19px;color: #ffafa9;border-bottom: 5px solid #ffafa9;border-radius: 2px;padding-bottom: 10px;">Find a New Realm</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
@@ -67,7 +65,7 @@
 	</div>
 </nav>
 
-<div class="container-fluid" style="min-height:85%">
+<div class="container-fluid" style="min-height:85%;font-family: 'Roboto', sans-serif;">
 	<div class="row" id="row1" style="display:none">
 		<div class="col-sm-12" id="row1col1">	
 		</div>
@@ -163,14 +161,12 @@
 							<b style="color:black;">Cross Realm Pets <sup>BETA</sup></b> is a tool that tells you where to <b style="color:black;">buy</b> and <b style="color:black;">sell</b> your World of Warcraft pets to <b style="color:black;">maximize cross realm/server profits</b>  - All based on <b style="color:black;">your </b>characters and realms
 							<br/>
 							<br/>
-							Here's what you can expect:
+							What to expect from the  <b style="color:black;">Find a New Realm Page:</b>
 						</span>
 						<ul>
-							<li style="padding-left: 5px;padding-top: 5px;padding-bottom: 5px;padding-top: 10px;">Which <b style="color:black;">realm to buy on</b> followed by a list of <b style="color:black;">realms to sell on <span class="glyphicon glyphicon-random" style="padding-left: 6px;"></span></b></li>
-							<li style="padding: 5px;">Displays <b style="color:black;">pets you own</b> and <b style="color:black;">how many <span class="glyphicon glyphicon-tags" style="padding-left: 5px;"></span></b></li>
-							<li style="padding: 5px;">List of <b style="color:black;">deals to snipe</b> on a realm/server<b style="color:black;"><span class="glyphicon glyphicon-list" style="padding-left: 8px;"></span> </b></li>
-							<li style="padding: 5px;"><b style="color:black;">Customizable parameters</b> to narrow and personalize your search <b style="color:black;"><span class="glyphicon glyphicon-option-vertical" style="padding-left: 5px;"></span></b></li>
-							<li style="padding: 5px;"><b style="color:black;">Tailored for you and your realms! <span class="glyphicon glyphicon-user" style="padding-left: 5px;"></span></b></li>
+							<li style="padding-left: 5px;padding-top: 5px;padding-bottom: 5px;padding-top: 10px;">Helps you make a decision about <b style="color:black;">which realm to sell pets on next</b></li>
+							<li style="padding-left: 5px;padding-top: 5px;padding-bottom: 5px;padding-top: 5px;">Displays a <b style="color:black;">sum of Region Market Value</b> for your account's pets per realm</li>
+							<li style="padding: 5px;"><b style="color:black;">Supplumental information</b> - to be used with other realm statistics</li>
 						</ul>
 					</div>
 				</div>

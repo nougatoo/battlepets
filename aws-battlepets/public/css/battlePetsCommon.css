@@ -295,7 +295,7 @@ tr.totalRow {
 }
 
 .navbar .navbar-nav > li > a:hover {
-    color: white !important;
+    color: #333333  !important;
 }
 .charInput {
 	border: none;
@@ -363,5 +363,40 @@ tr.totalRow {
 .legendColorLabel{
 	color: #6b6b6b;
 }
+
+
+.navbar-inverse .navbar-nav>.active>a {
+	background-color: #333333 !important;
+}
+
+.navbar-inverse .navbar-nav>.active>a:hover {
+	color: #ffafa9 !important;
+	border-bottom: 5px solid #ffafa9;
+	border-radius: 2px;
+	padding-bottom: 10px;
+}
+.navbar-inverse .navbar-nav>li>a:hover {
+	color: #ffafa9 !important;
+	border-bottom: 5px solid #ffafa9;
+	border-radius: 2px;
+	padding-bottom: 10px;
+}
+
+
+.container-fluid>.navbar-header > a:hover{
+	cursor: pointer !important;
+	
+}
+
+.container-fluid>.navbar-header:hover{
+	cursor: pointer !important;
+	
+}
+
+.navbar-header:hover{
+	cursor: pointer !important;
+	
+}
+
 
 

@@ -19,7 +19,7 @@
 		});
 	</script>
 	
-	<title>Cross-Realm Pets</title>
+	<title>Cross Realm Pets</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/js/jquery-3.3.1.js"></script>  <!-- must be above the boostrap js -->
@@ -29,22 +29,20 @@
 	<script src="/js/viewAllPets.js"></script>
 	<script src="/js/publicCommon.js"></script>
 	<link rel="stylesheet" href="/css/battlePetsCommon.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 
 <body style="overflow-y: scroll; overflow-x: hidden; background-color: #e6e6e68a;">
 
-<nav class="navbar navbar-inverse" id="top" style="background-color:#333;">
+<nav class="navbar navbar-inverse" id="top" style="background-color:#333;font-family: 'Roboto', sans-serif;">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#" style="font-size: 27px;color: #a9e7ff;letter-spacing: 1px;">Cross Realm Pets</a>
-		</div>
-		<div class="navbar-header">
-			  <span class="glyphicon glyphicon-random navbar-brand" style="color: #a9e7ff; font-size: 20px;"></span>
+			<a class="navbar-brand" href="#" style="font-size: 33px;color: #a9e7ff;">Cross Realm Pets</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li><a href="http://crossrealmpets.com"  style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Home</a></li>
-			<li  class="active"><a href="viewAllPets.php" style="font-size: 16px;letter-spacing: 0.5px;">All Pets</a></li>
-			<li><a href="findNewRealm.php" style="font-size: 16px;color: #a9e7ff;letter-spacing: 0.5px;">Find a New Realm</a></li>
+			<li><a href="http://crossrealmpets.com"  style="font-size: 19px;color: #a9e7ff;">Home</a></li>
+			<li  class="active"><a href="viewAllPets.php" style="font-size: 19px;color: #ffafa9;border-bottom: 5px solid #ffafa9;border-radius: 2px;padding-bottom: 10px;">All Pets</a></li>
+			<li><a href="findNewRealm.php" style="font-size: 19px;color: #a9e7ff;">Find a New Realm</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
@@ -65,55 +63,47 @@
 </nav>
 
 
-<div class="container-fluid" style="min-height:85%">
+<div class="container-fluid" style="min-height:85%;font-family: 'Roboto', sans-serif;">
 	<div class="row" id="row1">
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
-					<div class="panel-heading" style="border: none; background-color: white;">
-						<h3 class="panel-title">
-							<a class="realmCollapse" data-toggle="collapse" href="#welcomeMessage" style="color:black; color: #00000094; font-weight: bold;">Welcome!</a>
-						</h3>
-					</div>
-					<div id="welcomeMessage" class="panel-collapse collapse in realmPanelCollapse">
-						<div style="color: #6b6b6b;font-size: 14px;">
+		<div class="col-sm-4">
+			<div class="panel panel-default" style="border: 1px solid #e0e0e0;">
+				<div class="panel-heading" style="border: none; background-color: white;">
+					<h3 class="panel-title">
+						<a class="realmCollapse" data-toggle="collapse" href="#welcomeMessage" style="color:black; color: #00000094; font-weight: bold;">Welcome!</a>
+					</h3>
+				</div>
+				<div id="welcomeMessage" class="panel-collapse collapse in realmPanelCollapse" style="padding-bottom: 15px;">
+					<div style="color: #6b6b6b;font-size: 14px;">
+						<br/>
+						<span>
+							<b style="color:black;">Cross Realm Pets <sup>BETA</sup></b> is a tool that tells you where to <b style="color:black;">buy</b> and <b style="color:black;">sell</b> your World of Warcraft pets to <b style="color:black;">maximize cross realm/server profits</b>  - All based on <b style="color:black;">your </b>characters and realms
 							<br/>
-							<span>
-								<b style="color:black;">Cross Realm Pets <sup>BETA</sup></b> is a tool that tells you where to <b style="color:black;">buy</b> and <b style="color:black;">sell</b> your World of Warcraft pets to <b style="color:black;">maximize cross realm/server profits</b>  - All based on <b style="color:black;">your </b>characters and realms
-								<br/>
-								<br/>
-								Here's what you can expect:
-							</span>
-							<ul>
-								<li style="padding-left: 5px;padding-top: 5px;padding-bottom: 5px;padding-top: 10px;">Which <b style="color:black;">realm to buy on</b> followed by a list of <b style="color:black;">realms to sell on <span class="glyphicon glyphicon-random" style="padding-left: 6px;"></span></b></li>
-								<li style="padding: 5px;">Displays <b style="color:black;">pets you own</b> and <b style="color:black;">how many <span class="glyphicon glyphicon-tags" style="padding-left: 5px;"></span></b></li>
-								<li style="padding: 5px;">List of <b style="color:black;">deals to snipe</b> on a realm/server<b style="color:black;"><span class="glyphicon glyphicon-list" style="padding-left: 8px;"></span> </b></li>
-								<li style="padding: 5px;"><b style="color:black;">Customizable parameters</b> to narrow and personalize your search <b style="color:black;"><span class="glyphicon glyphicon-option-vertical" style="padding-left: 5px;"></span></b></li>
-								<li style="padding: 5px;"><b style="color:black;">Tailored for you and your realms! <span class="glyphicon glyphicon-user" style="padding-left: 5px;"></span></b></li>
-							</ul>
-						</div>
+							<br/>
+							The <b  style="color:black;">All Pets</b> page gives you an overview of the <b  style="color:black;">region market value</b> for every pet
+						</span>
+						<br/>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-4">
-				<div id="loadingBar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
-					</div>
+		</div>
+		<div class="col-sm-4">
+			<div id="loadingBar">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; background-color:#333;"></div>
 				</div>
-				<input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
-				<div class="panel panel-default realmPanel" style="margin-top:15px;">
-					<div class="panel-heading realmPanelHeading">
-						<h4 class="panel-title">	  
-						  <a class="realmCollapse" data-toggle="collapse" href="#allPetsTable"><b>All Pets</b></a>
-						</h4>
-					</div>
-					<div id="allPetsTable" class="panel-collapse collapse in realmPanelCollapse">		
-					</div>
-				</div>
-			</div> <!-- End of middle column -->
-			<div class="col-sm-4">
 			</div>
+			<input class="form-control" id="dataFilter" type="text" placeholder="Filter..." style="display:none;box-shadow: none; border: 1px solid #e0e0e0;">
+			<div class="panel panel-default realmPanel" style="margin-top:15px;">
+				<div class="panel-heading realmPanelHeading">
+					<h4 class="panel-title">	  
+					  <a class="realmCollapse" data-toggle="collapse" href="#allPetsTable"><b>All Pets</b></a>
+					</h4>
+				</div>
+				<div id="allPetsTable" class="panel-collapse collapse in realmPanelCollapse">		
+				</div>
+			</div>
+		</div> <!-- End of middle column -->
+		<div class="col-sm-4">
 		</div>
 	</div> <!-- End of Row -->
 </div> <!-- End of Top Container -->

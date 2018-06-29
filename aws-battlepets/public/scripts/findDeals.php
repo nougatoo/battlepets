@@ -77,7 +77,7 @@ else {
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in realmPanelCollapse">
-											<table class="table table-hover realmTable">
+											<table class="table table-striped table-hover realmTable">
 												<tr style="background-color:white; color: #6b6b6b;">
 													<th onclick="sortTable(this)" class="realmTableHeader">Name</th>
 													<th class="realmTableHeader">'.getRealmNameFromSlug($realms[$j], $region).' Price</th>
@@ -161,7 +161,7 @@ else {
 				$subTableHTML .=  '</tr>';
 				
 				$lastUpdatedDiffBuy = floor((time() - (getRealmLastUpdated($realms[$j], $region)/1000))/60) ;
-				$subTableHTML .= '<tr>
+				$subTableHTML .= '<tr style="background-color:white;">
 												<td></td>
 												<td></td>
 												<td></td>
@@ -364,9 +364,9 @@ function createRealmList($realms)
 		$realmName = getRealmNameFromSlug($aRealm,$region);
 		
 		if($key == 0)
-			$realmListHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
+			$realmListHTML .= '<li class="active"><a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="fas fa-shopping-cart" style="padding-left:10px;color:#e6e6e600"></span></a></li>';
 		else
-			$realmListHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="glyphicon glyphicon-shopping-cart" style="padding-left:10px;color:#e6e6e600"></a></li>';
+			$realmListHTML .= '<li> <a class="buyRealmList" data-toggle="tab" href="#'.$aRealm.'_tab">'.$realmName.'<span class="fas fa-shopping-cart" style="padding-left:10px;color:#e6e6e600"></a></li>';
 	
 		echo $realmListHTML;
 	}	

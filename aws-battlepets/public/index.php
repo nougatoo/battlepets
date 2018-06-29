@@ -33,6 +33,7 @@
 	<link rel="stylesheet" href="/css/battlePetsCommon.css">
 	<link rel="shortcut icon" type="image/png" href="graphics/favicon.ico"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 </head>
 
 
@@ -51,7 +52,7 @@
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<span class="glyphicon glyphicon-globe" style="padding-right:5px"></span>
+				<span class="fas fa-globe-americas" style="padding-right:5px"></span>
 				<span id="currentRegion">Region:</span>
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu">
@@ -59,9 +60,9 @@
 					<li><a href="#" style="text-align: center;" onclick="switchRegion(this)">EU</a></li>
 				</ul>
 			</li>
-			<li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="glyphicon glyphicon-envelope" style="padding-right:5px"></span><span>Contact</span></a></li>
-			<li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="glyphicon glyphicon-pencil" style="padding-right:5px"></span><span>Report a Bug</span></a></li>
-			<li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="glyphicon glyphicon-info-sign" style="padding-right:5px"></span><span>FAQ</span></a></li>
+			<li><a href="#" data-toggle="modal" data-target="#contactModal"><span class="fas fa-envelope" style="padding-right:5px"></span><span>Contact</span></a></li>
+			<li><a href="#" data-toggle="modal" data-target="#rptBugModal"><span class="fas fa-pencil-alt" style="padding-right:5px"></span><span>Report a Bug</span></a></li>
+			<li><a href="#" data-toggle="modal" data-target="#faqModal"><span class="fas fa-info-circle" style="padding-right:5px"></span><span>FAQ</span></a></li>
 		</ul>
 	</div>
 </nav>

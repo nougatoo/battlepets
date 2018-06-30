@@ -84,7 +84,7 @@ function findDeals() {
 		stage = "b";
 		
 	// Escape user input and build the characters and realms arrays
-	if($('#character1' + stage).val().replace(/\s/g, '') != "Test") {
+	if($('#character1' + stage).val().replace(/\s/g, '').toLocaleLowerCase() != "test") {
 		for(var i = 1; i <= numRealms; i++) {
 			var aCharacter = $('#character' + i + stage).val().replace(/\s/g, '');
 			var aRealm = $('#realm' + i + stage).val();

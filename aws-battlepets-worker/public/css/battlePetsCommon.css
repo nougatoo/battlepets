@@ -1,5 +1,5 @@
 .table {
-  font-size: 12px !important;
+  font-size: 12px;
 }
 
 @media only screen and (max-width: 1441px) {
@@ -295,7 +295,7 @@ tr.totalRow {
 }
 
 .navbar .navbar-nav > li > a:hover {
-    color: white !important;
+    color: #333333  !important;
 }
 .charInput {
 	border: none;
@@ -365,3 +365,33 @@ tr.totalRow {
 }
 
 
+.navbar-inverse .navbar-nav>.active>a {
+	background-color: #333333 !important;
+}
+
+.navbar-inverse .navbar-nav>.active>a:hover {
+	color: #ffafa9 !important;
+	border-bottom: 3px solid #ffafa9;
+	border-radius: 2px;
+	/* padding-bottom: 10px; */
+}
+.navbar-inverse .navbar-nav>li>a:hover {
+	color: #ffafa9 !important;
+	border-bottom: 3px solid #ffafa9;
+	border-radius: 2px;
+	/* padding-bottom: 10px; */
+}
+
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+	
+    border-top: 1px solid #fff0;
+}
+
+.table>tbody>tr>th {
+	font-size: 14px;
+}
+
+.panel-title {
+	font-size: 18px;
+}

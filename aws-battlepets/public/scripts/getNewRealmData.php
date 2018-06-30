@@ -139,7 +139,7 @@ arsort($finalRealmData);
 $tableHTML =	'<table class="table table-striped table-hover realmTable">
 						<tr style="background-color:white; color: #6b6b6b;">
 							<th class="realmTableHeader">Realm</th>
-							<th class="realmTableHeader">Value</th>
+							<th class="realmTableHeader">Region Market Value</th>
 						</tr>
 						<tbody id="myTable1">';
 						

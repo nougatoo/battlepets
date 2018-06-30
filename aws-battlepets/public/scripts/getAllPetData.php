@@ -13,7 +13,7 @@ $conn = dbConnect($region);
 $tableHTML = 	'<table class="table table-striped table-hover realmTable">
 							<tr style="background-color:white; color: #6b6b6b;">
 								<th onclick="sortTable(0)" class="realmTableHeader">Name</th>
-								<th onclick="sortTable(1)" class="realmTableHeader">Global Market Value</th>
+								<th onclick="sortTable(1)" class="realmTableHeader">Region Market Value</th>
 							</tr>
 							<tbody id="myTable1">';
 							

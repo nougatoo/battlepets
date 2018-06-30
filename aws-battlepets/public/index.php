@@ -45,7 +45,7 @@
 			<a class="navbar-brand" href="#" style="font-size: 33px;color: #a9e7ff;">Cross Realm Pets</a>
 		</div>
 		<ul class="nav navbar-nav" >
-			<li class="active"><a href=""  style="font-size: 19px;	color: #ffafa9;border-bottom: 5px solid #ffafa9;border-radius: 2px;padding-bottom: 10px;">Home</a></li>
+			<li class="active"><a href=""  style="font-size: 19px;	color: #ffafa9;border-bottom: 3px solid #ffafa9;border-radius: 2px;">Home</a></li>
 			<li><a href="viewAllPets.php" style="font-size: 19px;color: #a9e7ff;">All Pets</a></li>
 			<li><a href="findNewRealm.php" style="font-size: 19px;color: #a9e7ff;">Find a New Realm</a></li>
 		</ul>	
@@ -269,7 +269,7 @@
 					<div style="color: #6b6b6b;font-size: 14px;">
 						<br/>
 						<span>
-							<b style="color:black;">Cross Realm Pets <sup>BETA</sup></b> is a tool that tells you where to <b style="color:black;">buy</b> and <b style="color:black;">sell</b> your World of Warcraft pets to <b style="color:black;">maximize cross realm/server profits</b>  - All based on <b style="color:black;">your </b>characters and realms
+							<b style="color:black;">Cross Realm Pets <sup>BETA</sup></b> is a tool that tells you where to <b style="color:black;">buy</b> and <b style="color:black;">sell</b> your World of Warcraft pets to <b style="color:black;">maximize cross realm/server profits</b>  - all based on <b style="color:black;">your </b>characters and realms
 							<br/>
 							<br/>
 							What to expect from the <b style="color:black;">main search tool:</b>
@@ -281,6 +281,12 @@
 							<li style="padding: 5px;"><b style="color:black;">Customizable parameters</b> to narrow and personalize your search <b style="color:black;"><span class="glyphicon glyphicon-option-vertical" style="padding-left: 5px;"></span></b></li>
 							<li style="padding: 5px;"><b style="color:black;">Tailored for you and your realms! <span class="glyphicon glyphicon-user" style="padding-left: 5px;"></span></b></li>
 						</ul>
+						<span>If you just want to see how it works, you can enter <b style="color:black;">"Test" for Character 1 </b>, and then select any <b style="color:black;">US realm</b>. This will show you an <b style="color:black;">example</b> that contains five realms</span>
+						<br/>
+						<br/>
+						<span>Please be patient and don't give up on me while I work through this <b style="color:black;">BETA</b> phase!  <i class="far fa-smile"></i></span>
+						<br/>
+						<br/>
 					</div>
 				</div>
 			</div>
@@ -325,7 +331,11 @@
 </div>
 <footer class="footer" style="min-height:5%">
 	<center>	
-			  <h5><a href="privacypolicy.htm" target="_blank" style="color:#5f5f5f;"><b>Privacy Policy<b></a></h5>
+			  <h5>
+				  <a href="privacypolicy.htm" target="_blank" style="color:#5f5f5f;padding-right:5px;"><b>Privacy Policy<b></a>
+				  &#8226;
+				  <a href="#" style="color:#5f5f5f;padding-right:5px;padding-left:5px;"><b>Change Log<b></a>
+			  </h5>
 	</center>
 </footer>
 
@@ -388,7 +398,7 @@
 		</div>
 		<div class="modal-body">
 		  <h4><b>Who should use this application?</b></h4>
-		  <span style="font-weight:300;"><ul><li>This is for small/medium globins in the pet market. When you have limited gold on a server, it's best to buy pets that are already selling well on your other realms. This application will hopefully find those pets for you.</li></ul></span>
+		  <span style="font-weight:300;"><ul><li>This is for small/medium goblins in the pet market. When you have limited gold on a server, it's best to buy pets that are already selling well on your other realms. This application will hopefully find those pets for you.</li></ul></span>
 		  
 		  <h4><b>Who is this NOT for?</h4>
 		  <span style="font-weight:300;"><ul><li>While still totally usuable by large goblins, they may get less value out of it. Once you're trading on enough realms, you don't have to worry about buying a pet that's not selling well on your other realms. You're probably trading on enough realms that within a short amount of time, one of your realms will have it around ~100% Region Market Value.</li></ul></span>
@@ -402,9 +412,6 @@
 		  <h4><b>What are the default values?</b></h4>
 		  <span style="font-weight:300;"><ul><li>The default mininum sell value is 75% region market value and the default maxium buy value is 50% region market value.</li></ul></span>
 		  
-		  <h4><b>Why does "Last Updated" never change?</b></h4>
-		  <span style="font-weight:300;"><ul><li>This is still under development. Currently the data is refreshed every hour</li></ul></span>
-		  
 		  <h4><b>How does the "Find a New Realm" page work?</b></h4>
 		  <span style="font-weight:300;"><ul><li>This is a non-sophisticated way to see the value of your current pet collection by realm. This page is not meant to tell you exactly which realm you should start sell on next. Instead, it's one piece of the puzzle. You need to use other information like realm population and realm type to make an informed decision.</li></ul></span>
 		  
@@ -412,7 +419,7 @@
 		  <span style="font-weight:300;"><ul><li>It's designed to be usable on mobile, but optimized for desktop</li></ul></span>
 		  
 		  <h4><b>What future changes do you have planned?</b></h4>
-		  <span style="font-weight:300;"><ul><li>Update the data pulling functions to run more often, instead of once per hour</li><li>Table Sorting</li><li>Allow users to not enter characters</li><li>Possibly add links to wowhead.com for more details of the pet</li><li>Write the text for the question mark icons</li></ul></span>
+		  <span style="font-weight:300;"><ul><li>Table Sorting</li><li>Make character selection optional so you can just compare realms</li><li>Possibly add links to wowhead.com for more details of the pet</li><li>Write the text for the question mark icons</li><li>Create the change log</li></ul></span>
 		  
 		  <h4><b>Known Bugs</b></h4>
 		  <span style="font-weight:300;"><ul><li>Duplicates pets showing for connected realms</li></ul></span>

@@ -24,6 +24,19 @@ $(document).ready(function(){
 	getRegionRealmList();
 	$('#realm1').append(realmSelectHTML); 
 	$('#currentRegion').html("Region: " + currentRegion);
+	
+	// On click for the search string copy to clipboard 
+	$('#copyTSMShopToClip').on('click', function(event) {
+		
+		/* Get the text field */
+		var copyText = document.getElementById("tsmShopStr");
+
+		/* Select the text field */
+		copyText.select();
+
+		/* Copy the text inside the text field */
+		document.execCommand("copy");
+	});
 
 });
 
@@ -310,8 +323,40 @@ function recreateCharSelection()
 }
 
 
-
-
+/**
+	Creates and shows the TSM Shopping string to users based on which realm they 
+	clicked and which option they selected.
+	
+	@param {obj} obj - The clicked element
+*/
+function createTSMString(obj, realmHint) 
+{	
+	var shopString = "";
+	var allDeals = false;
+	
+	if(obj.innerText == "All Realm Deals")
+		allDeals = true;
+	
+	//$('#' + realmHint + 'Table tr').each(function() {
+	$('.' + realmHint + ' tr').each(function() {
+		
+		if($(this).find("td:first").children().length > 0)
+			if($(this).find("td:first").children()[0].innerText != "" && allDeals == false )
+				return;
+		
+		var petName = $(this).find("td:first").html();    
+		petName = petName.split("<span")[0];
+		
+		if(petName != "<b>Total <b></b></b>")
+			shopString += (petName +";");
+	});
+	
+	shopString = shopString.substring(0, shopString.length - 2);
+	//alert(shopString);
+	
+	$("#tsmShopStr").val(shopString)
+	$('#tsmSearchStrModal').modal('show');
+}
 
 
 

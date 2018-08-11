@@ -8,7 +8,12 @@ TODO:
  - Refactor the passed variables for the getUrls and insertAuction stuff
  - Clean up CSS
  - Possibly rework where the time gets updated. Currently it gets updated before we actually pull any data
- - Reduce size of nav bar bottom selection bar
- - Play around with font-sizes for tds and tr
+ - Create a TSM search string from a selected group of rows
+ - Make it friendly for people who don't sell any pets right now
+	- External link to popular guide
+	- User guide and a step by step guide on how to use my tool
+ - Post feature updates on the subreddit (ask mods if this is allowed)
+ - I broke filtering with changing the table names
+	
 Known Bugs:
  - Duplicates showing for connected realms

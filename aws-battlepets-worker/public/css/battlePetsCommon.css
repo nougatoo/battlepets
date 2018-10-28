@@ -9,12 +9,11 @@
 }
 
 
-
 @media only screen and (max-width: 20000px) {
 	.affix {
 		top: 20px;
 		width:inherit;
-		z-index: 9999 !important;
+		/* z-index: 1049 !important; */
 		padding-right: 15px !important;
 	}
 }

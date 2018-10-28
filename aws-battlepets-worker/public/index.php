@@ -329,6 +329,30 @@
 	</div>
 </div>
 </div>
+
+
+<!-- Contact Modal -->
+<div class="modal fade" id="tsmSearchStrModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+
+	  <!-- Modal content-->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		  <h4 class="modal-title">TSM Shopping String</h4>
+		</div>
+		<div class="modal-body">
+		  <p><b>Paste this string into TSM's shopping module to quickly buy these pets:</b></p>
+		  <textarea  id="tsmShopStr" readonly rows="4" style="width:100%;resize: none;    border: none;background-color: #8a8a8a26;border-radius: 5px;padding: 5px;"></textarea>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" style="	background-color: white;border: 1px solid #e0e0e0;padding-top: 0px;padding-bottom: 0px;border-left: 6px solid #a9e7ff;border-right: 6px solid #a9e7ff;"id="copyTSMShopToClip">Copy to Clipboard</button>
+		  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	  </div> 
+	</div>
+</div>
+
 <footer class="footer" style="min-height:5%">
 	<center>	
 			  <h5>

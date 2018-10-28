@@ -74,6 +74,16 @@ else {
 										<div class="panel-heading realmPanelHeading">
 											<h4 class="panel-title">	  
 											  <a class="realmCollapse" data-toggle="collapse" href="#'.$realms[$i].'x'.$realms[$j].'"><b>'.getRealmNameFromSlug($realms[$j], $region) .'</b></a>
+											  <div class="dropdown" style="display: inline;color: #6b6b6b;">
+												<button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style="background-color: #ffffff00;border: none;">
+													<i class="fas fa-copy"></i>
+												</button>
+												<ul class="dropdown-menu">
+													<li class="dropdown-header">TSM Shopping String For:</li>
+													<li><a onclick="createTSMString(this, \''.$realms[$i].'x'.$realms[$j].'\')">Unowned Realm Deals</a></li>
+													<li><a onclick="createTSMString(this,\''.$realms[$i].'x'.$realms[$j].'\')">All Realm Deals</a></li>
+												</ul>
+											</div>
 											</h4>
 										</div>
 										<div id="'.$realms[$i].'x'.$realms[$j].'" class="panel-collapse collapse in realmPanelCollapse">
@@ -85,7 +95,7 @@ else {
 													<th class="realmTableHeader">Region Market Value</th>
 													<th class="realmTableHeader">% Region Market Value</th>
 												</tr>
-												<tbody id="myTable1" class="realmTableBody">';			
+												<tbody id="myTable1" class="'.$realms[$i].'x'.$realms[$j].'">';			
 					
 			// Find good places to sell 
 			$goodSellers = findSellersForRealm($realms[$j], $characters[$j], false);
@@ -407,6 +417,16 @@ function buildSnipesTables($realm)
 								<div class="panel-heading realmPanelHeading">
 									<h4 class="panel-title">
 									  <a class="realmCollapse realmCollapse" data-toggle="collapse" href="#'.$realm.'_snipes"><b>All Realm Deals</b></a>
+									  <div class="dropdown" style="display: inline;color: #6b6b6b;">
+												<button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" style="background-color: #ffffff00;border: none;">
+													<i class="fas fa-copy"></i>
+												</button>
+												<ul class="dropdown-menu">
+													<li class="dropdown-header">TSM Shopping String For:</li>
+													<li><a onclick="createTSMString(this, \''.$realm.'_snipes\')">Unowned Realm Deals</a></li>
+													<li><a onclick="createTSMString(this,\''.$realm.'_snipes\')">All Realm Deals</a></li>
+												</ul>
+										</div>
 									</h4>
 								</div>
 								<div id="'.$realm.'_snipes" class="panel-collapse collapse in realmPanelCollapse">
@@ -417,7 +437,7 @@ function buildSnipesTables($realm)
 											<th class="realmTableHeader">Region Market Value</th>
 											<th class="realmTableHeader">% Region Market Value</th>
 										</tr>
-										<tbody id="myTable1" class="realmTableBody">';
+										<tbody id="myTable1" class="'.$realm.'_snipes">';
 									
 
 	$subTableHTML = "";
@@ -465,7 +485,7 @@ function buildSnipesTables($realm)
 			$emptyTable = true;
 		
 	$subTableHTML.= '<tr class="totalRow">';			
-	$subTableHTML .=  "<td>"."<b>Total<b/>"."</td>";
+	$subTableHTML .=  "<td>"."<b>Total <b/>"."</td>";
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalBuy)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."<b>".convertToWoWCurrency($totalValue)."</b>"."</td>";
 	$subTableHTML .=  "<td>"."</td>";

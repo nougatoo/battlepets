@@ -7,7 +7,7 @@ require_once('../../scripts/util.php');
 set_time_limit(0);
 ini_set('memory_limit', '1024M');
 
-$conn = dbConnect("EU");
+$conn = dbConnect("US");
 $distinctPets = [];
 
 $result = $conn->prepare("SELECT distinct market_value_pets.species_id, pets.name FROM market_value_pets INNER JOIN pets ON pets.species_id = market_value_pets.species_id");
@@ -26,15 +26,16 @@ foreach ($distinctPets as $key => $aSpecies) {
 	$marketValues = [];
 	$marketValueHist = -1;
 	
+	//
 	$sql = "SELECT market_value_pets.species_id, market_value_pets.market_value, pets.name, market_value_pets_hist_median.market_value_hist_median, market_value_pets_hist.market_value_hist
 		FROM market_value_pets 
 		INNER JOIN pets ON pets.species_id = market_value_pets.species_id 
 		INNER JOIN market_value_pets_hist_median ON market_value_pets_hist_median.species_id = market_value_pets.species_id 
         INNER JOIN market_value_pets_hist on market_value_pets_hist.species_id = pets.species_id
 		WHERE market_value_pets.species_id = '".$aSpecies['species_id']."' AND
-			((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 25 DAY))
-			AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) 
-			AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
+			((`market_value_pets`.`date` >= (CURDATE() - INTERVAL 30 DAY))
+			AND (`market_value_pets`.`date` < (CURDATE() + INTERVAL 1 DAY))) ";
+			//AND market_value_pets.market_value < (market_value_pets_hist_median.market_value_hist_median*2)";
 	
 	$result = $conn->prepare($sql);
 	$result->execute();
@@ -59,14 +60,21 @@ foreach ($distinctPets as $key => $aSpecies) {
 	$medianIndex = floor(sizeof($marketValues)/2);
 	$medianValue = $marketValues[$medianIndex];
 	
+	echo $medianValue;
+	echo "<br/>";
 	// ANYTHING OVER 25K...USER MEDIAN
 	// user average for anything else
-	if($medianValue < 250000000) {
+	if($medianValue < 250000000 && medianValue > 100000000) {
 		$medianValue = ($medianValue + $marketValueHist) / 2 ;
 	}
 	else if ($medianValue < 100000000) {
+		echo "I am tiny <br/>";
+		echo "marketValueHist " + $marketValueHist + "<br/>";
 		$medianValue = $marketValueHist;
 	}
+	
+	echo $medianValue;
+	echo "<br/>";
 	
 	$mvMedianInsertSql = "INSERT INTO market_value_pets_hist_median (`species_id`,  `market_value_hist_median`) VALUES ('".$aSpecies['species_id']."' , '".$medianValue."') ON DUPLICATE KEY UPDATE market_value_hist_median = ".$medianValue.";";
 		
